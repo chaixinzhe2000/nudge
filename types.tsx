@@ -4,8 +4,11 @@ export type RootStackParamList = {
 };
 
 export type BottomTabParamList = {
-  TabOne: undefined;
-  TabTwo: undefined;
+  Inbox: any;
+  Sent: any;
+  Post: any;
+  Contact: any;
+  Settings: any;
 };
 
 export type TabOneParamList = {
