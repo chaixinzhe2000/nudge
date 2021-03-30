@@ -4,6 +4,7 @@ import { View, Text, Button } from "react-native";
 interface ILandingProps {
 	navigation: any
 }
+
 function Landing(props: ILandingProps) {
 	return (
 		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
