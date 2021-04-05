@@ -8,9 +8,6 @@ function LoginScreen() {
 	const [email, setEmail]: [string, any] = useState('');
 	const [password, setPassword]: [string, any] = useState('');
 
-
-
-	
 	const handleLogin = () => {
 		firebase.auth().signInWithEmailAndPassword(email, password)
 			.then((res) => {
@@ -20,7 +17,6 @@ function LoginScreen() {
 				console.log(err)
 			})
 	}
-
 
 	return (
 

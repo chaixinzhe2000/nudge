@@ -2,9 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
 import * as firebase from 'firebase';
 import firebaseConfig from './constants/ApiKey'
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +10,7 @@ import Register from './screens/auth/RegisterScreen';
 import Landing from './screens/auth/LandingScreen';
 import LoginScreen from './screens/auth/LoginScreen';
 import { View, Text } from 'react-native';
+import MainScreen from './navigation/MainRouter';
 
 export default function App() {
 	// for native-screen package
@@ -45,7 +43,7 @@ export default function App() {
 				<Text>Loading</Text>
 			</View>
 		)
-	} 
+	}
 	if (!loggedIn) {
 		return (
 			<SafeAreaProvider>
@@ -61,10 +59,13 @@ export default function App() {
 			</SafeAreaProvider>
 		);
 	}
-
 	return (
-		<View style={{ flex: 1, justifyContent: 'center' }}>
-			<Text>User is Logged in</Text>
-		</View>
+		<SafeAreaProvider>
+			<NavigationContainer>
+				<Stack.Navigator initialRouteName="Main">
+					<Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</SafeAreaProvider>
 	)
 }
