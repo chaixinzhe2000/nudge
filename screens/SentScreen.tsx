@@ -4,7 +4,7 @@ import IndividualTaskList from '../components/IndividualTaskList';
 import ProfileImage from '../components/ProfileImage';
 import { Text, View } from '../components/Themed';
 
-export default function MainScreen() {
+export default function SentScreen() {
 	return (
 		<ScrollView>
 			<ScrollView horizontal={true}
