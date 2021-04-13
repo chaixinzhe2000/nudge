@@ -6,7 +6,8 @@ import { Text, View } from '../components/Themed';
 
 export default function InboxScreen() {
 	return (
-		<ScrollView>
+		<ScrollView style={{backgroundColor: 'white'}}>
+			<Text style={styles.favorites}>Favorites</Text>
 			<ScrollView horizontal={true}
 				contentContainerStyle={styles.favoritesContainer}
 				showsHorizontalScrollIndicator={false}
@@ -38,14 +39,22 @@ export default function InboxScreen() {
 }
 
 const styles = StyleSheet.create({
+	favorites: {
+		paddingTop: 10,
+		backgroundColor: 'white',
+		fontSize: 17,
+		fontWeight: '500',
+		paddingLeft: 15,
+	},
 	favoritesContainer: {
 		alignItems: 'flex-start',
 		justifyContent: 'flex-start',
 		flexDirection: 'row',
 		backgroundColor: 'white',
 		height: 100,
-		borderColor: 'red',
-		borderWidth: 3
+		paddingTop: 10,
+		paddingLeft: 12,
+		marginBottom: 20
 	},
 	scrollContainer: {
 		flex: 1,
@@ -53,8 +62,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		flexDirection: 'column',
 		backgroundColor: 'white',
-		borderColor: 'blue',
-		borderWidth: 3,
 		height: '100%',
 		width: '100%',
 

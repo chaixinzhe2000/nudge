@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import IndividualTaskList from '../components/IndividualTaskList';
 import ProfileImage from '../components/ProfileImage';
+import TaskBox from '../components/TaskBox';
 import { Text, View } from '../components/Themed';
 
 export default function SentScreen() {
@@ -24,6 +25,7 @@ export default function SentScreen() {
 				<ProfileImage />
 			</ScrollView>
 			<View style={styles.scrollContainer}>
+				<IndividualTaskList />
 				<IndividualTaskList />
 				<IndividualTaskList />
 				<IndividualTaskList />
