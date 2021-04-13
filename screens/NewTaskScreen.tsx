@@ -10,12 +10,37 @@ import 'firebase/firestore';
 export default function NewTaskScreen() {
 
   const [taskName, setTaskName] = useState("");
+  const [receiverName, setReceiverName] = useState("");
   const dbh = firebase.firestore();
 
-  function handleSubmit() {
-    dbh.collection("Task").add({
-      taskName: taskName
-    })
+  async function handleSubmit() {
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      // // get user from db
+      // const userSearchQuery = dbh.collection('User').doc(user.uid);
+      // const userDoc = await userSearchQuery.get();
+      // if (!userDoc.exists) {
+      //   console.log("userDoc does not exist");
+      // } else {
+      //   console.log(userDoc.data);
+      // }
+
+      // // find receiver
+
+
+      const toSend = {
+        taskName: taskName,
+        timeStamp: Date.now(),
+        creatorId: user.uid,
+        creatorEmail: user.email,
+        
+      }
+      dbh.collection("Task").add(toSend)
+    } else {
+      alert('Not logged in, please login again.');
+    }
+
   }
 
   return (
@@ -25,6 +50,12 @@ export default function NewTaskScreen() {
         onChangeText={setTaskName}
         placeholder="Task Name"
         value={taskName}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setReceiverName}
+        placeholder="Receiver's Name"
+        value={receiverName}
       />
       <Button
         icon={
