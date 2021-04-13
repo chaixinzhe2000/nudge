@@ -46,6 +46,7 @@ export default function App() {
 			</View>
 		)
 	}
+  
 	if (!loggedIn) {
 		return (
 			<SafeAreaProvider>

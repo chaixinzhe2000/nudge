@@ -19,7 +19,7 @@ const IndividualTaskList = () => {
 				<TaskBox priority='completed' title='Pick up dinner plz' dueDate={moment('2021-03-31 11:59:00')}/>
 			</View>
 		</View>
-	)
+)
 }
 
 const styles = StyleSheet.create({
