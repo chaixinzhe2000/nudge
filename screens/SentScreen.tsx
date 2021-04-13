@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import AddContactModal from '../components/AddContactModal';
 import IndividualTaskList from '../components/IndividualTaskList';
 import ProfileImage from '../components/ProfileImage';
 import TaskBox from '../components/TaskBox';
 import { Text, View } from '../components/Themed';
 
-export default function SentScreen() {
+export default function SentScreen(props) {
 	return (
     <>
 		<ScrollView>
+    <AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 			<ScrollView horizontal={true}
 				contentContainerStyle={styles.favoritesContainer}
 				showsHorizontalScrollIndicator={false}

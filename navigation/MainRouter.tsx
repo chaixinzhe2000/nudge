@@ -8,6 +8,7 @@ import NewTaskScreen from '../screens/NewTaskScreen';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import SettingsScreen from '../screens/SettingsScreen';
 import { useState } from 'react';
+import ContactsScreen from '../screens/ContactsScreen';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -18,7 +19,7 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 }
 
 export default function MainRouter() {
-
+  const [addContactModalOpen, setAddContactModalOpen] = useState(false);
   return (
     <BottomTab.Navigator
       initialRouteName="Inbox"
@@ -27,14 +28,14 @@ export default function MainRouter() {
       }}>
       <BottomTab.Screen
         name="Inbox"
-        component={InboxNavigator}
+        children = {() => <InboxNavigator addContactModalOpen={addContactModalOpen} setAddContactModalOpen={setAddContactModalOpen}/>}
         options={{
           tabBarIcon: ({ color }) => <FeatherIcon name="inbox" color={color} />,
         }}
       />
       <BottomTab.Screen
         name="Sent"
-        component={SentNavigator}
+        children = {() => <SentNavigator addContactModalOpen={addContactModalOpen} setAddContactModalOpen={setAddContactModalOpen}/>}
         options={{
           tabBarIcon: ({ color }) => <FeatherIcon name="send" color={color} />,
         }}
@@ -47,8 +48,8 @@ export default function MainRouter() {
         }}
       />
       <BottomTab.Screen
-        name="Contact"
-        component={InboxScreen}
+        name="Contacts"
+        children = {() => <ContactsNavigator addContactModalOpen={addContactModalOpen} setAddContactModalOpen={setAddContactModalOpen}/>}
         options={{
           tabBarIcon: ({ color }) => <FeatherIcon name="user" color={color} />,
         }}
@@ -66,15 +67,12 @@ export default function MainRouter() {
 
 const InboxStack = createNativeStackNavigator();
 
-function InboxNavigator() {
-
-  const [addContactModalOpen, setAddContactModalOpen] = useState(false);
-
+function InboxNavigator(props) {
   return (
     <InboxStack.Navigator>
       <InboxStack.Screen
         name="InboxScreen"
-        children={() => <InboxScreen setAddContactModalOpen={setAddContactModalOpen} addContactModalOpen={addContactModalOpen} />}
+        children={() => <InboxScreen setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />}
         options={{
           title: 'For Me',
           headerStyle: {
@@ -83,11 +81,9 @@ function InboxNavigator() {
           headerTintColor: '#fff',
           headerLargeTitle: true,
           headerRight: () => (
-            <>
-          <TouchableOpacity onPress={() => setAddContactModalOpen(true)} >
-            <FeatherIcon name="inbox" color='white'/>
-          </TouchableOpacity>
-          </>
+            <TouchableOpacity onPress={() => props.setAddContactModalOpen(true)} >
+              <FeatherIcon name="user-plus" color='white'/>
+            </TouchableOpacity>
           )
         }}
       />
@@ -97,12 +93,12 @@ function InboxNavigator() {
 
 const SentStack = createNativeStackNavigator();
 
-function SentNavigator() {
+function SentNavigator(props) {
   return (
     <SentStack.Navigator>
       <SentStack.Screen
         name="SentScreen"
-        component={SentScreen}
+        children={() => <SentScreen setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />}
         options={{
           title: 'Sent',
           headerStyle: {
@@ -111,11 +107,9 @@ function SentNavigator() {
           headerTintColor: '#fff',
           headerLargeTitle: true,
           headerRight: () => (
-            <Button
-              onPress={() => alert('This is a button!')}
-              title=""
-              color="#fff"
-            />
+            <TouchableOpacity onPress={() => props.setAddContactModalOpen(true)} >
+              <FeatherIcon name="user-plus" color='white'/>
+            </TouchableOpacity>
           )
         }}
       />
@@ -167,6 +161,32 @@ function SettingsNavigator() {
   );
 }
 
+
+const ContactsStack = createNativeStackNavigator();
+
+function ContactsNavigator(props) {
+  return (
+    <ContactsStack.Navigator>
+      <ContactsStack.Screen
+        name="ContactsScreen"
+        children={() => <ContactsScreen setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />}
+        options={{
+          title: 'Contacts',
+          headerStyle: {
+            backgroundColor: '#2cb9af',
+          },
+          headerTintColor: '#fff',
+          headerLargeTitle: true,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => props.setAddContactModalOpen(true)} >
+              <FeatherIcon name="user-plus" color='white'/>
+            </TouchableOpacity>
+          )
+        }}
+      />
+    </ContactsStack.Navigator>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
