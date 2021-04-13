@@ -10,7 +10,7 @@ import Register from './screens/auth/RegisterScreen';
 import Landing from './screens/auth/LandingScreen';
 import LoginScreen from './screens/auth/LoginScreen';
 import { View, Text } from 'react-native';
-import MainScreen from './navigation/MainRouter';
+import MainRouter from './navigation/MainRouter';
 
 export default function App() {
 	// for native-screen package
@@ -62,8 +62,8 @@ export default function App() {
 	return (
 		<SafeAreaProvider>
 			<NavigationContainer>
-				<Stack.Navigator initialRouteName="Main">
-					<Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
+				<Stack.Navigator initialRouteName="InboxScreen">
+					<Stack.Screen name="MainRouter" component={MainRouter} options={{ headerShown: false }} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</SafeAreaProvider>

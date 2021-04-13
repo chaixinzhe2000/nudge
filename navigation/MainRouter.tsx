@@ -6,6 +6,7 @@ import InboxScreen from '../screens/InboxScreen';
 import SentScreen from '../screens/SentScreen';
 import NewTaskScreen from '../screens/NewTaskScreen';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
+import SettingsScreen from '../screens/SettingsScreen';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -15,7 +16,7 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
   return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export default function TabOneScreen() {
+export default function MainRouter() {
   return (
     <BottomTab.Navigator
       initialRouteName="Inbox"
@@ -52,7 +53,7 @@ export default function TabOneScreen() {
       />
       <BottomTab.Screen
         name="Settings"
-        component={InboxScreen}
+        component={SettingsNavigator}
         options={{
           tabBarIcon: ({ color }) => <FeatherIcon name="settings" color={color} />,
         }}
@@ -125,6 +126,27 @@ function NewTaskNavigator() {
   );
 }
 
+
+const SettingsStack = createNativeStackNavigator();
+
+function SettingsNavigator() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+        options={{
+          title: 'Settings',
+          headerStyle: {
+            backgroundColor: '#2cb9af',
+          },
+          headerTintColor: '#fff',
+          headerLargeTitle: true
+        }}
+      />
+    </SettingsStack.Navigator>
+  );
+}
 
 
 const styles = StyleSheet.create({

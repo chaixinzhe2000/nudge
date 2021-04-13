@@ -2,8 +2,46 @@ import React from "react";
 import { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import * as firebase from 'firebase';
+// import firebase from "firebase/app";
+// import "firebase/messaging";
+
 
 function Register() {
+  // Firebase create user collection and add user
+  // TODO: test this
+  const dbh = firebase.firestore();
+
+  async function handleAddUser() {
+    const user = firebase.auth().currentUser;
+    const messaging = firebase.messaging();
+
+    
+    if (user !== null) {
+      let userFCMToken;
+      userFCMToken = Notification.requestPermission()
+      .then(() => {
+        console.log('Have permission')
+        return messaging.getToken();
+      })
+      .then((token) => {
+        console.log(token);
+        return token;
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      dbh.collection("User").add({
+        name: name,
+        email: email,
+        uid: user.uid,
+        messageToken: userFCMToken,
+      })
+      return true;
+    }
+    return false;
+  }
+
+  //----------------------------------------------------------------
 	const [name, setName]: [string, any] = useState('');
 
 	const [email, setEmail]: [string, any] = useState('');
@@ -13,7 +51,8 @@ function Register() {
 		console.log(email)
 		firebase.auth().createUserWithEmailAndPassword(email, password)
 			.then((res) => {
-				console.log(res)
+				console.log(res);
+        handleAddUser();
 			})
 			.catch((err) => {
 				console.log(err)
