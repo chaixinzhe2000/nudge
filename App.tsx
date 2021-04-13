@@ -2,14 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { enableScreens } from 'react-native-screens';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import firebaseConfig from './constants/ApiKey'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Register from './screens/auth/RegisterScreen';
 import Landing from './screens/auth/LandingScreen';
 import LoginScreen from './screens/auth/LoginScreen';
-import { View, Text } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import MainRouter from './navigation/MainRouter';
 
 export default function App() {
@@ -30,6 +30,8 @@ export default function App() {
 			}
 		})
 	}, []);
+
+
 
 	if (!firebase.apps.length) {
 		firebase.initializeApp(firebaseConfig);

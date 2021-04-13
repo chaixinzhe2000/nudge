@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 function LoginScreen() {
 

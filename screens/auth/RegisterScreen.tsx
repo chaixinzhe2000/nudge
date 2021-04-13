@@ -1,35 +1,57 @@
 import React from "react";
 import { useState } from "react";
-import { View, Text, TextInput, Button } from "react-native";
-import * as firebase from 'firebase';
+import { View, Text, TextInput, Button, Platform } from "react-native";
+import * as firebase from 'firebase/app';
 // import firebase from "firebase/app";
 // import "firebase/messaging";
-
+import { Permissions  } from 'expo';
+import Constants from "expo-constants";
+import * as Notifications from 'expo-notifications'
 
 function Register() {
   // Firebase create user collection and add user
   // TODO: test this
   const dbh = firebase.firestore();
 
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    return token;
+  }
+
+
   async function handleAddUser() {
     const user = firebase.auth().currentUser;
-    const messaging = firebase.messaging();
-
+    
+    console.log("WE RAN TYHIS")
     
     if (user !== null) {
-      let userFCMToken;
-      userFCMToken = Notification.requestPermission()
-      .then(() => {
-        console.log('Have permission')
-        return messaging.getToken();
-      })
-      .then((token) => {
-        console.log(token);
-        return token;
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+      const userFCMToken = await registerForPushNotificationsAsync();
       dbh.collection("User").add({
         name: name,
         email: email,
