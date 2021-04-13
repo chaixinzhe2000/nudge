@@ -53,10 +53,11 @@ function Register() {
     if (user !== null) {
       const userFCMToken = await registerForPushNotificationsAsync();
       dbh.collection("User").add({
-        name: name,
+        displayName: name,
         email: email,
         uid: user.uid,
         messageToken: userFCMToken,
+        friends: []
       })
       return true;
     }
