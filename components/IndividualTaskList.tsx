@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import { Text, View, Image, StyleSheet } from 'react-native';
 import TaskBox from './TaskBox';
@@ -13,9 +14,9 @@ const IndividualTaskList = () => {
 			/>
 			<View>
 				<Text style={styles.name}>Xinzhe</Text>
-				<TaskBox priority='normal' title='Ship FedEx package' dueDate={new Date()}/>
-				<TaskBox priority='high' title='Review TA application' dueDate={new Date()}/>
-				<TaskBox priority='completed' title='Pick up dinner plz' dueDate={new Date()}/>
+				<TaskBox priority='normal' title='Ship FedEx package' dueDate={moment('2021-04-23 11:59:00')}/>
+				<TaskBox priority='high' title='Review TA application' dueDate={moment('2021-04-30 09:00:00')}/>
+				<TaskBox priority='completed' title='Pick up dinner plz' dueDate={moment('2021-03-31 11:59:00')}/>
 			</View>
 		</View>
 	)
@@ -23,14 +24,14 @@ const IndividualTaskList = () => {
 
 const styles = StyleSheet.create({
 	profileImage: {
-		width: 60,
-		height: 60,
-		marginLeft: 12,
+		width: 55,
+		height: 55,
+		marginLeft: 17,
 		marginRight: 10,
 		borderRadius: 90
 	},
 	name: {
-		fontWeight: 'bold',
+		fontWeight: '600',
 		fontSize: 17
 	},
 	viewContainer: {
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
 		alignItems: "flex-start",
 		display: "flex",
 		flexDirection: "row",
-		marginRight: 18
+		marginRight: 15
 	},
 });
 export default IndividualTaskList;
