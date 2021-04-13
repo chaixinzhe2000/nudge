@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Feather } from '@expo/vector-icons';
 import InboxScreen from '../screens/InboxScreen';
@@ -7,6 +7,7 @@ import SentScreen from '../screens/SentScreen';
 import NewTaskScreen from '../screens/NewTaskScreen';
 import { createNativeStackNavigator } from 'react-native-screens/native-stack';
 import SettingsScreen from '../screens/SettingsScreen';
+import { useState } from 'react';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -17,6 +18,7 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 }
 
 export default function MainRouter() {
+
   return (
     <BottomTab.Navigator
       initialRouteName="Inbox"
@@ -65,18 +67,28 @@ export default function MainRouter() {
 const InboxStack = createNativeStackNavigator();
 
 function InboxNavigator() {
+
+  const [addContactModalOpen, setAddContactModalOpen] = useState(false);
+
   return (
     <InboxStack.Navigator>
       <InboxStack.Screen
         name="InboxScreen"
-        component={InboxScreen}
+        children={() => <InboxScreen setAddContactModalOpen={setAddContactModalOpen} addContactModalOpen={addContactModalOpen} />}
         options={{
           title: 'For Me',
           headerStyle: {
             backgroundColor: '#2cb9af',
           },
           headerTintColor: '#fff',
-          headerLargeTitle: true
+          headerLargeTitle: true,
+          headerRight: () => (
+            <>
+          <TouchableOpacity onPress={() => setAddContactModalOpen(true)} >
+            <FeatherIcon name="inbox" color='white'/>
+          </TouchableOpacity>
+          </>
+          )
         }}
       />
     </InboxStack.Navigator>
@@ -97,7 +109,14 @@ function SentNavigator() {
             backgroundColor: '#2cb9af',
           },
           headerTintColor: '#fff',
-          headerLargeTitle: true
+          headerLargeTitle: true,
+          headerRight: () => (
+            <Button
+              onPress={() => alert('This is a button!')}
+              title=""
+              color="#fff"
+            />
+          )
         }}
       />
     </SentStack.Navigator>

@@ -57,8 +57,9 @@ function TaskBox(props: ITaskBoxProps) {
 	return (
 		<View style={styles.boxDiv}>
 			<Text style={styles.title}>{props.title}</Text>
-			<Text style={styles.date}>{props.dueDate.toUTCString}</Text>
+			<Text style={styles.date}>{props.dueDate.toUTCString()}</Text>
 		</View>
+ 
 	)
 }
 

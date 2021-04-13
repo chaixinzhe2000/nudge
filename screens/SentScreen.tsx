@@ -7,6 +7,7 @@ import { Text, View } from '../components/Themed';
 
 export default function SentScreen() {
 	return (
+    <>
 		<ScrollView>
 			<ScrollView horizontal={true}
 				contentContainerStyle={styles.favoritesContainer}
@@ -36,6 +37,7 @@ export default function SentScreen() {
 				<IndividualTaskList />
 			</View>
 		</ScrollView>
+    </>
 	);
 }
 

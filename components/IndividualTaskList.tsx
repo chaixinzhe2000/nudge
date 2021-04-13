@@ -18,7 +18,7 @@ const IndividualTaskList = () => {
 				<TaskBox priority='completed' title='Pick up dinner plz' dueDate={new Date()}/>
 			</View>
 		</View>
-	)
+)
 }
 
 const styles = StyleSheet.create({

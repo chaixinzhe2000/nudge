@@ -16,6 +16,7 @@ export default function AddContactModal(props: IAddContactModalProps) {
           name='close'
           size={24}
           onPress={()=> props.setAddContactModalOpen(false)}
+          style={styles.closeButton}
           />
 
         <Text> Hello from the modal :)</Text>
@@ -27,6 +28,9 @@ export default function AddContactModal(props: IAddContactModalProps) {
 const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
+  },
+  closeButton: {
+    marginTop:599
   }
 })
 
