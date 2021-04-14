@@ -147,25 +147,25 @@ export default function NewTaskScreen() {
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    display: 'flex',
-    flex: 1,
-    width: '100%',
-    justifyContent: 'space-between',
-    borderColor: 'blue',
-    borderWidth: 3,
-  },
-  input: {
-    height: 40,
-    width: '90%',
-    margin: 12,
-    borderWidth: 1,
-    borderColor: 'blue',
-  },
-  submitButton: {
-    width: '90%',
-    margin: '5%',
-    borderWidth: 1,
-    borderColor: 'blue',
-  }
+	mainContainer: {
+		display: 'flex',
+		flex: 1,
+		width: '100%',
+		justifyContent: 'space-between',
+		borderColor: 'blue',
+		borderWidth: 3,
+	},
+	input: {
+		height: 40,
+		width: '90%',
+		margin: 12,
+		borderWidth: 1,
+		borderColor: 'blue',
+	},
+	submitButton: {
+		width: '90%',
+		margin: '5%',
+		borderWidth: 1,
+		borderColor: 'blue',
+	}
 });
