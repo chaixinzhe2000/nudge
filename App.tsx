@@ -53,8 +53,20 @@ export default function App() {
 				<NavigationContainer>
 					<Stack.Navigator initialRouteName="Landing">
 						<Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }} />
-						<Stack.Screen name="Register" component={Register} />
-						<Stack.Screen name="Login" component={LoginScreen} />
+						<Stack.Screen name="Register" component={Register} options={{
+							title: '',
+          					headerStyle: {
+            					backgroundColor: '#2cb9af',
+          					},
+          					headerTintColor: '#fff'
+        				}} />
+						<Stack.Screen name="Login" component={LoginScreen} options={{
+							title: '',
+          					headerStyle: {
+            					backgroundColor: '#2cb9af',
+          					},
+          					headerTintColor: '#fff'
+        				}} />
 
 					</Stack.Navigator>
 				</NavigationContainer>

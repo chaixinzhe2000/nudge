@@ -1,12 +1,17 @@
 import React from "react";
 import { useState } from "react";
-import { View, Text, TextInput, Button, Platform } from "react-native";
+import { View, Text, TextInput, Button, Platform, StyleSheet, TouchableOpacity } from "react-native";
 import * as firebase from 'firebase/app';
 // import firebase from "firebase/app";
 // import "firebase/messaging";
 import { Permissions  } from 'expo';
 import Constants from "expo-constants";
-import * as Notifications from 'expo-notifications'
+import * as Notifications from 'expo-notifications';
+import { Feather } from '@expo/vector-icons';
+
+function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
+	return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
+}
 
 function Register() {
   // Firebase create user collection and add user
@@ -82,16 +87,75 @@ function Register() {
 			})
 	}
 	return (
-		<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+		<View style={styles.container}>
 			<TextInput
-				placeholder="Name" onChangeText={(text) => setName(text)} />
+				placeholder="Your Name" placeholderTextColor='white' textAlign='center'
+				onChangeText={(text) => setName(text)} style={styles.input}/>
 			<TextInput
-				placeholder="Email" onChangeText={(text) => setEmail(text)} />
+				placeholder="Your Email" placeholderTextColor='white' textAlign='center'
+				onChangeText={(text) => setEmail(text)} style={styles.input}/>
 			<TextInput
-				placeholder="Password" secureTextEntry={true} onChangeText={(text) => setPassword(text)} />
-			<Button onPress={() => {handleSignUp()}} title="Register" />
+				placeholder="Password" placeholderTextColor='white' textAlign='center'
+				secureTextEntry={true} onChangeText={(text) => setPassword(text)} style={styles.input}/>
+			<TouchableOpacity onPress={() => {handleSignUp()}} >
+				<View style={styles.buttonDiv}>
+					<Text style={styles.text}>START NUDGING</Text>
+					<FeatherIcon name="arrow-right" color='#2cb9b0' />
+				</View>
+          	</TouchableOpacity>
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#2cb9b0',
+		paddingTop: 90,
+		paddingLeft: 30,
+		paddingRight: 30
+	},
+	welcome: {
+		fontSize: 40,
+		fontWeight: '500',
+		color: 'white'
+	},
+	nudge: {
+		fontSize: 40,
+		fontWeight: '700',
+		color: 'white',
+		marginBottom: 45
+	},
+	buttonDiv: {
+		backgroundColor: 'white',
+		minHeight: 50,
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		flexDirection: 'row',
+		borderRadius: 10,
+		marginBottom: 12,
+		paddingRight: 10,
+		marginTop: 20
+	},
+	text: {
+		marginLeft: 15,
+		color: '#2cb9b0',
+		fontSize: 18,
+		fontWeight: '700'
+	},
+	input: {
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		color: 'white',
+		fontSize: 20,
+		borderRadius: 10,
+		backgroundColor: '#4bc4bc',
+		minHeight: 55,
+		marginBottom: 10,
+		fontWeight: '500'
+	}
+});
 
 export default Register;

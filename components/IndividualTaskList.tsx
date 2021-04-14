@@ -10,12 +10,13 @@ const IndividualTaskList = () => {
 			>
 			<Image
 				style={styles.profileImage}
-				source={{ uri: 'https://st2.depositphotos.com/1009634/7235/v/600/depositphotos_72350117-stock-illustration-no-user-profile-picture-hand.jpg' }}
+				source={{ uri: 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 			/>
-			<View>
+			<View style={styles.taskList}>
 				<Text style={styles.name}>Xinzhe</Text>
-				<TaskBox priority='normal' title='Ship FedEx package' dueDate={moment('2021-04-23 11:59:00')}/>
-				<TaskBox priority='high' title='Review TA application' dueDate={moment('2021-04-30 09:00:00')}/>
+				<TaskBox priority='normal' title='Ship FedEx package' dueDate={moment('2021-04-13 23:59:00')}/>
+				<TaskBox priority='high' title='Review TA application' dueDate={moment('2021-04-14 09:00:00')}/>
+				<TaskBox priority='normal' title='Prep for Calc BC' dueDate={moment('2021-04-27 10:00:00')}/>
 				<TaskBox priority='completed' title='Pick up dinner plz' dueDate={moment('2021-03-31 11:59:00')}/>
 			</View>
 		</View>
@@ -26,7 +27,6 @@ const styles = StyleSheet.create({
 	profileImage: {
 		width: 55,
 		height: 55,
-		marginLeft: 17,
 		marginRight: 10,
 		borderRadius: 90
 	},
@@ -37,11 +37,16 @@ const styles = StyleSheet.create({
 	viewContainer: {
 		paddingBottom: 15,
 		flex: 1,
+		width: '100%',
 		justifyContent: "center",
 		alignItems: "flex-start",
 		display: "flex",
 		flexDirection: "row",
-		marginRight: 15
+		paddingLeft: 10,
+		paddingRight: 10
 	},
+	taskList: {
+		flex: 1
+	}
 });
 export default IndividualTaskList;

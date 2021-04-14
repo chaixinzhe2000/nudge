@@ -14,7 +14,7 @@ const ProfileImage = () => {
 					borderWidth: 2, borderColor: '#2cb890'}}>
 			<Image
 				style={styles.stretch}
-				source={{uri: 'https://st2.depositphotos.com/1009634/7235/v/600/depositphotos_72350117-stock-illustration-no-user-profile-picture-hand.jpg'}}
+				source={{uri: 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg'}}
 			/>
 			</View>
 			<Text style={styles.name}>Xinzhe</Text>
