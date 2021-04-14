@@ -1,77 +1,91 @@
 import React from "react";
 import { useState } from "react";
-import { View, Text, TextInput, Button, Platform, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Button, Platform, StyleSheet, TouchableOpacity, Image } from "react-native";
 import * as firebase from 'firebase/app';
 // import firebase from "firebase/app";
 // import "firebase/messaging";
-import { Permissions  } from 'expo';
+import { Permissions } from 'expo';
 import Constants from "expo-constants";
 import * as Notifications from 'expo-notifications';
 import { Feather } from '@expo/vector-icons';
+import getCameraPermissions from '../../util/UserPermission'
+import * as ImagePicker from 'expo-image-picker'
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
 }
 
 function Register() {
-  // Firebase create user collection and add user
-  // TODO: test this
-  const dbh = firebase.firestore();
+	// Firebase create user collection and add user
+	// TODO: test this
+	const dbh = firebase.firestore();
 
-  async function registerForPushNotificationsAsync() {
-    let token;
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-  
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-      });
-    }
-  
-    return token;
-  }
+	async function registerForPushNotificationsAsync() {
+		let token;
+		if (Constants.isDevice) {
+			const { status: existingStatus } = await Notifications.getPermissionsAsync();
+			let finalStatus = existingStatus;
+			if (existingStatus !== 'granted') {
+				const { status } = await Notifications.requestPermissionsAsync();
+				finalStatus = status;
+			}
+			if (finalStatus !== 'granted') {
+				alert('Failed to get push token for push notification!');
+				return;
+			}
+			token = (await Notifications.getExpoPushTokenAsync()).data;
+			console.log(token);
+		} else {
+			alert('Must use physical device for Push Notifications');
+		}
 
+		if (Platform.OS === 'android') {
+			Notifications.setNotificationChannelAsync('default', {
+				name: 'default',
+				importance: Notifications.AndroidImportance.MAX,
+				vibrationPattern: [0, 250, 250, 250],
+				lightColor: '#FF231F7C',
+			});
+		}
 
-  async function handleAddUser() {
-    const user = firebase.auth().currentUser;
-    
-    console.log("WE RAN TYHIS")
-    
-    if (user !== null) {
-      const userFCMToken = await registerForPushNotificationsAsync();
-      dbh.collection("User").doc(user.uid).set({
-        displayName: name,
-        email: email,
-        uid: user.uid,
-        messageToken: userFCMToken,
-        contacts: []
-      })
-      return true;
-    }
-    return false;
-  }
+		return token;
+	}
 
-  //----------------------------------------------------------------
+	async function handleAddUser() {
+		const user = firebase.auth().currentUser;
+
+		console.log("WE RAN TYHIS")
+
+		if (user !== null) {
+			const userFCMToken = await registerForPushNotificationsAsync();
+			dbh.collection("User").doc(user.uid).set({
+				displayName: name,
+				email: email,
+				uid: user.uid,
+				messageToken: userFCMToken,
+				contacts: []
+			})
+			return true;
+		}
+		return false;
+	}
+
+	const handlePickAvatar = async () => {
+		getCameraPermissions();
+		let result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			allowsEditing: true,
+			aspect: [4, 3]
+		})
+
+		if (!result.cancelled) {
+
+		}
+	}
+
+	//----------------------------------------------------------------
 	const [name, setName]: [string, any] = useState('');
-
+	const [imageUri, setImageUri]: [string, any] = useState('https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg')
 	const [email, setEmail]: [string, any] = useState('');
 	const [password, setPassword]: [string, any] = useState('');
 
@@ -80,7 +94,7 @@ function Register() {
 		firebase.auth().createUserWithEmailAndPassword(email, password)
 			.then((res) => {
 				console.log(res);
-        handleAddUser();
+				handleAddUser();
 			})
 			.catch((err) => {
 				console.log(err)
@@ -88,21 +102,28 @@ function Register() {
 	}
 	return (
 		<View style={styles.container}>
+			<TouchableOpacity onPress={handlePickAvatar}>
+				<Image
+					style={styles.profileImage}
+					source={{ uri: imageUri}}
+				/>
+
+			</TouchableOpacity>
 			<TextInput
 				placeholder="Your Name" placeholderTextColor='white' textAlign='center'
-				onChangeText={(text) => setName(text)} style={styles.input}/>
+				onChangeText={(text) => setName(text)} style={styles.input} />
 			<TextInput
 				placeholder="Your Email" placeholderTextColor='white' textAlign='center'
-				onChangeText={(text) => setEmail(text)} style={styles.input}/>
+				onChangeText={(text) => setEmail(text)} style={styles.input} />
 			<TextInput
 				placeholder="Password" placeholderTextColor='white' textAlign='center'
-				secureTextEntry={true} onChangeText={(text) => setPassword(text)} style={styles.input}/>
-			<TouchableOpacity onPress={() => {handleSignUp()}} >
+				secureTextEntry={true} onChangeText={(text) => setPassword(text)} style={styles.input} />
+			<TouchableOpacity onPress={() => { handleSignUp() }} >
 				<View style={styles.buttonDiv}>
 					<Text style={styles.text}>START NUDGING</Text>
 					<FeatherIcon name="arrow-right" color='#2cb9b0' />
 				</View>
-          	</TouchableOpacity>
+			</TouchableOpacity>
 		</View>
 	);
 }
@@ -155,7 +176,13 @@ const styles = StyleSheet.create({
 		minHeight: 55,
 		marginBottom: 10,
 		fontWeight: '500'
-	}
+	},
+	profileImage: {
+		width: 55,
+		height: 55,
+		marginRight: 10,
+		borderRadius: 90
+	},
 });
 
 export default Register;
