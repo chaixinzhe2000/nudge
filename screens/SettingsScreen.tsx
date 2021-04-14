@@ -6,6 +6,7 @@ import { useState } from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
 import { Feather } from '@expo/vector-icons';
+import ChangeNameModal from '../components/ChangeNameModal';
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
@@ -13,6 +14,8 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 
 export default function SettingsScreen() {
 
+  const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
+  
   function handleSignOut() {
     firebase.auth().signOut().then(() => {
       // Sign-out successful.
@@ -23,6 +26,8 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+      <ChangeNameModal setChangeNameModalOpen={setChangeNameModalOpen} changeNameModalOpen={changeNameModalOpen} />
+
 		<View style={styles.userContainer}>
 			<Image
 				style={styles.profileImage}
@@ -30,7 +35,7 @@ export default function SettingsScreen() {
 			/>
 			<Text style={styles.name}>Xinzhe Chai</Text>
 		</View>
-		<TouchableOpacity onPress={() => {handleSignOut()}} >
+		<TouchableOpacity onPress={() => {setChangeNameModalOpen(true)}} >
 			<View style={styles.nameDiv}>
 				<Text style={styles.altText}>Change Name</Text>
 				<FeatherIcon name="chevron-right" color='#2cb9b0' />

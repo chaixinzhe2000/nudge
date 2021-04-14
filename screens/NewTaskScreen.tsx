@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -16,6 +16,7 @@ export default function NewTaskScreen() {
   const [location, setLocation] = useState("");
   const [priority, setPriority] = useState("");
   const [receiverUid, setReceiverUid] = useState("");
+  const [contactsList, setContactsList] = useState([]);
 
   // data stuff
   const [date, setDate] = useState(new Date());
@@ -27,6 +28,17 @@ export default function NewTaskScreen() {
     setDate(currentDate);
   };
 
+  var getContacts = firebase.functions().httpsCallable('getContacts');
+
+
+  useEffect(() => {
+    async function getContactsCaller() {
+      await getContacts();
+    }
+    getContactsCaller();
+    console.log("contactsList");
+    console.log(contactsList);
+  },[])
 
 
   const db = firebase.firestore();
@@ -61,28 +73,29 @@ export default function NewTaskScreen() {
 
   // }
 
-  var getContacts = firebase.functions().httpsCallable('getContacts');
 
-  async function handleSubmit() {
+  async function handleGetContacts() {
     const user = firebase.auth().currentUser;
-
     if (user) {
       const toSend = {
       }
       getContacts(toSend)
       .then((result) => {
         console.log(result.data.contacts);
+        setContactsList(result.data.contacts);
+        return result.data.contacts;
       })
       .catch((error) => {
         // Getting the Error details.
         console.log(error.code)
         console.log(error.message)
         console.log(error.details)
+        return [];
       });
     } else {
       alert('Not logged in, please login again.');
+      return [];
     }
-
   }
 
   return (
@@ -139,7 +152,7 @@ export default function NewTaskScreen() {
         }
         buttonStyle={styles.submitButton}
         title="Send"
-        onPress={() => handleSubmit()}
+        // onPress={() => handleSubmit()}
 
       />
     </SafeAreaView>
