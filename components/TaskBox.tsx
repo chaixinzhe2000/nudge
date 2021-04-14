@@ -88,7 +88,6 @@ function TaskBox(props: ITaskBoxProps) {
 			<Text style={styles.title}>{props.title}</Text>
 			<Text style={styles.date}>{date}</Text>
 		</View>
- 
 	)
 }
 
