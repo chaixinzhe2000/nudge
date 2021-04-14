@@ -127,6 +127,7 @@ exports.addTask = functions.https.onCall(async (data, context) => {
     followUps: followUpIds[]
   }*/
   let taskName;
+  let extraDetails;
   let due;
   let location;
   let priority;
@@ -140,6 +141,7 @@ exports.addTask = functions.https.onCall(async (data, context) => {
     });
   } else {
     taskName = data.taskName;
+    extraDetails = data.taskName;
     due = data.due;
     location = data.location;
     priority = data.location;
@@ -167,6 +169,7 @@ exports.addTask = functions.https.onCall(async (data, context) => {
   // followUps: followUpIds[]
   const newTaskDoc = {
     taskName: taskName,
+    extraDetails: extraDetails,
     location: location,
     due: due,
     priority: priority,

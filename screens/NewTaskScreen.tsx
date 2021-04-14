@@ -10,116 +10,140 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function NewTaskScreen() {
 
-	const [taskName, setTaskName] = useState("");
-	const [receiverName, setReceiverName] = useState("");
-	const [date, setDate] = useState(new Date(1598051730000));
-	const [mode, setMode] = useState('datetime');
-	const [show, setShow] = useState(true);
+  const [taskName, setTaskName] = useState("");
+  const [extraDetails, setExtraDetails] = useState("");
+  const [receiverName, setReceiverName] = useState("");
+  const [location, setLocation] = useState("");
+  const [priority, setPriority] = useState("");
+  const [receiverUid, setReceiverUid] = useState("");
 
-	const onChange = (event, selectedDate) => {
-		const currentDate = selectedDate || date;
-		setShow(Platform.OS === 'ios');
-		setDate(currentDate);
-	};
+  // data stuff
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(true);
 
-
-	const db = firebase.firestore();
-
-
-	// async function handleSubmit() {
-	//   const user = firebase.auth().currentUser;
-
-	//   if (user) {
-	//     // // get user from db
-	//     // const userSearchQuery = dbh.collection('User').doc(user.uid);
-	//     // const userDoc = await userSearchQuery.get();
-	//     // if (!userDoc.exists) {
-	//     //   console.log("userDoc does not exist");
-	//     // } else {
-	//     //   console.log(userDoc.data);
-	//     // }
-
-	//     // // find receiver
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
 
 
-	//     const toSend = {
-	//       taskName: taskName,
-	//       timeStamp: Date.now(),
-	//       creatorId: user.uid,
-	//       creatorEmail: user.email,
-	//     }
-	//     dbh.collection("Task").add(toSend)
-	//   } else {
-	//     alert('Not logged in, please login again.');
-	//   }
 
-	// }
+  const db = firebase.firestore();
 
-	var getContacts = firebase.functions().httpsCallable('getContacts');
 
-	async function handleSubmit() {
-		const user = firebase.auth().currentUser;
+  // async function handleSubmit() {
+  //   const user = firebase.auth().currentUser;
 
-		if (user) {
-			const toSend = {
-			}
-			getContacts(toSend)
-				.then((result) => {
-					console.log(result.data.contacts);
-				})
-				.catch((error) => {
-					// Getting the Error details.
-					console.log(error.code)
-					console.log(error.message)
-					console.log(error.details)
-				});
-		} else {
-			alert('Not logged in, please login again.');
-		}
-	}
+  //   if (user) {
+  //     // // get user from db
+  //     // const userSearchQuery = dbh.collection('User').doc(user.uid);
+  //     // const userDoc = await userSearchQuery.get();
+  //     // if (!userDoc.exists) {
+  //     //   console.log("userDoc does not exist");
+  //     // } else {
+  //     //   console.log(userDoc.data);
+  //     // }
 
-	return (
-		<SafeAreaView style={styles.mainContainer}>
-			<TextInput
-				style={styles.input}
-				onChangeText={setTaskName}
-				placeholder="Task Name"
-				value={taskName}
-			/>
-			<TextInput
-				style={styles.input}
-				onChangeText={setReceiverName}
-				placeholder="Receiver's Name"
-				value={receiverName}
-			/>
-			<View>
-				<Text>Select Due Date: </Text>
-				{show && (
-					<DateTimePicker
-						testID="dateTimePicker"
-						value={date}
-						mode={'datetime'}
-						is24Hour={true}
-						display="default"
-						onChange={onChange}
-					/>
-				)}
-			</View>
-			<Button
-				icon={
-					<Icon
-						name="arrow-right"
-						size={15}
-						color="white"
-					/>
-				}
-				buttonStyle={styles.submitButton}
-				title="Send"
-				onPress={() => handleSubmit()}
+  //     // // find receiver
 
-			/>
-		</SafeAreaView>
-	);
+
+  //     const toSend = {
+  //       taskName: taskName,
+  //       timeStamp: Date.now(),
+  //       creatorId: user.uid,
+  //       creatorEmail: user.email,
+  //     }
+  //     dbh.collection("Task").add(toSend)
+  //   } else {
+  //     alert('Not logged in, please login again.');
+  //   }
+
+  // }
+
+  var getContacts = firebase.functions().httpsCallable('getContacts');
+
+  async function handleSubmit() {
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const toSend = {
+      }
+      getContacts(toSend)
+      .then((result) => {
+        console.log(result.data.contacts);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.log(error.code)
+        console.log(error.message)
+        console.log(error.details)
+      });
+    } else {
+      alert('Not logged in, please login again.');
+    }
+
+  }
+
+  return (
+    <SafeAreaView style={styles.mainContainer}>
+      <TextInput
+        style={styles.input}
+        onChangeText={setTaskName}
+        placeholder="Task Name"
+        value={taskName}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setReceiverName}
+        placeholder="Receiver's Name"
+        value={receiverName}
+      />
+      <View>
+      <TextInput
+        style={styles.input}
+        onChangeText={setExtraDetails}
+        placeholder="Extra Details"
+        value={extraDetails}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setLocation}
+        placeholder="Location"
+        value={location}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setPriority}
+        placeholder="Priority"
+        value={priority}
+      />
+      <Text>Select Due Date: </Text>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={'datetime'}
+          display="default"
+          onChange={onChange}
+        />
+      )}
+</View>
+      <Button
+        icon={
+          <Icon
+            name="arrow-right"
+            size={15}
+            color="white"
+          />
+        }
+        buttonStyle={styles.submitButton}
+        title="Send"
+        onPress={() => handleSubmit()}
+
+      />
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
