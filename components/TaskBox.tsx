@@ -81,7 +81,6 @@ function TaskBox(props: ITaskBoxProps) {
 			textDecorationLine: strikeThrough
 		},
 		timeDiv: {
-			display: 'flex',
 			flexDirection: 'row',
 			display: displayDate
 		},

@@ -55,6 +55,7 @@ function Register() {
 		const user = firebase.auth().currentUser;
 
 		console.log("WE RAN TYHIS")
+		let remoteUri: string = '';
 
 		if (user !== null) {
 			const userFCMToken = await registerForPushNotificationsAsync();
@@ -63,8 +64,15 @@ function Register() {
 				email: email,
 				uid: user.uid,
 				messageToken: userFCMToken,
-				contacts: []
+				contacts: [],
+				avatar: null
 			})
+			if (imageUri !== '') {
+				remoteUri = await uploadPhotoAsync(imageUri, `avatars/${user.uid}`)
+				dbh.collection("User").doc(user.uid).set(
+					{ avatar: remoteUri }, { merge: true }
+				)
+			}
 			return true;
 		}
 		return false;
@@ -83,14 +91,33 @@ function Register() {
 		}
 	}
 
+	const uploadPhotoAsync = async (uri, filename): Promise<string> => {
+		return new Promise(async (res, rej) => {
+			const response = await fetch(uri, filename);
+			const file = await response.blob();
+
+			let upload = firebase.storage().ref(filename).put(file);
+			upload.on(
+				"state_changed",
+				snapshot => { },
+				err => {
+					rej(err);
+				},
+				async () => {
+					const url = await upload.snapshot.ref.getDownloadURL()
+					res(url);
+				}
+			)
+		})
+	}
+
 	//----------------------------------------------------------------
 	const [name, setName]: [string, any] = useState('');
-	const [imageUri, setImageUri]: [string, any] = useState('https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg')
+	const [imageUri, setImageUri]: [string, any] = useState('')
 	const [email, setEmail]: [string, any] = useState('');
 	const [password, setPassword]: [string, any] = useState('');
 
 	const handleSignUp = () => {
-		console.log(email)
 		firebase.auth().createUserWithEmailAndPassword(email, password)
 			.then((res) => {
 				console.log(res);
@@ -105,7 +132,7 @@ function Register() {
 			<TouchableOpacity onPress={handlePickAvatar}>
 				<Image
 					style={styles.profileImage}
-					source={{ uri: imageUri}}
+					source={{ uri: imageUri ? imageUri : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 				/>
 
 			</TouchableOpacity>
