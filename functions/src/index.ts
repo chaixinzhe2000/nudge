@@ -91,7 +91,15 @@ exports.getContacts = functions.https.onCall(async (data, context) => {
   const doc = await currUserRef.get();
   if (doc.exists) {
     console.log(doc.get("contacts"));
-    return {status: true, contacts: doc.get("contacts")};
+    let listOfContacts: { uid: string; displayName: string; email: string; }[] = [];
+    const contactList = doc.get("contacts");
+    for (let i = 0; i < contactList.length; i++) {
+      const contactDoc = await db.collection("User").doc(contactList[i].uid).get();
+      listOfContacts.push({uid: contactList[i].uid, displayName: contactDoc.get("displayName"), email: contactList[i].email});
+      console.log("current listOfContacts:");
+      console.log(listOfContacts);
+    }
+    return {status: true, contacts: listOfContacts};
   } else {
     return {status: false, contacts: null};
   }
@@ -111,11 +119,11 @@ exports.addTask = functions.https.onCall(async (data, context) => {
     location: string,
     due: date,
     priority: string,
-    receiver: uid,
+    receiverUid: uid,
 
     completionStatus: string,
     timeCreated: date,
-    sender: uid,
+    senderUid: uid,
     followUps: followUpIds[]
   }*/
   let taskName;

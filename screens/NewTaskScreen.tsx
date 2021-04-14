@@ -52,7 +52,7 @@ export default function NewTaskScreen() {
       }
       getContacts(toSend)
       .then((result) => {
-        console.log(result);
+        console.log(result.data.contacts);
       })
       .catch((error) => {
         // Getting the Error details.
