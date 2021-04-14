@@ -1,42 +1,84 @@
 import * as React from 'react';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { SafeAreaView, StyleSheet, TextInput } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text } from 'react-native';
 import { useState } from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function NewTaskScreen() {
 
   const [taskName, setTaskName] = useState("");
+  const [extraDetails, setExtraDetails] = useState("");
   const [receiverName, setReceiverName] = useState("");
-  const dbh = firebase.firestore();
+  const [location, setLocation] = useState("");
+  const [priority, setPriority] = useState("");
+  const [receiverUid, setReceiverUid] = useState("");
+
+  // data stuff
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(true);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+
+
+  const db = firebase.firestore();
+
+
+  // async function handleSubmit() {
+  //   const user = firebase.auth().currentUser;
+
+  //   if (user) {
+  //     // // get user from db
+  //     // const userSearchQuery = dbh.collection('User').doc(user.uid);
+  //     // const userDoc = await userSearchQuery.get();
+  //     // if (!userDoc.exists) {
+  //     //   console.log("userDoc does not exist");
+  //     // } else {
+  //     //   console.log(userDoc.data);
+  //     // }
+
+  //     // // find receiver
+
+
+  //     const toSend = {
+  //       taskName: taskName,
+  //       timeStamp: Date.now(),
+  //       creatorId: user.uid,
+  //       creatorEmail: user.email,
+  //     }
+  //     dbh.collection("Task").add(toSend)
+  //   } else {
+  //     alert('Not logged in, please login again.');
+  //   }
+
+  // }
+
+  var getContacts = firebase.functions().httpsCallable('getContacts');
 
   async function handleSubmit() {
     const user = firebase.auth().currentUser;
 
     if (user) {
-      // // get user from db
-      // const userSearchQuery = dbh.collection('User').doc(user.uid);
-      // const userDoc = await userSearchQuery.get();
-      // if (!userDoc.exists) {
-      //   console.log("userDoc does not exist");
-      // } else {
-      //   console.log(userDoc.data);
-      // }
-
-      // // find receiver
-
-
       const toSend = {
-        taskName: taskName,
-        timeStamp: Date.now(),
-        creatorId: user.uid,
-        creatorEmail: user.email,
-        
       }
-      dbh.collection("Task").add(toSend)
+      getContacts(toSend)
+      .then((result) => {
+        console.log(result.data.contacts);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.log(error.code)
+        console.log(error.message)
+        console.log(error.details)
+      });
     } else {
       alert('Not logged in, please login again.');
     }
@@ -57,6 +99,36 @@ export default function NewTaskScreen() {
         placeholder="Receiver's Name"
         value={receiverName}
       />
+      <View>
+      <TextInput
+        style={styles.input}
+        onChangeText={setExtraDetails}
+        placeholder="Extra Details"
+        value={extraDetails}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setLocation}
+        placeholder="Location"
+        value={location}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setPriority}
+        placeholder="Priority"
+        value={priority}
+      />
+      <Text>Select Due Date: </Text>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={'datetime'}
+          display="default"
+          onChange={onChange}
+        />
+      )}
+</View>
       <Button
         icon={
           <Icon
