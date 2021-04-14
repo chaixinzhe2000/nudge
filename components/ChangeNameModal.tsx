@@ -70,6 +70,7 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
 		<View style={styles.inputDiv}>
 			<Text style={styles.title}>Change your name!</Text>
         	<TextInput
+				placeholder='Blueno Bear'
 				placeholderTextColor='#f9f7f7' textAlign='left'
           		style={styles.input}
           		onChangeText={setNewName}
@@ -79,7 +80,8 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
 		</View>
         <TouchableOpacity onPress={() => handleSubmit()} >
           <View style={styles.buttonDiv}>
-            <Text style={styles.text}>Change Name</Text>
+            <Text style={styles.text}>COMMIT CHANGES</Text>
+			<FeatherIcon name="chevron-right" color="white" />
           </View>
         </TouchableOpacity>
       </View>
