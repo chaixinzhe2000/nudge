@@ -100,6 +100,24 @@ export default function NewTaskScreen() {
         value={receiverName}
       />
       <View>
+      <TextInput
+        style={styles.input}
+        onChangeText={setExtraDetails}
+        placeholder="Extra Details"
+        value={extraDetails}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setLocation}
+        placeholder="Location"
+        value={location}
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setPriority}
+        placeholder="Priority"
+        value={priority}
+      />
       <Text>Select Due Date: </Text>
       {show && (
         <DateTimePicker
