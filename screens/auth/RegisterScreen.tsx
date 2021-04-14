@@ -79,7 +79,7 @@ function Register() {
 		})
 
 		if (!result.cancelled) {
-
+			setImageUri(result.uri)
 		}
 	}
 
