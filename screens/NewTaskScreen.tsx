@@ -11,9 +11,14 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 export default function NewTaskScreen() {
 
   const [taskName, setTaskName] = useState("");
+  const [extraDetails, setExtraDetails] = useState("");
   const [receiverName, setReceiverName] = useState("");
-  const [date, setDate] = useState(new Date(1598051730000));
-  const [mode, setMode] = useState('datetime');
+  const [location, setLocation] = useState("");
+  const [priority, setPriority] = useState("");
+  const [receiverUid, setReceiverUid] = useState("");
+
+  // data stuff
+  const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(true);
 
   const onChange = (event, selectedDate) => {
@@ -21,6 +26,7 @@ export default function NewTaskScreen() {
     setShow(Platform.OS === 'ios');
     setDate(currentDate);
   };
+
 
 
   const db = firebase.firestore();
@@ -100,7 +106,6 @@ export default function NewTaskScreen() {
           testID="dateTimePicker"
           value={date}
           mode={'datetime'}
-          is24Hour={true}
           display="default"
           onChange={onChange}
         />

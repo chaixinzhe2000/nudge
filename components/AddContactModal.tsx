@@ -16,7 +16,7 @@ export default function AddContactModal(props: IAddContactModalProps) {
 
 
   var addContact = firebase.functions().httpsCallable('addContact');
-
+  
 
   async function handleSubmit() {
     const user = firebase.auth().currentUser;
