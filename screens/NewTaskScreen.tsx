@@ -1,17 +1,30 @@
 import * as React from 'react';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { SafeAreaView, StyleSheet, TextInput } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text } from 'react-native';
 import { useState } from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function NewTaskScreen() {
 
   const [taskName, setTaskName] = useState("");
   const [receiverName, setReceiverName] = useState("");
-  const dbh = firebase.firestore();
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('datetime');
+  const [show, setShow] = useState(true);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+
+  const db = firebase.firestore();
+
 
   // async function handleSubmit() {
   //   const user = firebase.auth().currentUser;
@@ -51,15 +64,15 @@ export default function NewTaskScreen() {
       const toSend = {
       }
       getContacts(toSend)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        // Getting the Error details.
-        console.log(error.code)
-        console.log(error.message)
-        console.log(error.details)
-      });
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          // Getting the Error details.
+          console.log(error.code)
+          console.log(error.message)
+          console.log(error.details)
+        });
     } else {
       alert('Not logged in, please login again.');
     }
@@ -80,6 +93,19 @@ export default function NewTaskScreen() {
         placeholder="Receiver's Name"
         value={receiverName}
       />
+      <View>
+      <Text>Select Due Date: </Text>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={'datetime'}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      )}
+</View>
       <Button
         icon={
           <Icon
