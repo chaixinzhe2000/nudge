@@ -13,30 +13,53 @@ export default function NewTaskScreen() {
   const [receiverName, setReceiverName] = useState("");
   const dbh = firebase.firestore();
 
+  // async function handleSubmit() {
+  //   const user = firebase.auth().currentUser;
+
+  //   if (user) {
+  //     // // get user from db
+  //     // const userSearchQuery = dbh.collection('User').doc(user.uid);
+  //     // const userDoc = await userSearchQuery.get();
+  //     // if (!userDoc.exists) {
+  //     //   console.log("userDoc does not exist");
+  //     // } else {
+  //     //   console.log(userDoc.data);
+  //     // }
+
+  //     // // find receiver
+
+
+  //     const toSend = {
+  //       taskName: taskName,
+  //       timeStamp: Date.now(),
+  //       creatorId: user.uid,
+  //       creatorEmail: user.email,
+  //     }
+  //     dbh.collection("Task").add(toSend)
+  //   } else {
+  //     alert('Not logged in, please login again.');
+  //   }
+
+  // }
+
+  var getContacts = firebase.functions().httpsCallable('getContacts');
+
   async function handleSubmit() {
     const user = firebase.auth().currentUser;
 
     if (user) {
-      // // get user from db
-      // const userSearchQuery = dbh.collection('User').doc(user.uid);
-      // const userDoc = await userSearchQuery.get();
-      // if (!userDoc.exists) {
-      //   console.log("userDoc does not exist");
-      // } else {
-      //   console.log(userDoc.data);
-      // }
-
-      // // find receiver
-
-
       const toSend = {
-        taskName: taskName,
-        timeStamp: Date.now(),
-        creatorId: user.uid,
-        creatorEmail: user.email,
-        
       }
-      dbh.collection("Task").add(toSend)
+      getContacts(toSend)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.log(error.code)
+        console.log(error.message)
+        console.log(error.details)
+      });
     } else {
       alert('Not logged in, please login again.');
     }
