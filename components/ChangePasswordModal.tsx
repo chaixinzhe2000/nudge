@@ -53,18 +53,19 @@ export default function ChangePasswordModal(props: IChangePasswordModalProps) {
           </View>
     	</TouchableOpacity>
 		<View style={styles.inputDiv}>
-			<Text style={styles.title}>Change your name!</Text>
+			<Text style={styles.title}>Change your super secret password!</Text>
         	<TextInput
 				placeholderTextColor='#f9f7f7' textAlign='left'
           		style={styles.input}
           		onChangeText={setNewPassword}
           		value={newPassword}
         	/>
-			<Text style={styles.subtitle}>NEW NAME</Text>
+			<Text style={styles.subtitle}>NEW PASSWORD</Text>
+      <Text style={styles.subtitle}>{errorMessage}</Text>
 		</View>
         <TouchableOpacity onPress={() => handleSubmit()} >
           <View style={styles.buttonDiv}>
-            <Text style={styles.text}>Change Name</Text>
+            <Text style={styles.text}>Change Password</Text>
           </View>
         </TouchableOpacity>
       </View>

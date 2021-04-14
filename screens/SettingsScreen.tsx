@@ -7,6 +7,7 @@ import * as firebase from 'firebase'
 import 'firebase/firestore';
 import { Feather } from '@expo/vector-icons';
 import ChangeNameModal from '../components/ChangeNameModal';
+import ChangePasswordModal from '../components/ChangePasswordModal';
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
@@ -15,7 +16,7 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 export default function SettingsScreen() {
 
   const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
-  
+  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
   function handleSignOut() {
     firebase.auth().signOut().then(() => {
       // Sign-out successful.
@@ -27,7 +28,7 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={styles.mainContainer}>
       <ChangeNameModal setChangeNameModalOpen={setChangeNameModalOpen} changeNameModalOpen={changeNameModalOpen} />
-
+      <ChangePasswordModal setChangePasswordModalOpen={setChangePasswordModalOpen} changePasswordModalOpen={changePasswordModalOpen} />
 		<View style={styles.userContainer}>
 			<Image
 				style={styles.profileImage}
@@ -42,7 +43,7 @@ export default function SettingsScreen() {
 			</View>
         </TouchableOpacity>
 		<View style={styles.separator}></View>
-		<TouchableOpacity onPress={() => {handleSignOut()}} >
+		<TouchableOpacity onPress={() => {setChangePasswordModalOpen(true)}} >
 			<View style={styles.passDiv}>
 				<Text style={styles.altText}>Change Password</Text>
 				<FeatherIcon name="chevron-right" color='#2cb9b0' />
