@@ -1,6 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Moment from "moment";
+import { Feather } from '@expo/vector-icons';
+
+function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
+	return <Feather size={14} style={{ marginTop: 1 }} {...props} />;
+}
 
 interface ITaskBoxProps {
 	priority: String,
@@ -75,18 +80,26 @@ function TaskBox(props: ITaskBoxProps) {
 			color: 'white',
 			textDecorationLine: strikeThrough
 		},
+		timeDiv: {
+			display: 'flex',
+			flexDirection: 'row',
+			display: displayDate
+		},
 		date: {
 			fontWeight: '400',
 			fontSize: 14,
 			color: 'white',
-			display: displayDate
+			paddingLeft: 4
 		}
 	});
 
 	return (
 		<View style={styles.boxDiv}>
 			<Text style={styles.title}>{props.title}</Text>
-			<Text style={styles.date}>{date}</Text>
+			<View style={styles.timeDiv}>
+				<FeatherIcon name="clock" color='white' />
+				<Text style={styles.date}>{date}</Text>
+			</View>
 		</View>
 	)
 }
