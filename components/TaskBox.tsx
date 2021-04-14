@@ -32,7 +32,14 @@ function TaskBox(props: ITaskBoxProps) {
 		const uDate = date.toUpperCase();
 		const time = m.format('h:mm A');
 
-		return (uDate + ' @ ' + time);
+		const calendar = (m.calendar().split(' at'))[0];
+		if (calendar === 'Today') {
+			return ('TDY ' + time);
+		} else if (calendar === 'Tomorrow') {
+			return ('TMR ' + time);
+		} else {
+			return (uDate);
+		}
 	}
 
 	const setDisplay = (pLevel: String) => {
@@ -55,7 +62,6 @@ function TaskBox(props: ITaskBoxProps) {
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'space-between',
-			width: 295,
 			minHeight: 30,
 			backgroundColor: backgroundColor,
 			marginTop: 5,
@@ -71,7 +77,7 @@ function TaskBox(props: ITaskBoxProps) {
 		},
 		date: {
 			fontWeight: '400',
-			fontSize: 15,
+			fontSize: 14,
 			color: 'white',
 			display: displayDate
 		}
