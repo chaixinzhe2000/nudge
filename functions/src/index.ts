@@ -30,10 +30,8 @@ exports.addContact = functions.https.onCall(async (data, context) => {
   if (!context.auth) {
     return ({
       status: false,
-      targetEmail: targetEmail,
       reason: "no auth"
-    }
-    );
+    });
   } else {
     uid = context.auth.uid;
     userEmail = context.auth.token.email;
@@ -188,4 +186,24 @@ exports.addTask = functions.https.onCall(async (data, context) => {
   };
 });
 
-
+exports.changeName = functions.https.onCall(async (data, context) => {
+  const newName = data.newName;
+  let uid;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    uid = context.auth.uid;
+  }
+  // uid = data.uid;
+  // userEmail = data.email;
+  const db = admin.firestore();
+  const userRef = db.collection("User").doc(uid);
+  const updateRes = await userRef.update({ displayName: newName })
+  console.log(updateRes);
+  return {
+    status: true,
+  };
+});
