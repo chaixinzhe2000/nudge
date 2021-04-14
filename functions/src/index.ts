@@ -24,23 +24,22 @@ admin.initializeApp();
 //     // [END adminSdkAdd]
 //   });
 exports.addContact = functions.https.onCall(async (data, context) => {
-	const targetEmail = data.targetEmail;
-	let uid;
-	let userEmail;
-	if (!context.auth) {
-		return ({
-			status: false,
-			targetEmail: targetEmail,
-			reason: "no auth"
-		}
-		);
-	} else {
-		uid = context.auth.uid;
-		userEmail = context.auth.token.email;
-	}
-	// uid = data.uid;
-	// userEmail = data.email;
-	const db = admin.firestore();
+
+  const targetEmail = data.targetEmail;
+  let uid;
+  let userEmail;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    uid = context.auth.uid;
+    userEmail = context.auth.token.email;
+  }
+  // uid = data.uid;
+  // userEmail = data.email;
+  const db = admin.firestore();
 
 	const targetUsersRef = db.collection("User").where("email", "==", targetEmail);
 	const snapshot = await targetUsersRef.get();
@@ -76,33 +75,33 @@ exports.addContact = functions.https.onCall(async (data, context) => {
 });
 
 exports.getContacts = functions.https.onCall(async (data, context) => {
-	let uid;
-	if (!context.auth) {
-		return ({
-			status: false,
-			reason: "no auth"
-		}
-		);
-	} else {
-		uid = context.auth.uid;
-	}
-	const db = admin.firestore();
-	const currUserRef = db.collection("User").doc(uid);
-	const doc = await currUserRef.get();
-	if (doc.exists) {
-		console.log(doc.get("contacts"));
-		let listOfContacts: { uid: string; displayName: string; email: string; }[] = [];
-		const contactList = doc.get("contacts");
-		for (let i = 0; i < contactList.length; i++) {
-			const contactDoc = await db.collection("User").doc(contactList[i].uid).get();
-			listOfContacts.push({ uid: contactList[i].uid, displayName: contactDoc.get("displayName"), email: contactList[i].email });
-			console.log("current listOfContacts:");
-			console.log(listOfContacts);
-		}
-		return { status: true, contacts: listOfContacts };
-	} else {
-		return { status: false, contacts: null };
-	}
+  let uid;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    }
+    );
+  } else {
+    uid = context.auth.uid;
+  }
+  const db = admin.firestore();
+  const currUserRef = db.collection("User").doc(uid);
+  const doc = await currUserRef.get();
+  if (doc.exists) {
+    console.log(doc.get("contacts"));
+    let listOfContacts: { uid: string; displayName: string; email: string; avatar: string}[] = [];
+    const contactList = doc.get("contacts");
+    for (let i = 0; i < contactList.length; i++) {
+      const contactDoc = await db.collection("User").doc(contactList[i].uid).get();
+      listOfContacts.push({uid: contactList[i].uid, displayName: contactDoc.get("displayName"), email: contactList[i].email, avatar: contactList[i].avatar});
+      console.log("current listOfContacts:");
+      console.log(listOfContacts);
+    }
+    return {status: true, contacts: listOfContacts};
+  } else {
+    return {status: false, contacts: null};
+  }
 })
 
 exports.addTask = functions.https.onCall(async (data, context) => {
@@ -188,4 +187,24 @@ exports.addTask = functions.https.onCall(async (data, context) => {
 	};
 });
 
-
+exports.changeName = functions.https.onCall(async (data, context) => {
+  const newName = data.newName;
+  let uid;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    uid = context.auth.uid;
+  }
+  // uid = data.uid;
+  // userEmail = data.email;
+  const db = admin.firestore();
+  const userRef = db.collection("User").doc(uid);
+  const updateRes = await userRef.update({ displayName: newName })
+  console.log(updateRes);
+  return {
+    status: true,
+  };
+});

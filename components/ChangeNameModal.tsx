@@ -5,58 +5,53 @@ import * as firebase from 'firebase'
 import 'firebase/firestore';
 import "firebase/functions";
 import { Feather } from '@expo/vector-icons';
+import { user } from "firebase-functions/lib/providers/auth";
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={22} style={{ marginTop: -1 }} {...props} />;
 }
 
-interface IAddContactModalProps {
-  addContactModalOpen: boolean,
-  setAddContactModalOpen: any,
+interface IChangeNameModalProps {
+  changeNameModalOpen: boolean,
+  setChangeNameModalOpen: any,
 }
 
-export default function AddContactModal(props: IAddContactModalProps) {
+export default function ChangeNameModal(props: IChangeNameModalProps) {
+  const user = firebase.auth().currentUser;
 
-  const [newContactEmail, setNewContactEmail] = useState('');
+  const [newName, setNewName] = useState(user ? user.displayName : "");
 
-  var addContact = firebase.functions().httpsCallable('addContact');
+  var changeName = firebase.functions().httpsCallable('changeName');
 
   async function handleSubmit() {
     const user = firebase.auth().currentUser;
 
     if (user) {
-      if (user.email === newContactEmail) {
-        setNewContactEmail('');
-        alert('You cannot add yourself as a contact. Please try again.');
-        return;
-      }
-      
+
       const toSend = {
-        targetEmail: newContactEmail,
-        // email: user.email,
-        // uid: user.uid
+        newName: newName,
       }
-      addContact(toSend)
-      .then((result) => {
-        console.log(result);
-        if (result.data.status === false) {
-          setNewContactEmail('');
-          alert('No contact for this email found.');
-          return;
-        } else {
-          setNewContactEmail('');
-          props.setAddContactModalOpen(false);
-        }
-      })
-      .catch((error) => {
-        // Getting the Error details.
-        var code = error.code;
-        var message = error.message;
-        var details = error.details;
-        console.log(code)
-        console.log(message)
-        console.log(details)
-      });
+      changeName(toSend)
+        .then((result) => {
+          console.log(result);
+          if (result.data.status === false) {
+            setNewName(user ? user.displayName : "");
+            alert('Failed to change name. Please try again.');
+            return;
+          } else {
+            setNewName('');
+            props.setChangeNameModalOpen(false);
+          }
+        })
+        .catch((error) => {
+          // Getting the Error details.
+          var code = error.code;
+          var message = error.message;
+          var details = error.details;
+          console.log(code)
+          console.log(message)
+          console.log(details)
+        });
     } else {
       alert('Not logged in, please login again.');
     }
@@ -64,33 +59,29 @@ export default function AddContactModal(props: IAddContactModalProps) {
   }
 
   return (
-    <Modal visible={props.addContactModalOpen} animationType='slide'>
+    <Modal visible={props.changeNameModalOpen} animationType='slide'>
       <View style={styles.modalContent}>
-	  	<TouchableOpacity onPress={() => props.setAddContactModalOpen(false)} >
+	  	<TouchableOpacity onPress={() => props.setChangeNameModalOpen(false)} >
           <View style={styles.closeButton}>
 		  	<FeatherIcon name="x" color='#2cb9b0' />
             <Text style={styles.close}>CLOSE</Text>
           </View>
     	</TouchableOpacity>
 		<View style={styles.inputDiv}>
-			<Text style={styles.title}>Find a Nudge pal!</Text>
+			<Text style={styles.title}>Change your name!</Text>
         	<TextInput
 				placeholderTextColor='#f9f7f7' textAlign='left'
           		style={styles.input}
-          		onChangeText={setNewContactEmail}
-          		value={newContactEmail}
-          		placeholder={'hello@nudge.com'}
+          		onChangeText={setNewName}
+          		value={newName || ""}
         	/>
-			<Text style={styles.subtitle}>EMAIL</Text>
+			<Text style={styles.subtitle}>NEW NAME</Text>
 		</View>
-		{/* <View style={styles.buttonWrapper}> */}
         <TouchableOpacity onPress={() => handleSubmit()} >
           <View style={styles.buttonDiv}>
-            {/* <Text style={styles.text}>Add Contact</Text> */}
-			<FeatherIcon name='user-plus' color='white' />
+            <Text style={styles.text}>Change Name</Text>
           </View>
         </TouchableOpacity>
-		{/* </View> */}
       </View>
     </Modal>
   )
@@ -101,9 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-	marginTop: 60,
-	borderWidth: 3,
-	borderColor: 'red'
+	marginTop: 60
   },
   closeButton: {
 	display: 'flex',
@@ -148,28 +137,24 @@ const styles = StyleSheet.create({
 	paddingLeft: 8,
 	color: '#2cb9b0'
   },
-  buttonWrapper: {
-	display: 'flex',
-	justifyContent: 'center',
-	alignItems: 'center'
-  },
   buttonDiv: {
-	flex: 1,
+	  width: '100%',
+	  minWidth: 345,
 	backgroundColor: '#2cb9b0',
-	display: 'flex',
-	justifyContent: 'space-between',
-	alignItems: 'center',
-	borderRadius: 10,
-	maxHeight: 50,
-	marginLeft: 25,
-	marginRight: 15
+		minHeight: 50,
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		flexDirection: 'row',
+		borderRadius: 10,
+		marginBottom: 12,
+		marginLeft: 25,
+		paddingLeft: 20
   },
   text: {
     color: 'white',
     fontSize: 18,
-    fontWeight: '700',
-	paddingLeft: 15,
-	paddingRight: 15
+    fontWeight: '700'
   },
 })
 

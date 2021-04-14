@@ -2,11 +2,10 @@ import * as React from 'react';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text, TouchableOpacity, Image } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 
 interface IContact {
 	uid: string,
@@ -38,17 +37,13 @@ export default function NewTaskScreen() {
 
 	var getContacts = firebase.functions().httpsCallable('getContacts');
 
-	React.useEffect(() => {
-		getContacts({})
-			.then((result) => {
-				setContactList(result.data.contacts);
-			})
-			.catch((error) => {
-				console.log(error.code)
-				console.log(error.message)
-				console.log(error.details)
-			});
-	}, [])
+	useEffect(() => {
+		async function getContactsCaller() {
+		  await getContacts();
+		}
+		getContactsCaller();
+		console.log("contactsList");
+	  },[])
 
 	async function handleSubmit() {
 		const user = firebase.auth().currentUser;
@@ -70,6 +65,7 @@ export default function NewTaskScreen() {
 	const handleSelectContact = (e) => {
 		setReceiverUid(e.target.getAttribute('uid'))
 	}
+
 
 	const contactListElement = contactList.map((contact: IContact) =>
 		<TouchableOpacity onPress={e => {handleSelectContact(e)}} key={contact.uid}>
