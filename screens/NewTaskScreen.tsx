@@ -64,15 +64,15 @@ export default function NewTaskScreen() {
       const toSend = {
       }
       getContacts(toSend)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((error) => {
-          // Getting the Error details.
-          console.log(error.code)
-          console.log(error.message)
-          console.log(error.details)
-        });
+      .then((result) => {
+        console.log(result.data.contacts);
+      })
+      .catch((error) => {
+        // Getting the Error details.
+        console.log(error.code)
+        console.log(error.message)
+        console.log(error.details)
+      });
     } else {
       alert('Not logged in, please login again.');
     }
