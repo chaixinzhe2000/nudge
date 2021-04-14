@@ -37,6 +37,14 @@ export default function AddContactModal(props: IAddContactModalProps) {
       addContact(toSend)
       .then((result) => {
         console.log(result);
+        if (result.data.status === 'false') {
+          setNewContactEmail('');
+          alert('No contact for this email found.');
+          return;
+        } else {
+          setNewContactEmail('');
+          props.setAddContactModalOpen(false);
+        }
       })
       .catch((error) => {
         // Getting the Error details.
