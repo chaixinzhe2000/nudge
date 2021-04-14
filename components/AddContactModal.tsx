@@ -83,11 +83,14 @@ export default function AddContactModal(props: IAddContactModalProps) {
         	/>
 			<Text style={styles.subtitle}>EMAIL</Text>
 		</View>
+		{/* <View style={styles.buttonWrapper}> */}
         <TouchableOpacity onPress={() => handleSubmit()} >
           <View style={styles.buttonDiv}>
-            <Text style={styles.text}>Add Contact</Text>
+            {/* <Text style={styles.text}>Add Contact</Text> */}
+			<FeatherIcon name='user-plus' color='white' />
           </View>
         </TouchableOpacity>
+		{/* </View> */}
       </View>
     </Modal>
   )
@@ -98,7 +101,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-	marginTop: 60
+	marginTop: 60,
+	borderWidth: 3,
+	borderColor: 'red'
   },
   closeButton: {
 	display: 'flex',
@@ -143,24 +148,28 @@ const styles = StyleSheet.create({
 	paddingLeft: 8,
 	color: '#2cb9b0'
   },
+  buttonWrapper: {
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center'
+  },
   buttonDiv: {
-	  width: '100%',
-	  minWidth: 345,
+	flex: 1,
 	backgroundColor: '#2cb9b0',
-		minHeight: 50,
-		display: 'flex',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		flexDirection: 'row',
-		borderRadius: 10,
-		marginBottom: 12,
-		marginLeft: 25,
-		paddingLeft: 20
+	display: 'flex',
+	justifyContent: 'space-between',
+	alignItems: 'center',
+	borderRadius: 10,
+	maxHeight: 50,
+	marginLeft: 25,
+	marginRight: 15
   },
   text: {
     color: 'white',
     fontSize: 18,
-    fontWeight: '700'
+    fontWeight: '700',
+	paddingLeft: 15,
+	paddingRight: 15
   },
 })
 
