@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   closeButton: {
-    marginTop:599
+    marginTop: 599
   }
 })
 
