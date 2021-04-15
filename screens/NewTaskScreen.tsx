@@ -109,9 +109,10 @@ export default function NewTaskScreen() {
 	return (
 		<SafeAreaView style={styles.mainContainer}>
 			<TextInput
-				style={styles.input}
+				style={styles.taskName}
 				onChangeText={setTaskName}
-				placeholder="Task Name"
+				placeholder="Enter task name"
+				placeholderTextColor="#2cb9b0"
 				value={taskName}
 			/>
 			<View>
@@ -173,8 +174,15 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: '100%',
 		justifyContent: 'flex-start',
-		borderColor: 'blue',
-		borderWidth: 3,
+		marginLeft: 15
+	},
+	taskName: {
+		height: 40,
+		width: '90%',
+		fontSize: 20,
+		marginTop: 20,
+		color: 'black',
+		fontWeight: '700'
 	},
 	input: {
 		height: 40,
