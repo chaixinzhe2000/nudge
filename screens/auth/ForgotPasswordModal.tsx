@@ -11,77 +11,61 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 	return <Feather size={22} style={{ marginTop: -1 }} {...props} />;
 }
 
-interface IChangeNameModalProps {
-  changeNameModalOpen: boolean,
-  setChangeNameModalOpen: any,
+interface IForgotPasswordModal {
+  forgotPasswordModalOpen: boolean,
+  setForgotPasswordModalOpen: any,
 }
 
-export default function ChangeNameModal(props: IChangeNameModalProps) {
+export default function ChangePasswordModal(props: IForgotPasswordModal) {
   const user = firebase.auth().currentUser;
 
-  const [newName, setNewName] = useState(user ? user.displayName : "");
-
-  var changeName = firebase.functions().httpsCallable('changeName');
+  const [newPassword, setNewPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   async function handleSubmit() {
     const user = firebase.auth().currentUser;
-
     if (user) {
-
-      const toSend = {
-        newName: newName,
-      }
-      changeName(toSend)
-        .then((result) => {
-          console.log(result);
-          if (result.data.status === false) {
-            setNewName(user ? user.displayName : "");
-            alert('Failed to change name. Please try again.');
-            return;
-          } else {
-            setNewName('');
-            props.setChangeNameModalOpen(false);
-          }
+      user.updatePassword(newPassword)
+        .then(() => {
+          setNewPassword('');
+          setErrorMessage('');
+          props.setForgotPasswordModalOpen(false);
         })
         .catch((error) => {
-          // Getting the Error details.
-          var code = error.code;
-          var message = error.message;
-          var details = error.details;
-          console.log(code)
-          console.log(message)
-          console.log(details)
+          setNewPassword('');
+          setErrorMessage('Oh no! Failed to update password!');
+          console.log(error.code)
+          console.log(error.message)
+          console.log(error.details)
         });
     } else {
       alert('Not logged in, please login again.');
     }
-
   }
 
   return (
-    <Modal visible={props.changeNameModalOpen} animationType='slide'>
+    <Modal visible={props.forgotPasswordModalOpen} animationType='slide'>
       <View style={styles.modalContent}>
-	  	<TouchableOpacity onPress={() => props.setChangeNameModalOpen(false)} >
+	  	<TouchableOpacity onPress={() => props.setForgotPasswordModalOpen(false)} >
           <View style={styles.closeButton}>
 		  	<FeatherIcon name="x" color='#2cb9b0' />
             <Text style={styles.close}>CLOSE</Text>
           </View>
     	</TouchableOpacity>
 		<View style={styles.inputDiv}>
-			<Text style={styles.title}>Change your name!</Text>
+			<Text style={styles.title}>Change your super secret password!</Text>
         	<TextInput
-				placeholder='Blueno Bear'
 				placeholderTextColor='#f9f7f7' textAlign='left'
           		style={styles.input}
-          		onChangeText={setNewName}
-          		value={newName || ""}
+          		onChangeText={setNewPassword}
+          		value={newPassword}
         	/>
-			<Text style={styles.subtitle}>NEW NAME</Text>
+			<Text style={styles.subtitle}>NEW PASSWORD</Text>
+      <Text style={styles.subtitle}>{errorMessage}</Text>
 		</View>
         <TouchableOpacity onPress={() => handleSubmit()} >
           <View style={styles.buttonDiv}>
-            <Text style={styles.text}>COMMIT CHANGES</Text>
-			<FeatherIcon name="chevron-right" color="white" />
+            <Text style={styles.text}>Change Password</Text>
           </View>
         </TouchableOpacity>
       </View>

@@ -129,12 +129,16 @@ function Register() {
 	}
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity onPress={handlePickAvatar}>
+			<View style={{display: 'flex', alignItems: 'center'}}>
+				<Text style={styles.welcome}>Let's get you</Text>
+				<Text style={styles.nudge}>setup.</Text>
+			</View>
+			<TouchableOpacity onPress={handlePickAvatar} style={styles.profileDiv}>
 				<Image
 					style={styles.profileImage}
 					source={{ uri: imageUri ? imageUri : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 				/>
-
+				<Text style={styles.subtitle}>CHOOSE PROFILE</Text>
 			</TouchableOpacity>
 			<TextInput
 				placeholder="Your Name" placeholderTextColor='white' textAlign='center'
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#2cb9b0',
-		paddingTop: 90,
+		paddingTop: 30,
 		paddingLeft: 30,
 		paddingRight: 30
 	},
@@ -169,10 +173,15 @@ const styles = StyleSheet.create({
 		color: 'white'
 	},
 	nudge: {
-		fontSize: 40,
+		fontSize: 39,
 		fontWeight: '700',
 		color: 'white',
 		marginBottom: 45
+	},
+	profileDiv: {
+		display: 'flex',
+		alignItems: 'center',
+		marginBottom: 35
 	},
 	buttonDiv: {
 		backgroundColor: 'white',
@@ -205,11 +214,17 @@ const styles = StyleSheet.create({
 		fontWeight: '500'
 	},
 	profileImage: {
-		width: 55,
-		height: 55,
+		width: 80,
+		height: 80,
 		marginRight: 10,
-		borderRadius: 90
+		borderRadius: 90,
+		marginBottom: 10
 	},
+	subtitle: {
+		color: 'white',
+		fontWeight: '700',
+		fontSize: 15
+	}
 });
 
 export default Register;
