@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions";
 // import * as firebase from "firebase";
 import * as admin from "firebase-admin";
+import * as Notifications from 'expo-notifications';
+import { Expo } from 'expo-server-sdk';
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -182,10 +184,27 @@ exports.addTask = functions.https.onCall(async (data, context) => {
 	}
 	const addTaskRes = await db.collection("Task").add(newTaskDoc);
 	console.log(addTaskRes);
+
+
+  // // EXPO NOTIFICATIONS:
+  // // Create a new Expo SDK client
+  // // optionally providing an access token if you have enabled push security
+  // let expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
+  // const toSend = {
+  //     to: receiverDoc.get("messageToken"),
+  //     sound: 'default',
+  //     body: 'This is a test notification',
+  //     data: { withSome: 'data' },
+  // };
+  // let notifications = [toSend];
+  // expo.sendPushNotificationsAsync(notifications)
+
 	return {
 		status: true,
 		addTaskRes: addTaskRes,
 	};
+
+  
 });
 
 exports.changeName = functions.https.onCall(async (data, context) => {
@@ -212,6 +231,7 @@ exports.changeName = functions.https.onCall(async (data, context) => {
 
 
 exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
+  
 	/* send response/put in database: {
 	  taskName: string,
 	  location: string,
@@ -265,3 +285,53 @@ exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
   }
   return ({status: true, tasks: tasksBySenderMap, listOfSenders: listOfSenders});
 })
+
+
+const sendNotifications = async (expo, messages) => {
+  const chunks = expo.chunkPushNotifications(messages);
+  const tickets = [];
+  for (const chunk of chunks) {
+    try {
+      const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+      tickets.push(...ticketChunk);
+    } catch (error) {
+      console.error("error sending notifications", error);
+    }
+  }
+
+  return tickets;
+}
+
+// exports.sendReminders = functions.https.onRequest(async (req, res) => {
+//   if (req.method !== 'POST') {
+//     res.status(400).send('What are you even doing?');
+//     return;
+//   }
+
+//   const expo = new Expo();
+  
+//   // You can either get these tokens from the database
+//   // or pass them in your request
+//   const tokens: string[] = [];
+  
+//   const messages = [];
+//   for(token of tokens) {
+//     if (!Expo.isExpoPushToken(token)) {
+//       console.error(`Push token ${token} is not a valid Expo push token`);
+//       continue;
+//     }
+//     messages.push({
+//       to: token,
+//       title: 'Test Title',
+//       body: 'Test body'
+//     });
+//   }
+
+//   try {
+//     await sendNotifications(expo, messages);
+//   } catch (error) {
+//     console.log('error', error);
+//   }
+
+//   res.send(200).send('Notifications sent successfully');
+// })
