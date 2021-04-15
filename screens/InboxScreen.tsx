@@ -9,7 +9,6 @@ import TaskModal from '../components/TaskModal';
 
 export default function InboxScreen(props) {
 
-
 	var getReceivedTasks = firebase.functions().httpsCallable('getReceivedTasks');
 
 	React.useEffect(() => {
@@ -21,7 +20,7 @@ export default function InboxScreen(props) {
 				console.log(taskResponse.data.listOfSenders.length)
 			}
 		}
-		getTasksCaller();
+		setInterval(() => getTasksCaller(), 2000)
 	}, [])
 
 	const [taskBySenderMap, setTaskBySenderMap] = React.useState(new Map());
@@ -31,7 +30,7 @@ export default function InboxScreen(props) {
 	const [selectedUser, setSelectedUser] = React.useState({});
 
 	const TasksGroup = listOfSenders.map((user: any) =>
-		<IndividualTaskList 
+		<IndividualTaskList
 			user={user} setSelectedUser={setSelectedUser}
 			selectedTask={selectedTask} setSelectedTask={setSelectedTask}
 			taskModalOpen={taskModalOpen} setTaskModalOpen={setTaskModalOpen}
@@ -48,14 +47,14 @@ export default function InboxScreen(props) {
 				<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
 					selectedTask={selectedTask} setSelectedTask={setSelectedTask}
 					selectedUser={selectedUser} setSelectedUser={setSelectedUser}
-				 />
+				/>
 				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 				<Text style={styles.favorites}>Favorites</Text>
 				<ScrollView horizontal={true}
 					contentContainerStyle={styles.favoritesContainer}
 					showsHorizontalScrollIndicator={false}
 				>
-				{HorizontalAvatar}
+					{HorizontalAvatar}
 				</ScrollView>
 				<View style={styles.scrollContainer}>
 					{TasksGroup}

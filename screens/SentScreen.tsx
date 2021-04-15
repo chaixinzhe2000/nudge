@@ -6,6 +6,8 @@ import ProfileImage from '../components/ProfileImage';
 import TaskBox from '../components/TaskBox';
 import { Text, View } from '../components/Themed';
 import * as firebase from 'firebase'
+import TaskModal from '../components/TaskModal';
+import TaskModalSender from '../components/TaskModalSender';
 
 export default function SentScreen(props) {
 
@@ -19,15 +21,25 @@ export default function SentScreen(props) {
 				setListOfReceivers(taskResponse.data.listOfReceivers);
 			}
 		}
-		getTasksCaller();
+		setInterval(() => getTasksCaller(), 2000)
 	}, [])
 
 	const [taskByReceiverMap, setTaskByReceiverMap] = React.useState(new Map());
 	const [listOfReceivers, setListOfReceivers] = React.useState([]);
 
+	const [selectedTask, setSelectedTask] = React.useState({});
+	const [taskModalOpen, setTaskModalOpen] = React.useState(false);
+	const [selectedUser, setSelectedUser] = React.useState({});
+
 
 	const TasksGroup = listOfReceivers.map((user: any) =>
-		<IndividualTaskList key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskByReceiverMap} />
+		<IndividualTaskList
+
+			user={user} setSelectedUser={setSelectedUser}
+			selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+			taskModalOpen={taskModalOpen} setTaskModalOpen={setTaskModalOpen}
+
+			key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskByReceiverMap} />
 	)
 
 	const HorizontalAvatar = listOfReceivers.map((user: any) =>
@@ -37,6 +49,10 @@ export default function SentScreen(props) {
 	return (
 		<>
 			<ScrollView style={{ backgroundColor: 'white' }}>
+				<TaskModalSender setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
+					selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+					selectedUser={selectedUser} setSelectedUser={setSelectedUser}
+				/>
 				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 				<Text style={styles.favorites}>Favorites</Text>
 				<ScrollView horizontal={true}
