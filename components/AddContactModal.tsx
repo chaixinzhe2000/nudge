@@ -7,7 +7,7 @@ import "firebase/functions";
 import { Feather } from '@expo/vector-icons';
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
-	return <Feather size={22} style={{ marginTop: -1 }} {...props} />;
+	return <Feather size={22} style={{ marginTop: -2 }} {...props} />;
 }
 
 interface IAddContactModalProps {
@@ -75,7 +75,7 @@ export default function AddContactModal(props: IAddContactModalProps) {
 				<View style={styles.inputDiv}>
 					<Text style={styles.title}>Find a Nudge pal!</Text>
 					<TextInput
-						placeholderTextColor='#A9A9A9' textAlign='left'
+						placeholderTextColor='#a9a9a9' textAlign='left'
 						style={styles.input}
 						onChangeText={setNewContactEmail}
 						value={newContactEmail}
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
 		paddingRight: 20
 	},
 	close: {
-		fontSize: 18,
+		fontSize: 16,
 		fontWeight: '700'
 	},
 	inputDiv: {

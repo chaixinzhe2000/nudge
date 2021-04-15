@@ -8,7 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import { user } from "firebase-functions/lib/providers/auth";
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
-	return <Feather size={22} style={{ marginTop: -1 }} {...props} />;
+	return <Feather size={22} style={{ marginTop: -2 }} {...props} />;
 }
 
 interface IChangeNameModalProps {
@@ -71,19 +71,18 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
 			<Text style={styles.title}>Change your name!</Text>
         	<TextInput
 				placeholder='Blueno Bear'
-				placeholderTextColor='#f9f7f7' textAlign='left'
+				placeholderTextColor='#a9a9a9' textAlign='left'
           		style={styles.input}
           		onChangeText={setNewName}
           		value={newName || ""}
         	/>
 			<Text style={styles.subtitle}>NEW NAME</Text>
 		</View>
-        <TouchableOpacity onPress={() => handleSubmit()} >
-          <View style={styles.buttonDiv}>
-            <Text style={styles.text}>COMMIT CHANGES</Text>
-			<FeatherIcon name="chevron-right" color="white" />
-          </View>
-        </TouchableOpacity>
+		<View style={styles.buttonWrapper}>
+			<TouchableOpacity onPress={() => handleSubmit()} style={styles.buttonDiv}>
+				<Text style={styles.text}>Change Name</Text>
+			</TouchableOpacity>
+		</View>
       </View>
     </Modal>
   )
@@ -104,7 +103,7 @@ const styles = StyleSheet.create({
 	paddingRight: 20
   },
   close: {
-	fontSize: 18,
+	fontSize: 16,
     fontWeight: '700'
   },
   inputDiv: {
@@ -117,15 +116,14 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: '88%',
+	width: '88%',
 	marginTop: 15,
-	backgroundColor: '#c4c4c4',
+	backgroundColor: '#ededed',
 	borderRadius: 10,
 	minHeight: 50,
 	fontSize: 18,
 	paddingLeft: 20,
 	fontWeight: '600',
-	color: 'white'
   },
   title: {
 	fontWeight: '700',
@@ -139,19 +137,20 @@ const styles = StyleSheet.create({
 	paddingLeft: 8,
 	color: '#2cb9b0'
   },
+  buttonWrapper: {
+	display: 'flex',
+	alignItems: 'center',
+	width: '100%',
+	height: 50
+  },
   buttonDiv: {
-	  width: '100%',
-	  minWidth: 345,
 	backgroundColor: '#2cb9b0',
-		minHeight: 50,
-		display: 'flex',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		flexDirection: 'row',
-		borderRadius: 10,
-		marginBottom: 12,
-		marginLeft: 25,
-		paddingLeft: 20
+	display: 'flex',
+	flex: 1,
+	width: '88%',
+	borderRadius: 10,
+	justifyContent: 'center',
+	alignItems: 'center',
   },
   text: {
     color: 'white',

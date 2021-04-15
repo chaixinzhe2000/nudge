@@ -3,6 +3,7 @@ import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from "react-native";
 import * as firebase from 'firebase/app';
 import { Feather } from '@expo/vector-icons';
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
   return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
@@ -23,12 +24,17 @@ function LoginScreen() {
       })
       .catch((err) => {
         console.log(err)
-        setErrorMessage("Oops something went wrong! \n Incorrect username and/or password!")
+        setErrorMessage("Incorrect username or password!")
       })
   }
 
   return (
     <View style={styles.container}>
+		<View style={{display: 'flex', alignItems: 'center'}}>
+			<Text style={styles.welcome}>Good to see you</Text>
+			<Text style={styles.nudge}>again.</Text>
+		</View>
+      <ForgotPasswordModal forgotPasswordModalOpen={forgotPasswordModalOpen} setForgotPasswordModalOpen={setForgotPasswordModalOpen} />
       <TextInput
         placeholder="Your Email" placeholderTextColor='white' textAlign='center' style={styles.input}
         onChangeText={(text) => {setEmail(text); setErrorMessage('');}} />
@@ -37,12 +43,10 @@ function LoginScreen() {
         secureTextEntry={true} onChangeText={(text) => {setPassword(text); setErrorMessage('');}} />
         
       <TouchableOpacity onPress={() => { setForgotPasswordModalOpen(true) }} >
-        <Text>
-          FORGOT PASSWORD
-        </Text>
+        <Text style={styles.forgot}>FORGOT PASSWORD?</Text>
       </TouchableOpacity>
 
-      <Text>
+      <Text style={styles.error}>
         {errorMessage}
       </Text>
 
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2cb9b0',
-    paddingTop: 90,
+    paddingTop: 30,
     paddingLeft: 30,
     paddingRight: 30
   },
@@ -70,10 +74,10 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   nudge: {
-    fontSize: 40,
+    fontSize: 39,
     fontWeight: '700',
     color: 'white',
-    marginBottom: 45
+    marginBottom: 60
   },
   buttonDiv: {
     backgroundColor: 'white',
@@ -92,6 +96,20 @@ const styles = StyleSheet.create({
     color: '#2cb9b0',
     fontSize: 18,
     fontWeight: '700'
+  },
+  forgot: {
+	color: 'white',
+	fontSize: 15,
+	paddingTop: 3,
+	fontWeight: '700',
+	paddingLeft: 8
+  },
+  error: {
+	fontSize: 15,
+	paddingTop: 3,
+	color: '#e93342',
+	fontWeight: '500',
+	paddingLeft: 8
   },
   input: {
     display: 'flex',
