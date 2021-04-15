@@ -122,6 +122,8 @@ export default function TaskModal(props: ITaskModalProps) {
 
   let bColor = props.selectedTask.priority === 'high' ? '#f58822' : '#2cb9b0';
   let dueDate = new firebase.firestore.Timestamp(props.selectedTask.due ? props.selectedTask.due._seconds : 0, props.selectedTask.due ? props.selectedTask.due._nanoseconds : 0).toDate();
+  let priorityMessage = (props.selectedTask.priority + ' priority');
+
   let displayDate = parseDate(dueDate);
 
   const styles = StyleSheet.create({
@@ -284,7 +286,7 @@ export default function TaskModal(props: ITaskModalProps) {
 	  marginTop: 30
 	},
 	priorityButtonDiv: {
-	  width: '30%',
+	  width: '45%',
 		  backgroundColor: bColor,
 		  minHeight: 40,
 		  display: 'flex',
@@ -328,7 +330,7 @@ export default function TaskModal(props: ITaskModalProps) {
 		<View style={styles.priorityDiv}>
 				<FeatherIcon name="bell" color="#2cb9b0" />
 				<View style={styles.priorityButtonDiv}>
-					<Text style={styles.text}>{props.selectedTask.priority}</Text>
+					<Text style={styles.text}>{priorityMessage}</Text>
 				</View>
 			</View>
 			<View style={styles.detailsDiv}>
