@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Image, StyleSheet } from 'react-native';
 
-const ProfileImage = () => {
+const ProfileImage = (props) => {
 	return (
 		<View
 			style={{
@@ -10,14 +10,16 @@ const ProfileImage = () => {
 				alignItems: "center",
 				marginRight: 15
 			}}>
-			<View style={{borderRadius: 90, padding: 2, backgroundColor: 'white',
-					borderWidth: 2, borderColor: '#2cb890'}}>
-			<Image
-				style={styles.stretch}
-				source={{uri: 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg'}}
-			/>
+			<View style={{
+				borderRadius: 90, padding: 2, backgroundColor: 'white',
+				borderWidth: 2, borderColor: '#2cb890'
+			}}>
+				<Image
+					style={styles.stretch}
+					source={{ uri: props.profileImg ? props.profileImg : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
+				/>
 			</View>
-			<Text style={styles.name}>Xinzhe</Text>
+			<Text style={styles.name}>{props.name}</Text>
 		</View>
 	)
 }

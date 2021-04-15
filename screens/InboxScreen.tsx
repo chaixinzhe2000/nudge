@@ -13,16 +13,11 @@ export default function InboxScreen(props) {
 
 	React.useEffect(() => {
 		async function getTasksCaller() {
-      console.log("calling to server");
 			let taskResponse = await getReceivedTasks();
 			if (taskResponse.data.status) {
-        console.log("received success")
-        console.log("data:")
-        console.log(taskResponse.data)
 				setTaskBySenderMap(taskResponse.data.tasks)
 				setListOfSenders(taskResponse.data.listOfSenders);
-				console.log(taskResponse.data.tasks);
-				console.log(taskResponse.data.listOfSenders)
+				console.log(taskResponse.data.listOfSenders.length)
 			}
 		}
 		getTasksCaller();
@@ -30,6 +25,15 @@ export default function InboxScreen(props) {
 
 	const [taskBySenderMap, setTaskBySenderMap] = React.useState(new Map());
 	const [listOfSenders, setListOfSenders] = React.useState([]);
+
+
+	const TasksGroup = listOfSenders.map((user: any) =>
+		<IndividualTaskList key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskBySenderMap} />
+	)
+
+	const HorizontalAvatar = listOfSenders.map((user: any) =>
+		<ProfileImage key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} />
+	)
 
 	return (
 		<>
@@ -40,28 +44,10 @@ export default function InboxScreen(props) {
 					contentContainerStyle={styles.favoritesContainer}
 					showsHorizontalScrollIndicator={false}
 				>
-
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
-					<ProfileImage />
+				{HorizontalAvatar}
 				</ScrollView>
 				<View style={styles.scrollContainer}>
-					<IndividualTaskList />
-					<IndividualTaskList />
-					<IndividualTaskList />
-					<IndividualTaskList />
-					<IndividualTaskList />
-					<IndividualTaskList />
-					<IndividualTaskList />
-					<IndividualTaskList />
+					{TasksGroup}
 				</View>
 			</ScrollView>
 		</>

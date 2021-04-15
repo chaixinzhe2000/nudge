@@ -8,6 +8,12 @@ import TaskModal from '../components/TaskModal';
 const IndividualTaskList = (props) => {
 	const [taskModalOpen, setTaskModalOpen] = useState(false);
 
+	const TaskList = props.taskList[props.uid].map((task: any, i) =>
+		<TouchableOpacity onPress={() => { setTaskModalOpen(true) }} key={i}>
+			<TaskBox priority={task.priority} title={task.taskName} dueDate={moment(task.due)} />
+		</TouchableOpacity>
+	)
+
 	return (
 		<View style={styles.viewContainer}>
 			<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen} />
@@ -17,21 +23,10 @@ const IndividualTaskList = (props) => {
 			/>
 			<View style={styles.taskList}>
 				<Text style={styles.name}>{props.name}</Text>
-				<TouchableOpacity onPress={() => { setTaskModalOpen(true) }} >
-					<TaskBox priority='normal' title='Ship FedEx package' dueDate={moment('2021-04-14 23:59:00')}/>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => { setTaskModalOpen(true) }} >
-					<TaskBox priority='high' title='Review TA application' dueDate={moment('2021-04-15 09:00:00')}/>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => { setTaskModalOpen(true) }} >
-					<TaskBox priority='normal' title='Prep for Calc BC' dueDate={moment('2021-04-27 10:00:00')}/>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => { setTaskModalOpen(true) }} >
-					<TaskBox priority='completed' title='Pick up dinner plz' dueDate={moment('2021-03-31 11:59:00')}/>
-				</TouchableOpacity>
+				{TaskList}
 			</View>
 		</View>
-)
+	)
 }
 
 const styles = StyleSheet.create({
