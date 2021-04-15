@@ -64,7 +64,8 @@ export default function ContactsScreen(props) {
     <>
     <View style={{ backgroundColor: 'white', flex: 1 }}>
       <AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
-      <ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen} selectedContact={selectedContact} />
+      <ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen}
+	  		selectedContact={selectedContact} />
       <SectionList sections={getData()}
 	  		renderItem={({ item }) => (
 				  <TouchableOpacity onPress={() => {setSelectedContact(item); setAddViewContactsTasksModalOpen(true)}}>

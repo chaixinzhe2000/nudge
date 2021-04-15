@@ -212,7 +212,7 @@ export default function NewTaskScreen() {
 						onChange={onChange}
 					/>
 				</View>
-				<Text> {errorMessage} </Text>
+				<Text style={styles.error}> {errorMessage} </Text>
 				<TouchableOpacity onPress={() => { handleSubmit() }} style={{ display: 'flex', alignItems: 'center' }} >
 					<View style={styles.sendDiv}>
 						<FeatherIconAlt name="send" color='white' />
@@ -315,6 +315,13 @@ const styles = StyleSheet.create({
 		backgroundColor: '#ededed',
 		borderRadius: 10,
 		marginRight: 20,
+	},
+	error: {
+		fontSize: 16,
+		paddingTop: 15,
+		color: '#e93342',
+		fontWeight: '500',
+		paddingLeft: 15
 	},
 	box: {
 		height: 40,
