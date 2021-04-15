@@ -4,6 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from "rea
 import * as firebase from 'firebase/app';
 import { Feather } from '@expo/vector-icons';
 import ForgotPasswordModal from "./ForgotPasswordModal";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
   return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
@@ -29,34 +30,38 @@ function LoginScreen() {
   }
 
   return (
-    <View style={styles.container}>
-		<View style={{display: 'flex', alignItems: 'center'}}>
-			<Text style={styles.welcome}>Good to see you</Text>
-			<Text style={styles.nudge}>again.</Text>
-		</View>
-      <ForgotPasswordModal forgotPasswordModalOpen={forgotPasswordModalOpen} setForgotPasswordModalOpen={setForgotPasswordModalOpen} />
-      <TextInput
-        placeholder="Your Email" placeholderTextColor='white' textAlign='center' style={styles.input}
-        onChangeText={(text) => {setEmail(text); setErrorMessage('');}} />
-      <TextInput
-        placeholder="Password" placeholderTextColor='white' textAlign='center' style={styles.input}
-        secureTextEntry={true} onChangeText={(text) => {setPassword(text); setErrorMessage('');}} />
-        
-      <TouchableOpacity onPress={() => { setForgotPasswordModalOpen(true) }} >
-        <Text style={styles.forgot}>FORGOT PASSWORD?</Text>
-      </TouchableOpacity>
+    <KeyboardAwareScrollView>
 
-      <Text style={styles.error}>
-        {errorMessage}
-      </Text>
-
-      <TouchableOpacity onPress={() => { handleLogin() }} >
-        <View style={styles.buttonDiv}>
-          <Text style={styles.text}>ENTER THE NUDGE ZONE</Text>
-          <FeatherIcon name="arrow-right" color='#2cb9b0' />
+      <View style={styles.container}>
+        <View style={{ display: 'flex', alignItems: 'center' }}>
+          <Text style={styles.welcome}>Good to see you</Text>
+          <Text style={styles.nudge}>again.</Text>
         </View>
-      </TouchableOpacity>
-    </View>
+        <ForgotPasswordModal forgotPasswordModalOpen={forgotPasswordModalOpen} setForgotPasswordModalOpen={setForgotPasswordModalOpen} />
+        <TextInput
+          placeholder="Your Email" placeholderTextColor='white' textAlign='center' style={styles.input}
+          onChangeText={(text) => { setEmail(text); setErrorMessage(''); }} />
+        <TextInput
+          placeholder="Password" placeholderTextColor='white' textAlign='center' style={styles.input}
+          secureTextEntry={true} onChangeText={(text) => { setPassword(text); setErrorMessage(''); }} />
+
+        <TouchableOpacity onPress={() => { setForgotPasswordModalOpen(true) }} >
+          <Text style={styles.forgot}>FORGOT PASSWORD?</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.error}>
+          {errorMessage}
+        </Text>
+
+        <TouchableOpacity onPress={() => { handleLogin() }} >
+          <View style={styles.buttonDiv}>
+            <Text style={styles.text}>ENTER THE NUDGE ZONE</Text>
+            <FeatherIcon name="arrow-right" color='#2cb9b0' />
+          </View>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAwareScrollView>
+
   );
 }
 
@@ -98,18 +103,18 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   forgot: {
-	color: 'white',
-	fontSize: 15,
-	paddingTop: 3,
-	fontWeight: '700',
-	paddingLeft: 8
+    color: 'white',
+    fontSize: 15,
+    paddingTop: 3,
+    fontWeight: '700',
+    paddingLeft: 8
   },
   error: {
-	fontSize: 15,
-	paddingTop: 3,
-	color: '#e93342',
-	fontWeight: '500',
-	paddingLeft: 8
+    fontSize: 15,
+    paddingTop: 3,
+    color: '#e93342',
+    fontWeight: '500',
+    paddingLeft: 8
   },
   input: {
     display: 'flex',
