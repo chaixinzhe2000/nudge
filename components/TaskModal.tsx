@@ -80,6 +80,7 @@ export default function TaskModal(props: ITaskModalProps) {
       markTaskAsCompleted(toSend)
         .then((result) => {
           console.log(result.data);
+          props.setTaskModalOpen(false);
         })
         .catch((error) => {
           // Getting the Error details.
@@ -102,6 +103,7 @@ export default function TaskModal(props: ITaskModalProps) {
       deleteTask(toSend)
         .then((result) => {
           console.log(result.data);
+          props.setTaskModalOpen(false);
         })
         .catch((error) => {
           // Getting the Error details.
