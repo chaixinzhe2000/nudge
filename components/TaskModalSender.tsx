@@ -72,8 +72,6 @@ export default function TaskModal(props: ITaskModalProps) {
 		const user = firebase.auth().currentUser;
 
 		if (user) {
-			await user.updateProfile({ displayName: newName })
-				.catch(err => (console.log(err)));
 			const toSend = {
 				newName: newName,
 			}
