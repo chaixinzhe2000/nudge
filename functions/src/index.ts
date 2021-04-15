@@ -407,3 +407,47 @@ async function sendPushNotification(message: any) {
     body: JSON.stringify(message),
   });
 }
+
+exports.getTasksWithContact = functions.https.onCall(async (data, context) => {
+  let userUid;
+  let contactUid;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    userUid = context.auth.uid;
+    contactUid = data.uid;
+  }
+  // uid = data.uid;
+  // userEmail = data.email;
+  const db = admin.firestore();
+
+  // get tasks sent by contact
+  const receivedTasksRef = db.collection("Task").where("senderUid", "==", contactUid).where("receiverUid", "==", userUid);
+  const snapshot1 = await receivedTasksRef.get();
+  const sentTasksRef = db.collection("Task").where("senderUid", "==", userUid).where("receiverUid", "==", contactUid);
+  const snapshot2 = await sentTasksRef.get();
+  if (snapshot1.empty && snapshot2.empty) {
+    return ({
+      status: true,
+      receivedFromContact: [],
+      sentToContact: [],
+      reason: "no tasks shared"
+    });
+  }
+  let receivedFromContact: FirebaseFirestore.DocumentData[] = [];
+  let sentToContact: FirebaseFirestore.DocumentData[] = [];
+  snapshot1.forEach(task => {
+    receivedFromContact.push(task.data());
+  });
+
+  snapshot2.forEach(task => {
+    sentToContact.push(task.data());
+  });
+
+
+  return ({ status: true, receivedFromContact: receivedFromContact, listOfReceivers: sentToContact });
+});
+
