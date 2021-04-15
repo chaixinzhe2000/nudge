@@ -149,10 +149,10 @@ export default function NewTaskScreen() {
 					<FeatherIcon name="align-left" color="#2cb9b0" />
 					<TextInput
 						style={styles.box}
-						onChangeText={setLocation}
-						placeholder="Add location"
+						onChangeText={setExtraDetails}
+						placeholder="Add Detail"
 						placeholderTextColor="#a9a9a9"
-						value={location}
+						value={extraDetails}
 					/>
 				</TouchableOpacity>
 				<View style={styles.locationDiv}>

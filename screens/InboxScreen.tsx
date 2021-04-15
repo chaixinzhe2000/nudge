@@ -22,7 +22,7 @@ export default function InboxScreen(props) {
 			}
 		}
 		getTasksCaller();
-	})
+	}, [])
 
 	const [taskBySenderMap, setTaskBySenderMap] = React.useState(new Map());
 	const [listOfSenders, setListOfSenders] = React.useState([]);
