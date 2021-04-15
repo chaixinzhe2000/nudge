@@ -7,6 +7,15 @@ import * as firebase from 'firebase'
 import 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
+import { Feather } from '@expo/vector-icons';
+
+function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
+	return <Feather size={24} style={{ marginTop: 9, paddingRight: 10 }} {...props} />;
+}
+
+function FeatherIconAlt(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
+	return <Feather size={22} style={{ marginTop: 3, paddingRight: 5 }} {...props} />;
+}
 
 interface IContact {
 	uid: string,
@@ -18,9 +27,11 @@ interface IContact {
 export default function NewTaskScreen() {
 
 	const [taskName, setTaskName] = useState("");
+	const [selectedColor, setSelectedColor] = useState("white");
 	const [extraDetails, setExtraDetails] = useState("");
 	const [location, setLocation] = useState("");
 	const [priority, setPriority] = useState("medium");
+	const [priorityButton, setPriorityButton] = useState("Set Priority");
 	const [receiverUid, setReceiverUid] = useState("");
 	const [contactList, setContactList]: [IContact[], any] = useState([])
 	// data stuff
@@ -77,12 +88,15 @@ export default function NewTaskScreen() {
 	}
 
 	const contactListElement = contactList.map((contact: IContact) =>
-		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid) }} key={contact.uid}>
-			<Text>{contact.displayName}</Text>
-			<Image
-				style={styles.profileImage}
-				source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
-			/>
+		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid) }} key={contact.uid} style={styles.contactDiv}>
+			<View style={{borderRadius: 90, padding: 2, backgroundColor: 'white',
+					borderWidth: 2, borderColor: '#2cb9b0'}}>
+				<Image
+					style={styles.profileImage}
+					source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
+				/>
+			</View>
+			<Text style={styles.name}>{contact.displayName}</Text>
 		</TouchableOpacity>
 	)
 
@@ -95,13 +109,17 @@ export default function NewTaskScreen() {
 			},
 			buttonIndex => {
 				if (buttonIndex === 0) {
-					setPriority('medium')
+					setPriority('medium');
+					setPriorityButton('Set Priority');
 				} else if (buttonIndex === 1) {
 					setPriority('low');
+					setPriorityButton('Low');
 				} else if (buttonIndex === 2) {
 					setPriority('medium');
+					setPriorityButton('Medium');
 				} else {
-					setPriority('high')
+					setPriority('high');
+					setPriorityButton('High');
 				}
 			}
 		);
@@ -111,59 +129,60 @@ export default function NewTaskScreen() {
 			<TextInput
 				style={styles.taskName}
 				onChangeText={setTaskName}
-				placeholder="Enter task name"
+				placeholder="Add title"
 				placeholderTextColor="#2cb9b0"
 				value={taskName}
 			/>
 			<View>
-				<Text>List of Contacts</Text>
+				<Text style={styles.nudge}>Nudge a friend</Text>
 				<View style={styles.contactList}>
 					{contactListElement}
 				</View>
-
 			</View>
-			<View>
+			<View style={styles.detailsDiv}>
+				<FeatherIcon name="align-left" color="#2cb9b0" />
 				<TextInput
-					style={styles.input}
+					style={styles.details}
 					onChangeText={setExtraDetails}
-					placeholder="Extra Details"
+					placeholder="Add description"
+					placeholderTextColor="#a9a9a9"
+					multiline={true}
 					value={extraDetails}
 				/>
+			</View>
+			<View style={styles.locationDiv}>
+				<FeatherIcon name="map-pin" color="#2cb9b0" />
 				<TextInput
-					style={styles.input}
+					style={styles.box}
 					onChangeText={setLocation}
-					placeholder="Location"
+					placeholder="Add location"
+					placeholderTextColor="#a9a9a9"
 					value={location}
 				/>
-				<TextInput
-					style={styles.input}
-					onChangeText={setPriority}
-					placeholder="Priority"
-					value={priority}
-				/>
-				<Button onPress={onPress} title="Set Priority" />
-				<Text>Select Due Date: </Text>
+			</View>
+			<TouchableOpacity onPress={onPress} style={{display: 'flex', alignItems: 'center'}}>
+        		<View style={styles.buttonDiv}>
+					<FeatherIconAlt name="bell" color='white' />
+          			<Text style={styles.text}>{priorityButton}</Text>
+        		</View>
+      		</TouchableOpacity>
+			<View>
+				<Text style={styles.nudge}>When is this due?</Text>
 				<DateTimePicker
+					style={styles.date}
 					testID="dateTimePicker"
 					value={date}
 					mode={'datetime'}
 					display="default"
 					onChange={onChange}
 				/>
-
 			</View>
-			<Button
-				icon={
-					<Icon
-						name="arrow-right"
-						size={15}
-						color="white"
-					/>
-				}
-				buttonStyle={styles.submitButton}
-				title="Send"
-				onPress={() => handleSubmit()}
-			/>
+			<TouchableOpacity onPress={() => { handleSubmit() }} style={{display: 'flex', alignItems: 'center'}} >
+				<View style={styles.sendDiv}>
+					<FeatherIconAlt name="send" color='white' />
+					<Text style={styles.text}>Send</Text>
+				</View>
+			</TouchableOpacity>
 		</SafeAreaView>
 	);
 }
@@ -174,15 +193,88 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: '100%',
 		justifyContent: 'flex-start',
-		marginLeft: 15
+		backgroundColor: 'white'
+	},
+	buttonDiv: {
+		width: '55%',
+		backgroundColor: '#2cb9b0',
+		minHeight: 40,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'row',
+		borderRadius: 10,
+		marginBottom: 12,
+		paddingRight: 10,
+		marginTop: 20
+	},
+	sendDiv: {
+		width: '90%',
+		backgroundColor: '#2cb9b0',
+		minHeight: 40,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'row',
+		borderRadius: 10,
+		marginBottom: 12,
+		paddingRight: 10,
+		marginTop: 38
+	},
+	text: {
+		marginLeft: 3,
+		color: 'white',
+		fontSize: 18,
+		fontWeight: '700'
 	},
 	taskName: {
 		height: 40,
 		width: '90%',
-		fontSize: 20,
+		fontSize: 28,
 		marginTop: 20,
 		color: 'black',
-		fontWeight: '700'
+		fontWeight: '700',
+		marginLeft: 20
+	},
+	nudge: {
+		marginLeft: 20,
+		fontSize: 18,
+		marginTop: 13,
+		fontWeight: '600'
+	},
+	detailsDiv: {
+		display: 'flex',
+		flexDirection: 'row',
+		marginLeft: 20,
+		marginTop: 25
+	},
+	locationDiv: {
+		display: 'flex',
+		flexDirection: 'row',
+		marginLeft: 20,
+		marginTop: 10
+	},
+	details: {
+		minHeight: 40,
+		maxHeight: 120,
+		width: '85%',
+		fontSize: 18,
+		fontWeight: '600',
+		paddingTop: 12,
+		padding: 10,
+		backgroundColor: '#ededed',
+		borderRadius: 10,
+		marginRight: 20,
+	},
+	box: {
+		height: 40,
+		width: '85%',
+		fontSize: 18,
+		fontWeight: '600',
+		padding: 10,
+		backgroundColor: '#ededed',
+		borderRadius: 10,
+		marginRight: 20
 	},
 	input: {
 		height: 40,
@@ -191,20 +283,30 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 'blue',
 	},
-	submitButton: {
-		width: '90%',
-		margin: '5%',
-		borderWidth: 1,
-		borderColor: 'blue',
+	contactDiv: {
+		marginLeft: 20,
+		marginTop: 10,
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
 	profileImage: {
-		width: 55,
-		height: 55,
-		marginRight: 10,
+		width: 60,
+		height: 60,
 		borderRadius: 90
+	},
+	name: {
+		paddingTop: 8,
+		fontSize: 14,
+		fontWeight: '500'
 	},
 	contactList: {
 		display: 'flex',
 		flexDirection: 'row'
+	},
+	date: {
+		marginLeft: 20,
+		marginTop: 10,
+		fontWeight: '600'
 	}
 });
