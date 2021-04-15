@@ -5,6 +5,7 @@ import IndividualTaskList from '../components/IndividualTaskList';
 import ProfileImage from '../components/ProfileImage';
 import { Text, View } from '../components/Themed';
 import * as firebase from 'firebase'
+import TaskModal from '../components/TaskModal';
 
 export default function InboxScreen(props) {
 
@@ -25,10 +26,16 @@ export default function InboxScreen(props) {
 
 	const [taskBySenderMap, setTaskBySenderMap] = React.useState(new Map());
 	const [listOfSenders, setListOfSenders] = React.useState([]);
-
+	const [selectedTask, setSelectedTask] = React.useState({});
+	const [taskModalOpen, setTaskModalOpen] = React.useState(false);
+	const [selectedUser, setSelectedUser] = React.useState({});
 
 	const TasksGroup = listOfSenders.map((user: any) =>
-		<IndividualTaskList key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskBySenderMap} />
+		<IndividualTaskList 
+			user={user} setSelectedUser={setSelectedUser}
+			selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+			taskModalOpen={taskModalOpen} setTaskModalOpen={setTaskModalOpen}
+			key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskBySenderMap} />
 	)
 
 	const HorizontalAvatar = listOfSenders.map((user: any) =>
@@ -38,6 +45,10 @@ export default function InboxScreen(props) {
 	return (
 		<>
 			<ScrollView style={{ backgroundColor: 'white' }}>
+				<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
+					selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+					selectedUser={selectedUser} setSelectedUser={setSelectedUser}
+				 />
 				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 				<Text style={styles.favorites}>Favorites</Text>
 				<ScrollView horizontal={true}
