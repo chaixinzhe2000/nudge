@@ -13,6 +13,8 @@ function LoginScreen() {
   const [email, setEmail]: [string, any] = useState('');
   const [errorMessage, setErrorMessage]: [string, any] = useState('');
   const [password, setPassword]: [string, any] = useState('');
+  const [forgotPasswordModalOpen, setForgotPasswordModalOpen]: [boolean, any] = useState(false);
+
 
   const handleLogin = () => {
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -33,6 +35,13 @@ function LoginScreen() {
       <TextInput
         placeholder="Password" placeholderTextColor='white' textAlign='center' style={styles.input}
         secureTextEntry={true} onChangeText={(text) => {setPassword(text); setErrorMessage('');}} />
+        
+      <TouchableOpacity onPress={() => { setForgotPasswordModalOpen(true) }} >
+        <Text>
+          FORGOT PASSWORD
+        </Text>
+      </TouchableOpacity>
+
       <Text>
         {errorMessage}
       </Text>
