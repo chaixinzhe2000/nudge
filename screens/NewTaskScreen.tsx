@@ -8,6 +8,8 @@ import 'firebase/firestore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import { Feather } from '@expo/vector-icons';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginTop: 9, paddingRight: 10 }} {...props} />;
@@ -102,10 +104,12 @@ export default function NewTaskScreen() {
 					style={styles.profileImage}
 					source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 				/>
+        
 			</View>
 			<Text style={styles.name}>{contact.displayName}</Text>
+      {console.log(contact)}
 		</TouchableOpacity>
-	)
+  )
 
 	const onPress = () =>
 		ActionSheetIOS.showActionSheetWithOptions(
@@ -133,6 +137,8 @@ export default function NewTaskScreen() {
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
+      <KeyboardAwareScrollView>
+
 			<TextInput
 				style={styles.taskName}
 				onChangeText={setTaskName}
@@ -192,6 +198,8 @@ export default function NewTaskScreen() {
 					<Text style={styles.text}>Send</Text>
 				</View>
 			</TouchableOpacity>
+      </KeyboardAwareScrollView>
+
 		</SafeAreaView>
 	);
 }

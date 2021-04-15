@@ -3,19 +3,19 @@ import React from 'react';
 import { Text, View, Image, StyleSheet } from 'react-native';
 import TaskBox from './TaskBox';
 
-const IndividualTaskList = () => {
+const IndividualTaskList = (props) => {
 	return (
 		<View
 			style={styles.viewContainer}
 			>
 			<Image
 				style={styles.profileImage}
-				source={{ uri: 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
+				source={{ uri: props.profileImg }}
 			/>
 			<View style={styles.taskList}>
-				<Text style={styles.name}>Xinzhe</Text>
-				<TaskBox priority='normal' title='Ship FedEx package' dueDate={moment('2021-04-15 23:59:00')}/>
-				<TaskBox priority='high' title='Review TA application' dueDate={moment('2021-04-16 09:00:00')}/>
+				<Text style={styles.name}>{props.name}</Text>
+				<TaskBox priority='normal' title='Ship FedEx package' dueDate={moment('2021-04-14 23:59:00')}/>
+				<TaskBox priority='high' title='Review TA application' dueDate={moment('2021-04-15 09:00:00')}/>
 				<TaskBox priority='normal' title='Prep for Calc BC' dueDate={moment('2021-04-27 10:00:00')}/>
 				<TaskBox priority='completed' title='Pick up dinner plz' dueDate={moment('2021-03-31 11:59:00')}/>
 			</View>
