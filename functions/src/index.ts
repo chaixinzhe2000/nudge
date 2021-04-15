@@ -448,7 +448,7 @@ exports.getTasksWithContact = functions.https.onCall(async (data, context) => {
   });
 
 
-  return ({ status: true, receivedFromContact: receivedFromContact, listOfReceivers: sentToContact });
+  return ({ status: true, receivedFromContact: receivedFromContact, sentToContact: sentToContact });
 });
 
 exports.deleteTask = functions.https.onCall(async (data, context) => {
