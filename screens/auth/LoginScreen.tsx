@@ -30,9 +30,8 @@ function LoginScreen() {
   }
 
   return (
-    <KeyboardAwareScrollView>
-
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <KeyboardAwareScrollView>
         <View style={{ display: 'flex', alignItems: 'center' }}>
           <Text style={styles.welcome}>Good to see you</Text>
           <Text style={styles.nudge}>again.</Text>
@@ -59,8 +58,9 @@ function LoginScreen() {
             <FeatherIcon name="arrow-right" color='#2cb9b0' />
           </View>
         </TouchableOpacity>
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </View>
+
 
   );
 }

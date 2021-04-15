@@ -69,7 +69,7 @@ function Register() {
         uid: user.uid,
         messageToken: userFCMToken,
         contacts: [],
-        avatar: null,
+        avatar: remoteUri || "https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg",
         favorites: []
       })
       if (imageUri !== '') {
@@ -135,8 +135,9 @@ function Register() {
       })
   }
   return (
-    <KeyboardAwareScrollView>
+    
       <View style={styles.container}>
+        <KeyboardAwareScrollView>
         <View style={{ display: 'flex', alignItems: 'center' }}>
           <Text style={styles.welcome}>Let's get you</Text>
           <Text style={styles.nudge}>setup.</Text>
@@ -163,8 +164,9 @@ function Register() {
             <FeatherIcon name="arrow-right" color='#2cb9b0' />
           </View>
         </TouchableOpacity>
+        </KeyboardAwareScrollView>
       </View>
-    </KeyboardAwareScrollView>
+    
   );
 }
 

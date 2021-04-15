@@ -61,6 +61,17 @@ export default function NewTaskScreen() {
 		getContactsCaller();
 	}, [])
 
+  function clearFields() {
+    setTaskName("");
+    setExtraDetails("");
+    setLocation("");
+    setPriority("");
+    setDate(new Date());
+    setReceiverUid("");
+    setPriorityButton("Set Priority");
+    setReceiveMessage("Nudge a friend!")
+  }
+
 	async function handleSubmit() {
 		const user = firebase.auth().currentUser;
 
@@ -76,6 +87,7 @@ export default function NewTaskScreen() {
 			addTask(toSend)
 				.then((res) => {
 					console.log(res)
+          clearFields();
 				})
 				.catch(console.log);
 		} else {
