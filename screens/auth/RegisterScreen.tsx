@@ -66,7 +66,8 @@ function Register() {
 				uid: user.uid,
 				messageToken: userFCMToken,
 				contacts: [],
-				avatar: null
+				avatar: null,
+        favorites: []
 			})
 			if (imageUri !== '') {
 				remoteUri = await uploadPhotoAsync(imageUri, `avatars/${user.uid}`)

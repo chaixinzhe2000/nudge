@@ -209,3 +209,59 @@ exports.changeName = functions.https.onCall(async (data, context) => {
     status: true,
   };
 });
+
+
+exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
+	/* send response/put in database: {
+	  taskName: string,
+	  location: string,
+	  due: date,
+	  priority: string,
+	  receiverUid: uid,
+  
+	  completionStatus: string,
+	  timeCreated: date,
+	  senderUid: uid,
+	  followUps: followUpIds[]
+	}*/
+  let uid;
+
+	if (!context.auth) {
+		return ({
+			status: false,
+			reason: "no auth"
+		});
+	} else {
+		uid = context.auth.uid;
+	}
+	// uid = data.uid;
+	// userEmail = data.email;
+	const db = admin.firestore();
+
+	// verify receiverUid exists
+  const receivedTasksRef = db.collection("Task").where("receiverUid", "==", uid);
+	const snapshot = await receivedTasksRef.get();
+	if (snapshot.empty) {
+		return ({
+			status: true,
+      receivedTasks: [],
+			reason: "receiver has no new tasks"
+		});
+	}
+  const tasksBySenderMap = new Map();
+  snapshot.forEach(task => {
+    const senderUid = task.get("senderUid");
+    if (tasksBySenderMap.has(senderUid)) {
+      tasksBySenderMap.get(senderUid).push(task);
+    } else {
+      tasksBySenderMap.set(senderUid, task);
+    }
+  });
+
+  let listOfSenders = []
+  for (var key in tasksBySenderMap) {
+    const senderDoc = await db.collection("User").doc(key).get();
+    listOfSenders.push(senderDoc.data());
+  }
+  return ({status: true, tasks: tasksBySenderMap, listOfSenders: listOfSenders});
+})
