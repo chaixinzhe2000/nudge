@@ -122,7 +122,7 @@ export default function TaskModal(props: ITaskModalProps) {
 
   let bColor = props.selectedTask.priority === 'high' ? '#f58822' : '#2cb9b0';
   let priorityMessage = (props.selectedTask.priority + ' priority');
-  let dueDate = new firebase.firestore.Timestamp(props.selectedTask.due._seconds, props.selectedTask.due._nanoseconds).toDate();
+  let dueDate = new firebase.firestore.Timestamp(seconds, nanoseconds).toDate();
   let displayDate = parseDate(dueDate);
 
   const styles = StyleSheet.create({
