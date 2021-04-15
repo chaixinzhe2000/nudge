@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import * as firebase from 'firebase'
 import 'firebase/firestore';
@@ -19,7 +19,14 @@ interface IChangeNameModalProps {
 export default function ChangeNameModal(props: IChangeNameModalProps) {
   const user = firebase.auth().currentUser;
 
-  const [newName, setNewName] = useState(user ? user.displayName : "");
+  const [newName, setNewName] = useState(user!==null ? user.displayName || "" : "");
+
+  useEffect(() => {
+    if (user) {
+      setNewName(user.displayName || "");
+      console.log(user.displayName);
+    }
+  }, [])
 
   var changeName = firebase.functions().httpsCallable('changeName');
 
@@ -35,7 +42,9 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
         .then((result) => {
           console.log(result);
           if (result.data.status === false) {
-            setNewName(user ? user.displayName : "");
+            if (user) {
+              setNewName(user.displayName || "");
+            }
             alert('Failed to change name. Please try again.');
             return;
           } else {
@@ -69,9 +78,7 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
     	</TouchableOpacity>
 		<View style={styles.inputDiv}>
 			<Text style={styles.title}>Change your name!</Text>
-        	<TextInput
-				placeholder='Blueno Bear'
-				placeholderTextColor='#a9a9a9' textAlign='left'
+        	<TextInput textAlign='left' placeholder={user!==null ? user.displayName || "" : ""}
           		style={styles.input}
           		onChangeText={setNewName}
           		value={newName || ""}
