@@ -5,42 +5,51 @@ import IndividualTaskList from '../components/IndividualTaskList';
 import ProfileImage from '../components/ProfileImage';
 import TaskBox from '../components/TaskBox';
 import { Text, View } from '../components/Themed';
+import * as firebase from 'firebase'
 
 export default function SentScreen(props) {
+
+	var getSentTasks = firebase.functions().httpsCallable('getSentTasks');
+
+	React.useEffect(() => {
+		async function getTasksCaller() {
+			let taskResponse = await getSentTasks();
+			if (taskResponse.data.status) {
+				setTaskByReceiverMap(taskResponse.data.tasks)
+				setListOfReceivers(taskResponse.data.listOfReceivers);
+			}
+		}
+		getTasksCaller();
+	}, [])
+
+	const [taskByReceiverMap, setTaskByReceiverMap] = React.useState(new Map());
+	const [listOfReceivers, setListOfReceivers] = React.useState([]);
+
+
+	const TasksGroup = listOfReceivers.map((user: any) =>
+		<IndividualTaskList key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskByReceiverMap} />
+	)
+
+	const HorizontalAvatar = listOfReceivers.map((user: any) =>
+		<ProfileImage key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} />
+	)
+
 	return (
-    <>
-		<ScrollView style={{ backgroundColor: 'white' }}>
-    		<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
-			<Text style={styles.favorites}>Favorites</Text>
-			<ScrollView horizontal={true}
-				contentContainerStyle={styles.favoritesContainer}
-				showsHorizontalScrollIndicator={false}
-			>
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
-				<ProfileImage />
+		<>
+			<ScrollView style={{ backgroundColor: 'white' }}>
+				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
+				<Text style={styles.favorites}>Favorites</Text>
+				<ScrollView horizontal={true}
+					contentContainerStyle={styles.favoritesContainer}
+					showsHorizontalScrollIndicator={false}
+				>
+					{HorizontalAvatar}
+				</ScrollView>
+				<View style={styles.scrollContainer}>
+					{TasksGroup}
+				</View>
 			</ScrollView>
-			<View style={styles.scrollContainer}>
-				<IndividualTaskList />
-				<IndividualTaskList />
-				<IndividualTaskList />
-				<IndividualTaskList />
-				<IndividualTaskList />
-				<IndividualTaskList />
-				<IndividualTaskList />
-				<IndividualTaskList />
-				<IndividualTaskList />
-			</View>
-		</ScrollView>
-    </>
+		</>
 	);
 }
 
@@ -58,9 +67,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		backgroundColor: 'white',
 		height: 100,
-    	paddingTop: 10,
-    	paddingLeft: 12,
-    	marginBottom: 20
+		paddingTop: 10,
+		paddingLeft: 12,
+		marginBottom: 20
 	},
 	scrollContainer: {
 		flex: 1,
