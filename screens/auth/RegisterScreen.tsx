@@ -58,6 +58,7 @@ function Register() {
 		let remoteUri: string = '';
 
 		if (user !== null) {
+      
 			const userFCMToken = await registerForPushNotificationsAsync();
 			dbh.collection("User").doc(user.uid).set({
 				displayName: name,
@@ -73,6 +74,8 @@ function Register() {
 					{ avatar: remoteUri }, { merge: true }
 				)
 			}
+      await user.updateProfile({displayName: name, photoURL: remoteUri})
+        .catch(err =>(console.log(err)));
 			return true;
 		}
 		return false;
