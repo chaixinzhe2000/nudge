@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ActionSheetIOS } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ActionSheetIOS, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useState, useEffect } from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
@@ -27,11 +27,11 @@ interface IContact {
 export default function NewTaskScreen() {
 
 	const [taskName, setTaskName] = useState("");
-	const [selectedColor, setSelectedColor] = useState("white");
 	const [extraDetails, setExtraDetails] = useState("");
 	const [location, setLocation] = useState("");
 	const [priority, setPriority] = useState("medium");
 	const [priorityButton, setPriorityButton] = useState("Set Priority");
+	const [receiveMessage, setReceiveMessage] = useState("Nudge a friend!");
 	const [receiverUid, setReceiverUid] = useState("");
 	const [contactList, setContactList]: [IContact[], any] = useState([])
 	// data stuff
@@ -82,15 +82,22 @@ export default function NewTaskScreen() {
 		}
 	}
 
-	const handleSelectContact = (uid: string) => {
+	const DismissKeyboard = ({ children }) => (
+		<TouchableWithoutFeedback
+			onPress={() => Keyboard.dismiss()}>
+			{children}
+		</TouchableWithoutFeedback>
+	);
+
+	const handleSelectContact = (uid: string, name: string) => {
+		setReceiveMessage('Send to: ' + name);
 		setReceiverUid(uid);
 		console.log(receiverUid);
 	}
 
 	const contactListElement = contactList.map((contact: IContact) =>
-		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid) }} key={contact.uid} style={styles.contactDiv}>
-			<View style={{borderRadius: 90, padding: 2, backgroundColor: 'white',
-					borderWidth: 2, borderColor: '#2cb9b0'}}>
+		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
+			<View style={styles.imgDiv}>
 				<Image
 					style={styles.profileImage}
 					source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
@@ -134,22 +141,24 @@ export default function NewTaskScreen() {
 				value={taskName}
 			/>
 			<View>
-				<Text style={styles.nudge}>Nudge a friend</Text>
+				<Text style={styles.nudge}>{receiveMessage}</Text>
 				<View style={styles.contactList}>
 					{contactListElement}
 				</View>
 			</View>
-			<View style={styles.detailsDiv}>
-				<FeatherIcon name="align-left" color="#2cb9b0" />
-				<TextInput
-					style={styles.details}
-					onChangeText={setExtraDetails}
-					placeholder="Add description"
-					placeholderTextColor="#a9a9a9"
-					multiline={true}
-					value={extraDetails}
-				/>
-			</View>
+			<DismissKeyboard>
+				<View style={styles.detailsDiv}>
+					<FeatherIcon name="align-left" color="#2cb9b0" />
+					<TextInput
+						style={styles.details}
+						onChangeText={setExtraDetails}
+						placeholder="Add description"
+						placeholderTextColor="#a9a9a9"
+						multiline={true}
+						value={extraDetails}
+					/>
+				</View>
+			</DismissKeyboard>
 			<View style={styles.locationDiv}>
 				<FeatherIcon name="map-pin" color="#2cb9b0" />
 				<TextInput
@@ -187,6 +196,12 @@ export default function NewTaskScreen() {
 	);
 }
 
+const getColor = () => {
+	return 'white';
+}
+
+let selectedColor = getColor();
+
 const styles = StyleSheet.create({
 	mainContainer: {
 		display: 'flex',
@@ -194,6 +209,13 @@ const styles = StyleSheet.create({
 		width: '100%',
 		justifyContent: 'flex-start',
 		backgroundColor: 'white'
+	},
+	imgDiv: {
+		borderRadius: 90, 
+		padding: 2, 
+		backgroundColor: 'white',
+		borderWidth: 2, 
+		borderColor: selectedColor
 	},
 	buttonDiv: {
 		width: '55%',

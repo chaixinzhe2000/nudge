@@ -20,7 +20,7 @@ function LoginScreen() {
   const handleLogin = () => {
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((res) => {
-        console.log('succesfully logged in')
+        console.log('successfully logged in')
       })
       .catch((err) => {
         console.log(err)
