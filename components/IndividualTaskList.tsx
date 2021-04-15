@@ -4,13 +4,15 @@ import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import TaskBox from './TaskBox';
 import { useState } from 'react';
 import TaskModal from '../components/TaskModal';
+import * as firebase from 'firebase'
+import 'firebase/firestore';
 
 const IndividualTaskList = (props) => {
 	const [taskModalOpen, setTaskModalOpen] = useState(false);
 
 	const TaskList = props.taskList[props.uid].map((task: any, i) =>
 		<TouchableOpacity onPress={() => { setTaskModalOpen(true) }} key={i}>
-			<TaskBox priority={task.priority} title={task.taskName} dueDate={moment(task.due)} />
+			<TaskBox priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
 		</TouchableOpacity>
 	)
 
