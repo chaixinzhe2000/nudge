@@ -23,7 +23,7 @@ export default function ContactsScreen(props) {
         setContactList(getContactsRes.data.contacts);
       }
 		}
-		getContactsCaller();
+		setInterval(() => getContactsCaller(), 2000);
 	  },[])
 
 	interface IContact {

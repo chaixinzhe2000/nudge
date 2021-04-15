@@ -178,11 +178,12 @@ export default function NewTaskScreen() {
 					onPress={() => Keyboard.dismiss()}>
 					<FeatherIcon name="align-left" color="#2cb9b0" />
 					<TextInput
-						style={styles.box}
+						style={styles.details}
 						onChangeText={setExtraDetails}
 						placeholder="Add Detail"
 						placeholderTextColor="#a9a9a9"
 						value={extraDetails}
+            multiline={true}
 					/>
 				</TouchableOpacity>
 				<View style={styles.locationDiv}>
