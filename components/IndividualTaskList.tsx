@@ -6,17 +6,15 @@ import { useState } from 'react';
 import TaskModal from '../components/TaskModal';
 
 const IndividualTaskList = (props) => {
-	const [taskModalOpen, setTaskModalOpen] = useState(false);
 
 	const TaskList = props.taskList[props.uid].map((task: any, i) =>
-		<TouchableOpacity onPress={() => { setTaskModalOpen(true) }} key={i}>
+		<TouchableOpacity onPress={() => { props.setTaskModalOpen(true); props.setSelectedTask(task); props.setSelectedUser(props.user) }} key={i}>
 			<TaskBox priority={task.priority} title={task.taskName} dueDate={moment(task.due)} />
 		</TouchableOpacity>
 	)
 
 	return (
 		<View style={styles.viewContainer}>
-			<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen} />
 			<Image
 				style={styles.profileImage}
 				source={{ uri: props.profileImg }}
