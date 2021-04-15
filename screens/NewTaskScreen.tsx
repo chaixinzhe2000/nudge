@@ -36,12 +36,13 @@ export default function NewTaskScreen() {
 	const [receiveMessage, setReceiveMessage] = useState("Nudge a friend!");
 	const [receiverUid, setReceiverUid] = useState("");
 	const [contactList, setContactList]: [IContact[], any] = useState([])
+  const [errorMessage, setErrorMessage]: [string, any] = useState("");
 	// data stuff
 	const [date, setDate]: [Date, any] = useState(new Date());
 	const [show, setShow] = useState(true);
 
 	const onChange = (event, selectedDate) => {
-		const currentDate = selectedDate || date;
+		const currentDate = selectedDate;
 		setShow(Platform.OS === 'ios');
 		setDate(currentDate);
 	};
@@ -70,29 +71,46 @@ export default function NewTaskScreen() {
     setReceiverUid("");
     setPriorityButton("Set Priority");
     setReceiveMessage("Nudge a friend!")
+    setErrorMessage("");
   }
 
 	async function handleSubmit() {
 		const user = firebase.auth().currentUser;
 
-		if (user) {
-			const toSend = {
-				taskName: taskName,
-				due: date.getTime(),
-				location: location,
-				priority: priority,
-				receiverUid: receiverUid,
-				extraDetails: extraDetails
-			}
-			addTask(toSend)
-				.then((res) => {
-					console.log(res)
-          clearFields();
-				})
-				.catch(console.log);
-		} else {
-			alert('Not logged in, please login again.');
-		}
+    console.log(taskName);
+    console.log(receiverUid);
+    console.log(priority);
+    console.log(date);
+    console.log(date.getSeconds());
+
+    if (taskName === "") {
+      setErrorMessage("Please add a task name!");
+    } else if (receiverUid === "") {
+      setErrorMessage("Please select a contact to send this task to!")
+    } else if (priority === "") {
+      setErrorMessage("Please add a priority!");
+    } else if (date.getSeconds() <= (new Date).getSeconds()) {
+      setErrorMessage("Please select a later date!");
+    } else {
+      if (user) {
+        const toSend = {
+          taskName: taskName,
+          due: date.getTime(),
+          location: location,
+          priority: priority,
+          receiverUid: receiverUid,
+          extraDetails: extraDetails
+        }
+        addTask(toSend)
+          .then((res) => {
+            console.log(res)
+            clearFields();
+          })
+          .catch(console.log);
+      } else {
+        alert('Not logged in, please login again.');
+      }
+    }
 	}
 
 	const handleSelectContact = (uid: string, name: string) => {
@@ -194,6 +212,7 @@ export default function NewTaskScreen() {
 						onChange={onChange}
 					/>
 				</View>
+        <Text> {errorMessage} </Text>
 				<TouchableOpacity onPress={() => { handleSubmit() }} style={{ display: 'flex', alignItems: 'center' }} >
 					<View style={styles.sendDiv}>
 						<FeatherIconAlt name="send" color='white' />
