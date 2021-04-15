@@ -72,7 +72,7 @@ export default function ContactsScreen(props) {
 
   	return (
     <>
-    <View style={{ backgroundColor: 'white' }}>
+    <View style={{ backgroundColor: 'white', flex: 1}}>
       <AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
       <SectionList sections={getData()}
 	  		renderItem={({ item }) => (
