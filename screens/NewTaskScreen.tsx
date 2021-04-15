@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ActionSheetIOS, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ActionSheetIOS, Keyboard } from 'react-native';
 import { useState, useEffect } from 'react';
 import * as firebase from 'firebase'
 import 'firebase/firestore';
@@ -83,8 +83,6 @@ export default function NewTaskScreen() {
 		}
 	}
 
-
-
 	const handleSelectContact = (uid: string, name: string) => {
 		setReceiveMessage('Send to: ' + name);
 		setReceiverUid(uid);
@@ -132,9 +130,7 @@ export default function NewTaskScreen() {
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
-
 			<KeyboardAwareScrollView>
-
 				<TextInput
 					style={styles.taskName}
 					onChangeText={setTaskName}
@@ -148,17 +144,17 @@ export default function NewTaskScreen() {
 						{contactListElement}
 					</View>
 				</View>
-					<View style={styles.detailsDiv}>
-						<FeatherIcon name="align-left" color="#2cb9b0" />
-						<TextInput
-							style={styles.details}
-							onChangeText={setExtraDetails}
-							placeholder="Add description"
-							placeholderTextColor="#a9a9a9"
-							multiline={true}
-							value={extraDetails}
-						/>
-					</View>
+				<TouchableOpacity activeOpacity={1} style={styles.detailsDiv}
+					onPress={() => Keyboard.dismiss()}>
+					<FeatherIcon name="align-left" color="#2cb9b0" />
+					<TextInput
+						style={styles.box}
+						onChangeText={setLocation}
+						placeholder="Add location"
+						placeholderTextColor="#a9a9a9"
+						value={location}
+					/>
+				</TouchableOpacity>
 				<View style={styles.locationDiv}>
 					<FeatherIcon name="map-pin" color="#2cb9b0" />
 					<TextInput
@@ -191,9 +187,9 @@ export default function NewTaskScreen() {
 						<FeatherIconAlt name="send" color='white' />
 						<Text style={styles.text}>Send</Text>
 					</View>
+
 				</TouchableOpacity>
 			</KeyboardAwareScrollView>
-
 		</SafeAreaView>
 	);
 }

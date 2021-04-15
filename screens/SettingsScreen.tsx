@@ -23,6 +23,7 @@ export default function SettingsScreen() {
 	const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
 	const [imageUri, setImageUri] = useState("");
 
+
 	useEffect(() => {
 		async function getProfileImageCaller() {
 			if (user) {
@@ -82,8 +83,6 @@ export default function SettingsScreen() {
 			)
 		})
 	}
-
-
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
