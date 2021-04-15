@@ -19,14 +19,14 @@ interface IChangeNameModalProps {
 export default function ChangeNameModal(props: IChangeNameModalProps) {
   const user = firebase.auth().currentUser;
 
-  const [newName, setNewName] = useState(user!==null ? user.displayName || "" : "");
+  const [newName, setNewName] = useState(user !==null ? user.displayName : "");
 
   useEffect(() => {
     if (user) {
-      setNewName(user.displayName || "");
+      setNewName(user.displayName);
       console.log(user.displayName);
     }
-  }, [])
+  }, [props.changeNameModalOpen])
 
   var changeName = firebase.functions().httpsCallable('changeName');
 
@@ -44,7 +44,7 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
           console.log(result);
           if (result.data.status === false) {
             if (user) {
-              setNewName(user.displayName || "");
+              setNewName(user.displayName);
             }
             alert('Failed to change name. Please try again.');
             return;

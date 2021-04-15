@@ -15,6 +15,7 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 
 export default function SettingsScreen() {
 
+  const user = firebase.auth().currentUser;
   const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
   function handleSignOut() {
@@ -34,7 +35,7 @@ export default function SettingsScreen() {
 				style={styles.profileImage}
 				source={{ uri: 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 			/>
-			<Text style={styles.name}>Xinzhe Chai</Text>
+			<Text style={styles.name}>{user !== null ? user.displayName : ""}</Text>
 		</View>
 		<TouchableOpacity onPress={() => {setChangeNameModalOpen(true)}} >
 			<View style={styles.nameDiv}>
