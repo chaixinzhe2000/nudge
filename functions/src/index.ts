@@ -448,6 +448,50 @@ exports.getTasksWithContact = functions.https.onCall(async (data, context) => {
   });
 
 
-  return ({ status: true, receivedFromContact: receivedFromContact, listOfReceivers: sentToContact });
+  return ({ status: true, receivedFromContact: receivedFromContact, sentToContact: sentToContact });
 });
+
+exports.deleteTask = functions.https.onCall(async (data, context) => {
+  let taskId;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    taskId = data.taskId;
+  }
+  // uid = data.uid;
+  // userEmail = data.email;
+  const db = admin.firestore();
+
+  // get tasks sent by contact
+  const receivedTasksRef = db.collection("Task").doc(taskId);
+  await receivedTasksRef.delete();
+  return ({ status: true });
+});
+
+exports.markTaskAsCompleted = functions.https.onCall(async (data, context) => {
+  let taskId;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    taskId = data.taskId;
+  }
+  // uid = data.uid;
+  // userEmail = data.email;
+  const db = admin.firestore();
+
+  // get tasks sent by contact
+  const receivedTasksRef = db.collection("Task").doc(taskId);
+  const receivedTaskDoc = await receivedTasksRef.get();
+  await db.collection("CompletedTask").add(receivedTaskDoc);
+  await receivedTasksRef.delete();
+  return ({ status: true });
+});
+
+
 
