@@ -17,7 +17,6 @@ export default function InboxScreen(props) {
 			if (taskResponse.data.status) {
 				setTaskBySenderMap(taskResponse.data.tasks)
 				setListOfSenders(taskResponse.data.listOfSenders);
-				console.log(taskResponse.data.listOfSenders.length)
 			}
 		}
 		setInterval(() => getTasksCaller(), 2000)
