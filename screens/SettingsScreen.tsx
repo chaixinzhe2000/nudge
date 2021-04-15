@@ -18,10 +18,17 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 
 export default function SettingsScreen() {
 	const dbh = firebase.firestore();
+<<<<<<< HEAD
 	const user = firebase.auth().currentUser;
 	const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
 	const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
 	const [imageUri, setImageUri] = useState("");
+=======
+  const user = firebase.auth().currentUser;
+  const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
+  const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
+  const [imageUri, setImageUri] = useState("https://www.labelprint.co.za/wp-content/uploads/2018/11/user-icon-image-placeholder-300-grey.jpg");
+>>>>>>> 1df30d428e131966d76b25b2940964db6926b9e8
 
 	useEffect(() => {
 		async function getProfileImageCaller() {
@@ -48,7 +55,7 @@ export default function SettingsScreen() {
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			allowsEditing: true,
 			aspect: [4, 3]
-		})
+		});
 
 		if (!result.cancelled && user) {
 			setImageUri(result.uri)
