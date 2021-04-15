@@ -108,7 +108,7 @@ exports.addTask = functions.https.onCall(async (data, context) => {
 	/* data: {
 	  taskName: string,
     extraDetails: string,
-	  due: date,
+	  due: number,
 	  location: string,
 	  priority: string,
 	  receiverUid: string

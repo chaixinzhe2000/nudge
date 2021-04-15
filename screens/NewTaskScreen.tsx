@@ -54,7 +54,7 @@ export default function NewTaskScreen() {
 		if (user) {
 			const toSend = {
 				taskName: taskName,
-				due: date,
+				due: date.getTime(),
 				location: location,
 				priority: priority,
 				receiverUid: receiverUid,

@@ -8,8 +8,8 @@ import { Permissions } from 'expo';
 import Constants from "expo-constants";
 import * as Notifications from 'expo-notifications';
 import { Feather } from '@expo/vector-icons';
-import getCameraPermissions from '../../util/UserPermission'
-import * as ImagePicker from 'expo-image-picker'
+import getCameraPermissions from '../../util/UserPermission';
+import * as ImagePicker from 'expo-image-picker';
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
