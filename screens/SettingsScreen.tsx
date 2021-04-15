@@ -17,11 +17,12 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 }
 
 export default function SettingsScreen() {
-  	const dbh = firebase.firestore();
-  	const user = firebase.auth().currentUser;
-  	const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
-  	const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
-  	const [imageUri, setImageUri] = useState("https://www.labelprint.co.za/wp-content/uploads/2018/11/user-icon-image-placeholder-300-grey.jpg");
+	const dbh = firebase.firestore();
+	const user = firebase.auth().currentUser;
+	const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
+	const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
+	const [imageUri, setImageUri] = useState("");
+
 
 	useEffect(() => {
 		async function getProfileImageCaller() {
@@ -82,8 +83,6 @@ export default function SettingsScreen() {
 			)
 		})
 	}
-
-
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>

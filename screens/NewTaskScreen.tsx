@@ -73,12 +73,11 @@ export default function NewTaskScreen() {
 				receiverUid: receiverUid,
 				extraDetails: extraDetails
 			}
-			console.log(toSend);
 			addTask(toSend)
-			.then((res) => {
-				console.log(res)
-			})
-			.catch(console.log);
+				.then((res) => {
+					console.log(res)
+				})
+				.catch(console.log);
 		} else {
 			alert('Not logged in, please login again.');
 		}
@@ -87,22 +86,23 @@ export default function NewTaskScreen() {
 	const handleSelectContact = (uid: string, name: string) => {
 		setReceiveMessage('Send to: ' + name);
 		setReceiverUid(uid);
-		console.log(receiverUid);
+		// console.log(receiverUid);
 	}
 
 	const contactListElement = contactList.map((contact: IContact) =>
 		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
-			<View style={styles.imgDiv}>
+			{/* {console.log(receiverUid)} */}
+			{console.log(contact.uid)}
+			<View style={contact.uid === receiverUid ? styles.highlightedImgDiv : styles.imgDiv}>
 				<Image
 					style={styles.profileImage}
 					source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 				/>
-        
+
 			</View>
 			<Text style={styles.name}>{contact.displayName}</Text>
-      {console.log(contact)}
 		</TouchableOpacity>
-  )
+	)
 
 	const onPress = () =>
 		ActionSheetIOS.showActionSheetWithOptions(
@@ -130,30 +130,29 @@ export default function NewTaskScreen() {
 
 	return (
 		<SafeAreaView style={styles.mainContainer}>
-      	<KeyboardAwareScrollView>
-			<TextInput
-				style={styles.taskName}
-				onChangeText={setTaskName}
-				placeholder="Add title"
-				placeholderTextColor="#2cb9b0"
-				value={taskName}
-			/>
-			<View>
-				<Text style={styles.nudge}>{receiveMessage}</Text>
-				<View style={styles.contactList}>
-					{contactListElement}
+			<KeyboardAwareScrollView>
+				<TextInput
+					style={styles.taskName}
+					onChangeText={setTaskName}
+					placeholder="Add title"
+					placeholderTextColor="#2cb9b0"
+					value={taskName}
+				/>
+				<View>
+					<Text style={styles.nudge}>{receiveMessage}</Text>
+					<View style={styles.contactList}>
+						{contactListElement}
+					</View>
 				</View>
-			</View>
 				<TouchableOpacity activeOpacity={1} style={styles.detailsDiv}
 					onPress={() => Keyboard.dismiss()}>
 					<FeatherIcon name="align-left" color="#2cb9b0" />
 					<TextInput
-						style={styles.details}
-						onChangeText={setExtraDetails}
-						placeholder="Add description"
+						style={styles.box}
+						onChangeText={setLocation}
+						placeholder="Add location"
 						placeholderTextColor="#a9a9a9"
-						multiline={true}
-						value={extraDetails}
+						value={location}
 					/>
 				</TouchableOpacity>
 				<View style={styles.locationDiv}>
@@ -166,40 +165,34 @@ export default function NewTaskScreen() {
 						value={location}
 					/>
 				</View>
-			<TouchableOpacity onPress={onPress} style={{display: 'flex', alignItems: 'center'}}>
-        		<View style={styles.buttonDiv}>
-					<FeatherIconAlt name="bell" color='white' />
-          			<Text style={styles.text}>{priorityButton}</Text>
-        		</View>
-      		</TouchableOpacity>
-			<View>
-				<Text style={styles.nudge}>When is this due?</Text>
-				<DateTimePicker
-					style={styles.date}
-					testID="dateTimePicker"
-					value={date}
-					mode={'datetime'}
-					display="default"
-					onChange={onChange}
-				/>
-			</View>
-			<TouchableOpacity onPress={() => { handleSubmit() }} style={{display: 'flex', alignItems: 'center'}} >
-				<View style={styles.sendDiv}>
-					<FeatherIconAlt name="send" color='white' />
-					<Text style={styles.text}>Send</Text>
+				<TouchableOpacity onPress={onPress} style={{ display: 'flex', alignItems: 'center' }}>
+					<View style={styles.buttonDiv}>
+						<FeatherIconAlt name="bell" color='white' />
+						<Text style={styles.text}>{priorityButton}</Text>
+					</View>
+				</TouchableOpacity>
+				<View>
+					<Text style={styles.nudge}>When is this due?</Text>
+					<DateTimePicker
+						style={styles.date}
+						testID="dateTimePicker"
+						value={date}
+						mode={'datetime'}
+						display="default"
+						onChange={onChange}
+					/>
 				</View>
-			</TouchableOpacity>
-      </KeyboardAwareScrollView>
+				<TouchableOpacity onPress={() => { handleSubmit() }} style={{ display: 'flex', alignItems: 'center' }} >
+					<View style={styles.sendDiv}>
+						<FeatherIconAlt name="send" color='white' />
+						<Text style={styles.text}>Send</Text>
+					</View>
 
+				</TouchableOpacity>
+			</KeyboardAwareScrollView>
 		</SafeAreaView>
 	);
 }
-
-const getColor = () => {
-	return 'white';
-}
-
-let selectedColor = getColor();
 
 const styles = StyleSheet.create({
 	mainContainer: {
@@ -209,12 +202,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-start',
 		backgroundColor: 'white'
 	},
-	imgDiv: {
-		borderRadius: 90, 
-		padding: 2, 
+	highlightedImgDiv: {
+		borderRadius: 90,
+		padding: 2,
 		backgroundColor: 'white',
-		borderWidth: 2, 
-		borderColor: selectedColor
+		borderWidth: 2,
+		borderColor: '#2cb9b0'
+	},
+	imgDiv: {
+		borderRadius: 90,
+		padding: 2,
+		backgroundColor: 'white',
 	},
 	buttonDiv: {
 		width: '55%',
