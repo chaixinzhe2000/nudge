@@ -73,7 +73,6 @@ export default function NewTaskScreen() {
 				receiverUid: receiverUid,
 				extraDetails: extraDetails
 			}
-			console.log(toSend);
 			addTask(toSend)
 				.then((res) => {
 					console.log(res)
@@ -84,22 +83,19 @@ export default function NewTaskScreen() {
 		}
 	}
 
-	const DismissKeyboard = ({ children }) => (
-		<TouchableWithoutFeedback
-			onPress={() => Keyboard.dismiss()}>
-			{children}
-		</TouchableWithoutFeedback>
-	);
+
 
 	const handleSelectContact = (uid: string, name: string) => {
 		setReceiveMessage('Send to: ' + name);
 		setReceiverUid(uid);
-		console.log(receiverUid);
+		// console.log(receiverUid);
 	}
 
 	const contactListElement = contactList.map((contact: IContact) =>
 		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
-			<View style={styles.imgDiv}>
+			{/* {console.log(receiverUid)} */}
+			{console.log(contact.uid)}
+			<View style={contact.uid === receiverUid ? styles.highlightedImgDiv : styles.imgDiv}>
 				<Image
 					style={styles.profileImage}
 					source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
@@ -107,7 +103,6 @@ export default function NewTaskScreen() {
 
 			</View>
 			<Text style={styles.name}>{contact.displayName}</Text>
-			{console.log(contact)}
 		</TouchableOpacity>
 	)
 
@@ -153,7 +148,6 @@ export default function NewTaskScreen() {
 						{contactListElement}
 					</View>
 				</View>
-				<DismissKeyboard>
 					<View style={styles.detailsDiv}>
 						<FeatherIcon name="align-left" color="#2cb9b0" />
 						<TextInput
@@ -165,69 +159,67 @@ export default function NewTaskScreen() {
 							value={extraDetails}
 						/>
 					</View>
-				</DismissKeyboard>
-					<View style={styles.locationDiv}>
-						<FeatherIcon name="map-pin" color="#2cb9b0" />
-						<TextInput
-							style={styles.box}
-							onChangeText={setLocation}
-							placeholder="Add location"
-							placeholderTextColor="#a9a9a9"
-							value={location}
-						/>
+				<View style={styles.locationDiv}>
+					<FeatherIcon name="map-pin" color="#2cb9b0" />
+					<TextInput
+						style={styles.box}
+						onChangeText={setLocation}
+						placeholder="Add location"
+						placeholderTextColor="#a9a9a9"
+						value={location}
+					/>
+				</View>
+				<TouchableOpacity onPress={onPress} style={{ display: 'flex', alignItems: 'center' }}>
+					<View style={styles.buttonDiv}>
+						<FeatherIconAlt name="bell" color='white' />
+						<Text style={styles.text}>{priorityButton}</Text>
 					</View>
-					<TouchableOpacity onPress={onPress} style={{ display: 'flex', alignItems: 'center' }}>
-						<View style={styles.buttonDiv}>
-							<FeatherIconAlt name="bell" color='white' />
-							<Text style={styles.text}>{priorityButton}</Text>
-						</View>
-					</TouchableOpacity>
-					<View>
-						<Text style={styles.nudge}>When is this due?</Text>
-						<DateTimePicker
-							style={styles.date}
-							testID="dateTimePicker"
-							value={date}
-							mode={'datetime'}
-							display="default"
-							onChange={onChange}
-						/>
+				</TouchableOpacity>
+				<View>
+					<Text style={styles.nudge}>When is this due?</Text>
+					<DateTimePicker
+						style={styles.date}
+						testID="dateTimePicker"
+						value={date}
+						mode={'datetime'}
+						display="default"
+						onChange={onChange}
+					/>
+				</View>
+				<TouchableOpacity onPress={() => { handleSubmit() }} style={{ display: 'flex', alignItems: 'center' }} >
+					<View style={styles.sendDiv}>
+						<FeatherIconAlt name="send" color='white' />
+						<Text style={styles.text}>Send</Text>
 					</View>
-					<TouchableOpacity onPress={() => { handleSubmit() }} style={{ display: 'flex', alignItems: 'center' }} >
-						<View style={styles.sendDiv}>
-							<FeatherIconAlt name="send" color='white' />
-							<Text style={styles.text}>Send</Text>
-						</View>
-					</TouchableOpacity>
+				</TouchableOpacity>
 			</KeyboardAwareScrollView>
 
 		</SafeAreaView>
 	);
 }
 
-const getColor = () => {
-	return 'white';
-}
-
-let selectedColor = getColor();
-
 const styles = StyleSheet.create({
-				mainContainer: {
-				display: 'flex',
+	mainContainer: {
+		display: 'flex',
 		flex: 1,
 		width: '100%',
 		justifyContent: 'flex-start',
 		backgroundColor: 'white'
 	},
-	imgDiv: {
-				borderRadius: 90,
+	highlightedImgDiv: {
+		borderRadius: 90,
 		padding: 2,
 		backgroundColor: 'white',
 		borderWidth: 2,
-		borderColor: selectedColor
+		borderColor: '#2cb9b0'
+	},
+	imgDiv: {
+		borderRadius: 90,
+		padding: 2,
+		backgroundColor: 'white',
 	},
 	buttonDiv: {
-				width: '55%',
+		width: '55%',
 		backgroundColor: '#2cb9b0',
 		minHeight: 40,
 		display: 'flex',
@@ -240,7 +232,7 @@ const styles = StyleSheet.create({
 		marginTop: 20
 	},
 	sendDiv: {
-				width: '90%',
+		width: '90%',
 		backgroundColor: '#2cb9b0',
 		minHeight: 40,
 		display: 'flex',
@@ -253,13 +245,13 @@ const styles = StyleSheet.create({
 		marginTop: 38
 	},
 	text: {
-				marginLeft: 3,
+		marginLeft: 3,
 		color: 'white',
 		fontSize: 18,
 		fontWeight: '700'
 	},
 	taskName: {
-				height: 40,
+		height: 40,
 		width: '90%',
 		fontSize: 28,
 		marginTop: 20,
@@ -268,25 +260,25 @@ const styles = StyleSheet.create({
 		marginLeft: 20
 	},
 	nudge: {
-				marginLeft: 20,
+		marginLeft: 20,
 		fontSize: 18,
 		marginTop: 13,
 		fontWeight: '600'
 	},
 	detailsDiv: {
-				display: 'flex',
+		display: 'flex',
 		flexDirection: 'row',
 		marginLeft: 20,
 		marginTop: 25
 	},
 	locationDiv: {
-				display: 'flex',
+		display: 'flex',
 		flexDirection: 'row',
 		marginLeft: 20,
 		marginTop: 10
 	},
 	details: {
-				minHeight: 40,
+		minHeight: 40,
 		maxHeight: 120,
 		width: '85%',
 		fontSize: 18,
@@ -298,7 +290,7 @@ const styles = StyleSheet.create({
 		marginRight: 20,
 	},
 	box: {
-				height: 40,
+		height: 40,
 		width: '85%',
 		fontSize: 18,
 		fontWeight: '600',
@@ -308,35 +300,35 @@ const styles = StyleSheet.create({
 		marginRight: 20
 	},
 	input: {
-				height: 40,
+		height: 40,
 		width: '90%',
 		margin: 12,
 		borderWidth: 1,
 		borderColor: 'blue',
 	},
 	contactDiv: {
-				marginLeft: 20,
+		marginLeft: 20,
 		marginTop: 10,
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
 	profileImage: {
-				width: 60,
+		width: 60,
 		height: 60,
 		borderRadius: 90
 	},
 	name: {
-				paddingTop: 8,
+		paddingTop: 8,
 		fontSize: 14,
 		fontWeight: '500'
 	},
 	contactList: {
-				display: 'flex',
+		display: 'flex',
 		flexDirection: 'row'
 	},
 	date: {
-				marginLeft: 20,
+		marginLeft: 20,
 		marginTop: 10,
 		fontWeight: '600'
 	}
