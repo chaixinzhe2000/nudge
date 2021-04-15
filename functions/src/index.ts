@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 // import * as firebase from "firebase";
 import * as admin from "firebase-admin";
-import * as Notifications from 'expo-notifications';
-import { Expo } from 'expo-server-sdk';
+// import * as Notifications from 'expo-notifications';
+// import { Expo } from 'expo-server-sdk';
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -264,43 +264,56 @@ exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
 	if (snapshot.empty) {
 		return ({
 			status: true,
-      receivedTasks: [],
+      tasks: new Map(),
+      listOfSenders: [],
 			reason: "receiver has no new tasks"
 		});
 	}
-  const tasksBySenderMap = new Map();
+  let tasksBySenderMap = new Map();
+  let listOfSenderIds: any[] = [];
+  console.log("snapshot")
+  console.log(snapshot);
   snapshot.forEach(task => {
     const senderUid = task.get("senderUid");
-    if (tasksBySenderMap.has(senderUid)) {
-      tasksBySenderMap.get(senderUid).push(task);
-    } else {
-      tasksBySenderMap.set(senderUid, task);
+    if (!tasksBySenderMap.has(senderUid)) {
+      tasksBySenderMap.set(senderUid, []);
     }
+    tasksBySenderMap.get(senderUid).push(task.data());
+    console.log("task data")
+    console.log(task.data());
+    listOfSenderIds.push(senderUid);
   });
 
-  let listOfSenders = []
-  for (var key in tasksBySenderMap) {
-    const senderDoc = await db.collection("User").doc(key).get();
+
+  let listOfSenders = [];
+  for (let i = 0; i < listOfSenderIds.length; i++) {
+    const senderDoc = await db.collection("User").doc(listOfSenderIds[i]).get();
     listOfSenders.push(senderDoc.data());
+    console.log("senderDoc.data()");
+    console.log(senderDoc.data());
+    console.log("listOfSenders")
+    console.log(listOfSenders);
   }
-  return ({status: true, tasks: tasksBySenderMap, listOfSenders: listOfSenders});
+
+
+  return ({status: true, tasks: Object.fromEntries(tasksBySenderMap), listOfSenders: listOfSenders});
 })
 
 
-const sendNotifications = async (expo, messages) => {
-  const chunks = expo.chunkPushNotifications(messages);
-  const tickets = [];
-  for (const chunk of chunks) {
-    try {
-      const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-      tickets.push(...ticketChunk);
-    } catch (error) {
-      console.error("error sending notifications", error);
-    }
-  }
+// const sendNotifications = async (expo, messages) => {
+//   const chunks = expo.chunkPushNotifications(messages);
+//   const tickets = [];
+//   for (const chunk of chunks) {
+//     try {
+//       const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+//       tickets.push(...ticketChunk);
+//     } catch (error) {
+//       console.error("error sending notifications", error);
+//     }
+//   }
 
-  return tickets;
-}
+//   return tickets;
+// }
 
 // exports.sendReminders = functions.https.onRequest(async (req, res) => {
 //   if (req.method !== 'POST') {

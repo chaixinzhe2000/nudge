@@ -13,8 +13,12 @@ export default function InboxScreen(props) {
 
 	React.useEffect(() => {
 		async function getTasksCaller() {
+      console.log("calling to server");
 			let taskResponse = await getReceivedTasks();
 			if (taskResponse.data.status) {
+        console.log("received success")
+        console.log("data:")
+        console.log(taskResponse.data)
 				setTaskBySenderMap(taskResponse.data.tasks)
 				setListOfSenders(taskResponse.data.listOfSenders);
 				console.log(taskResponse.data.tasks);
@@ -22,7 +26,7 @@ export default function InboxScreen(props) {
 			}
 		}
 		getTasksCaller();
-	})
+	}, [])
 
 	const [taskBySenderMap, setTaskBySenderMap] = React.useState(new Map());
 	const [listOfSenders, setListOfSenders] = React.useState([]);
