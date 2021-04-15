@@ -142,7 +142,7 @@ exports.addTask = functions.https.onCall(async (data, context) => {
 	} else {
 		taskName = data.taskName;
 		extraDetails = data.extraDetails;
-		due = data.due;
+		due = admin.firestore.Timestamp.fromDate(data.due);
 		location = data.location;
 		priority = data.priority;
 		senderUid = context.auth.uid;
