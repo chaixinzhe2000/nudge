@@ -73,7 +73,8 @@ function TaskBox(props: ITaskBoxProps) {
 			marginTop: 5,
 			borderRadius: 5,
 			paddingLeft: 10,
-			paddingRight: 10
+			paddingRight: 10,
+			maxHeight: 30
 		},
 		title: {
 			fontWeight: '500',
@@ -90,6 +91,9 @@ function TaskBox(props: ITaskBoxProps) {
 			fontSize: 14,
 			color: 'white',
 			paddingLeft: 4
+		},
+		box: {
+			
 		}
 	});
 
@@ -99,7 +103,6 @@ function TaskBox(props: ITaskBoxProps) {
 			<Text style={styles.title}>{props.title}</Text>
 			<View style={styles.timeDiv}>
 				<FeatherIcon name="clock" color='white' />
-				
 				<Text style={styles.date}>{parseDate(props.dueDate)}</Text>
 			</View>
 		</View>
