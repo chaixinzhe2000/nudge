@@ -10,6 +10,9 @@ import * as Notifications from 'expo-notifications';
 import { Feather } from '@expo/vector-icons';
 import getCameraPermissions from '../../util/UserPermission';
 import * as ImagePicker from 'expo-image-picker';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
@@ -132,6 +135,7 @@ function Register() {
 			})
 	}
 	return (
+    <KeyboardAwareScrollView>
 		<View style={styles.container}>
 			<View style={{display: 'flex', alignItems: 'center'}}>
 				<Text style={styles.welcome}>Let's get you</Text>
@@ -160,6 +164,7 @@ function Register() {
 				</View>
 			</TouchableOpacity>
 		</View>
+    </KeyboardAwareScrollView>
 	);
 }
 

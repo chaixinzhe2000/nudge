@@ -21,7 +21,7 @@ export default function SettingsScreen() {
   const user = firebase.auth().currentUser;
   const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
   const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
-  const [imageUri, setImageUri] = useState("");
+  const [imageUri, setImageUri] = useState("https://www.labelprint.co.za/wp-content/uploads/2018/11/user-icon-image-placeholder-300-grey.jpg");
 
   useEffect(() => {
     async function getProfileImageCaller() {
@@ -53,10 +53,8 @@ export default function SettingsScreen() {
 		if (!result.cancelled && user) {
 			setImageUri(result.uri)
       if (imageUri !== '') {
-				remoteUri = await uploadPhotoAsync(imageUri, `avatars/${user.uid}`)
-				dbh.collection("User").doc(user.uid).set(
-					{ avatar: remoteUri }, { merge: true }
-				)
+				remoteUri = await uploadPhotoAsync(imageUri, `avatars/${user.uid}`);
+				await dbh.collection("User").doc(user.uid).update({ avatar: remoteUri });
 			}
 		}
 	}
