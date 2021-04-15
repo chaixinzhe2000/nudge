@@ -75,7 +75,7 @@ export default function AddContactModal(props: IAddContactModalProps) {
 				<View style={styles.inputDiv}>
 					<Text style={styles.title}>Find a Nudge pal!</Text>
 					<TextInput
-						placeholderTextColor='#f9f7f7' textAlign='left'
+						placeholderTextColor='#A9A9A9' textAlign='left'
 						style={styles.input}
 						onChangeText={setNewContactEmail}
 						value={newContactEmail}
@@ -124,13 +124,12 @@ const styles = StyleSheet.create({
 		height: 40,
 		width: '88%',
 		marginTop: 15,
-		backgroundColor: '#c4c4c4',
+		backgroundColor: '#ededed',
 		borderRadius: 10,
 		minHeight: 50,
 		fontSize: 18,
 		paddingLeft: 20,
 		fontWeight: '600',
-		color: 'white'
 	},
 	title: {
 		fontWeight: '700',
