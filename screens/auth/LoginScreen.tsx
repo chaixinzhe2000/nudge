@@ -3,6 +3,7 @@ import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from "react-native";
 import * as firebase from 'firebase/app';
 import { Feather } from '@expo/vector-icons';
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
   return <Feather size={24} style={{ marginBottom: -3 }} {...props} />;
@@ -30,9 +31,10 @@ function LoginScreen() {
   return (
     <View style={styles.container}>
 		<View style={{display: 'flex', alignItems: 'center'}}>
-				<Text style={styles.welcome}>Good to see you</Text>
-				<Text style={styles.nudge}>again.</Text>
-			</View>
+			<Text style={styles.welcome}>Good to see you</Text>
+			<Text style={styles.nudge}>again.</Text>
+		</View>
+      <ForgotPasswordModal forgotPasswordModalOpen={forgotPasswordModalOpen} setForgotPasswordModalOpen={setForgotPasswordModalOpen} />
       <TextInput
         placeholder="Your Email" placeholderTextColor='white' textAlign='center' style={styles.input}
         onChangeText={(text) => {setEmail(text); setErrorMessage('');}} />

@@ -107,6 +107,7 @@ exports.getContacts = functions.https.onCall(async (data, context) => {
 exports.addTask = functions.https.onCall(async (data, context) => {
 	/* data: {
 	  taskName: string,
+    extraDetails: string,
 	  due: date,
 	  location: string,
 	  priority: string,
@@ -140,10 +141,10 @@ exports.addTask = functions.https.onCall(async (data, context) => {
 		});
 	} else {
 		taskName = data.taskName;
-		extraDetails = data.taskName;
-		due = data.due;
+		extraDetails = data.extraDetails;
+		due = admin.firestore.Timestamp.fromDate(new Date(data.due));
 		location = data.location;
-		priority = data.location;
+		priority = data.priority;
 		senderUid = context.auth.uid;
 		receiverUid = data.receiverUid;
 	}
