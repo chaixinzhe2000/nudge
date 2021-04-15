@@ -153,11 +153,21 @@ exports.addTask = functions.https.onCall(async (data, context) => {
     priority = data.priority;
     senderUid = context.auth.uid;
     receiverUid = data.receiverUid;
-    senderName = context.auth.token.displayName;
   }
   // uid = data.uid;
   // userEmail = data.email;
   const db = admin.firestore();
+
+  // get sender name
+  const userRef = db.collection("User").doc(senderUid);
+  const senderDoc = await userRef.get();
+  if (!senderDoc.exists) {
+    return ({
+      status: false,
+      reason: "sender uid does not map to real user."
+    });
+  }
+  senderName = senderDoc.get("displayName");
 
   // verify receiverUid exists
   const receiverRef = db.collection("User").doc(receiverUid);
