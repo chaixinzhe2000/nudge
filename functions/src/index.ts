@@ -184,6 +184,8 @@ exports.addTask = functions.https.onCall(async (data, context) => {
   // timeCreated: date,
   // sender: uid,
   // followUps: followUpIds[]
+  
+  const addTaskRef = await db.collection("Task").doc();
   const newTaskDoc = {
     taskName: taskName,
     extraDetails: extraDetails,
@@ -195,9 +197,11 @@ exports.addTask = functions.https.onCall(async (data, context) => {
     seen: "not seen yet",
     timeCreated: admin.firestore.Timestamp.fromDate(new Date()),
     senderUid: senderUid,
-    followUps: []
+    followUps: [],
+    id: addTaskRef.id
   }
-  const addTaskRes = await db.collection("Task").add(newTaskDoc);
+  const addTaskRes = await db.collection("Task").doc(addTaskRef.id).set(newTaskDoc);
+
   console.log(addTaskRes);
 
 
@@ -487,8 +491,8 @@ exports.markTaskAsCompleted = functions.https.onCall(async (data, context) => {
 
   // get tasks sent by contact
   const receivedTasksRef = db.collection("Task").doc(taskId);
-  const receivedTaskDoc = await receivedTasksRef.get();
-  await db.collection("CompletedTask").add(receivedTaskDoc);
+  // const receivedTaskDoc = await receivedTasksRef.get();
+  // await db.collection("CompletedTask").add(receivedTaskDoc.data);
   await receivedTasksRef.delete();
   return ({ status: true });
 });

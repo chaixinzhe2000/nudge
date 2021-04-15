@@ -53,6 +53,9 @@ export default function TaskModal(props: ITaskModalProps) {
 
   var task = firebase.functions().httpsCallable('task');
 
+  var markTaskAsCompleted = firebase.functions().httpsCallable('markTaskAsCompleted');
+  var deleteTask = firebase.functions().httpsCallable('deleteTask');
+
   //   const contactListElement = contactList.map((contact: IContact) =>
   // 		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
   // 			{/* {console.log(receiverUid)} */}
@@ -68,12 +71,54 @@ export default function TaskModal(props: ITaskModalProps) {
   // 		</TouchableOpacity>
   // 	)
 
-  async function handleSubmit() {
+  async function handleMarkAsCompleted() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const toSend = {
+          taskId: props.selectedTask.id
+      }
+      markTaskAsCompleted(toSend)
+        .then((result) => {
+          console.log(result.data);
+        })
+        .catch((error) => {
+          // Getting the Error details.
+          var code = error.code;
+          var message = error.message;
+          var details = error.details;
+          console.log(code)
+          console.log(message)
+          console.log(details)
+        })
+    }
+  }
+
+  async function handleDeleteTask() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const toSend = {
+        taskId: props.selectedTask.id
+      }
+      deleteTask(toSend)
+        .then((result) => {
+          console.log(result.data);
+        })
+        .catch((error) => {
+          // Getting the Error details.
+          var code = error.code;
+          var message = error.message;
+          var details = error.details;
+          console.log(code)
+          console.log(message)
+          console.log(details)
+        })
+    }
+  }
+
+  async function handleEdit() {
     const user = firebase.auth().currentUser;
 
     if (user) {
-      await user.updateProfile({ displayName: newName })
-        .catch(err => (console.log(err)));
       const toSend = {
         newName: newName,
       }
@@ -294,15 +339,35 @@ export default function TaskModal(props: ITaskModalProps) {
       flexDirection: 'row',
       borderRadius: 10
     },
-    buttonDiv: {
-      width: '30%',
+    markCompletedButton: {
       backgroundColor: '#2cb9b0',
       minHeight: 40,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      borderRadius: 10
+      borderRadius: 10,
+      padding: 10
+    },
+    editButton: {
+      backgroundColor: '#2cb9b0',
+      minHeight: 40,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      borderRadius: 10,
+      padding: 10
+    },
+    deleteButton: {
+      backgroundColor: '#e93342',
+      minHeight: 40,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      borderRadius: 10,
+      padding: 10
     },
     text: {
       color: 'white',
@@ -351,8 +416,18 @@ export default function TaskModal(props: ITaskModalProps) {
           </View>
         </View>
         <View style={styles.buttonWrapper}>
-          <TouchableOpacity onPress={() => handleSubmit()} style={styles.buttonDiv}>
+          <TouchableOpacity onPress={() => handleMarkAsCompleted()} style={styles.markCompletedButton}>
+            <Text style={styles.text}>Mark As Completed</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity onPress={() => handleEdit()} style={styles.editButton}>
             <Text style={styles.text}>Edit Task</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity onPress={() => handleDeleteTask()} style={styles.deleteButton}>
+            <Text style={styles.text}>Delete Task</Text>
           </TouchableOpacity>
         </View>
       </View>
