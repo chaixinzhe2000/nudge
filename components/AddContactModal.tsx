@@ -81,7 +81,7 @@ export default function AddContactModal(props: IAddContactModalProps) {
 						value={newContactEmail}
 						placeholder={'hello@nudge.com'}
 					/>
-					<Text style={styles.subtitle}>EMAIL</Text>
+					<Text style={styles.subtitle}>SEARCH BY EMAIL</Text>
 				</View>
 
 				<View style={styles.buttonWrapper}>
