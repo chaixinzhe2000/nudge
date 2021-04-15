@@ -8,7 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import { user } from "firebase-functions/lib/providers/auth";
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
-	return <Feather size={22} style={{ marginTop: -1 }} {...props} />;
+	return <Feather size={22} style={{ marginTop: -2 }} {...props} />;
 }
 
 interface IChangePasswordModalProps {
@@ -53,22 +53,24 @@ export default function ChangePasswordModal(props: IChangePasswordModalProps) {
           </View>
     	</TouchableOpacity>
 		<View style={styles.inputDiv}>
-			<Text style={styles.title}>Change your super secret password!</Text>
+			<Text style={styles.title}>Change your password!</Text>
         	<TextInput
-				placeholderTextColor='#f9f7f7' textAlign='left'
+				placeholder='super-secret-password'
+				placeholderTextColor='#a9a9a9' textAlign='left'
           		style={styles.input}
           		onChangeText={setNewPassword}
           		value={newPassword}
+				secureTextEntry={true}
         	/>
 			<Text style={styles.subtitle}>NEW PASSWORD</Text>
       <Text style={styles.subtitle}>{errorMessage}</Text>
 		</View>
-        <TouchableOpacity onPress={() => handleSubmit()} >
-          <View style={styles.buttonDiv}>
-            <Text style={styles.text}>Change Password</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+		<View style={styles.buttonWrapper}>
+			<TouchableOpacity onPress={() => handleSubmit()} style={styles.buttonDiv}>
+				<Text style={styles.text}>Change Password</Text>
+			</TouchableOpacity>
+		</View>
+		</View>
     </Modal>
   )
 }
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
 	paddingRight: 20
   },
   close: {
-	fontSize: 18,
+	fontSize: 16,
     fontWeight: '700'
   },
   inputDiv: {
@@ -101,15 +103,14 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: '88%',
+	width: '88%',
 	marginTop: 15,
-	backgroundColor: '#c4c4c4',
+	backgroundColor: '#ededed',
 	borderRadius: 10,
 	minHeight: 50,
 	fontSize: 18,
 	paddingLeft: 20,
 	fontWeight: '600',
-	color: 'white'
   },
   title: {
 	fontWeight: '700',
@@ -123,19 +124,20 @@ const styles = StyleSheet.create({
 	paddingLeft: 8,
 	color: '#2cb9b0'
   },
+  buttonWrapper: {
+	display: 'flex',
+	alignItems: 'center',
+	width: '100%',
+	height: 50
+  },
   buttonDiv: {
-	  width: '100%',
-	  minWidth: 345,
 	backgroundColor: '#2cb9b0',
-		minHeight: 50,
-		display: 'flex',
-		justifyContent: 'space-between',
-		alignItems: 'center',
-		flexDirection: 'row',
-		borderRadius: 10,
-		marginBottom: 12,
-		marginLeft: 25,
-		paddingLeft: 20
+	display: 'flex',
+	flex: 1,
+	width: '88%',
+	borderRadius: 10,
+	justifyContent: 'center',
+	alignItems: 'center',
   },
   text: {
     color: 'white',
