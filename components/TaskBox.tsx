@@ -18,7 +18,7 @@ function TaskBox(props: ITaskBoxProps) {
 	const setBackgroundColor = (pLevel: String) => {
 		if (pLevel === 'high') {
 			return '#f58822';
-		} else if (pLevel === 'normal') {
+		} else if (pLevel === 'medium' || pLevel ==='low') {
 			return '#2cb9b0';
 		} else {
 			return '#7a7a7a';

@@ -6,6 +6,7 @@ import 'firebase/firestore';
 import "firebase/functions";
 import { Feather } from '@expo/vector-icons';
 import { user } from "firebase-functions/lib/providers/auth";
+import moment from "moment";
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginTop: 9, paddingRight: 10 }} {...props} />;
@@ -105,7 +106,23 @@ export default function TaskModal(props: ITaskModalProps) {
 
   }
 
-  var bColor = props.selectedTask.priority === 'high' ? '#f58822' : '#2cb9b0';
+  const parseDate = (m: any) => {
+	const uDate = moment(m).format('MMMM Do YYYY [at] h:mm A');
+	const time = moment(m).format('h:mm A');
+
+	const calendar = (moment(m).calendar().split(' at'))[0]
+	if (calendar === 'Today') {
+		return ('Today at ' + time);
+	} else if (calendar === 'Tomorrow') {
+		return ('Tomorrow at ' + time);
+	} else {
+		return (uDate);
+	}
+  }
+
+  let bColor = props.selectedTask.priority === 'high' ? '#f58822' : '#2cb9b0';
+  let dueDate = new firebase.firestore.Timestamp(props.selectedTask.due._seconds, props.selectedTask.due._nanoseconds).toDate();
+  let displayDate = parseDate(dueDate);
 
   const styles = StyleSheet.create({
 	modalContent: {
@@ -329,7 +346,7 @@ export default function TaskModal(props: ITaskModalProps) {
 			<View style={styles.locationDiv}>
 				<FeatherIcon name="clock" color="#2cb9b0" />
 				<View style={styles.timeBox}>
-					<Text style={styles.boxText}>{props.selectedTask.location}</Text>
+					<Text style={styles.boxText}>{displayDate}</Text>
 				</View>
 			</View>
 		<View style={styles.buttonWrapper}>
