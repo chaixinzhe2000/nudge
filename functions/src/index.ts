@@ -90,11 +90,11 @@ exports.getContacts = functions.https.onCall(async (data, context) => {
   const doc = await currUserRef.get();
   if (doc.exists) {
     console.log(doc.get("contacts"));
-    let listOfContacts: { uid: string; displayName: string; email: string; avatar: string}[] = [];
+    let listOfContacts = [];
     const contactList = doc.get("contacts");
     for (let i = 0; i < contactList.length; i++) {
       const contactDoc = await db.collection("User").doc(contactList[i].uid).get();
-      listOfContacts.push({uid: contactList[i].uid, displayName: contactDoc.get("displayName"), email: contactList[i].email, avatar: contactList[i].avatar});
+      listOfContacts.push(contactDoc.data());
       console.log("current listOfContacts:");
       console.log(listOfContacts);
     }

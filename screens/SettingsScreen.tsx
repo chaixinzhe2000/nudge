@@ -48,7 +48,7 @@ export default function SettingsScreen() {
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			allowsEditing: true,
 			aspect: [4, 3]
-		})
+		});
 
 		if (!result.cancelled && user) {
 			setImageUri(result.uri)

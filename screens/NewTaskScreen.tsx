@@ -89,18 +89,20 @@ export default function NewTaskScreen() {
 		console.log(receiverUid);
 	}
 
-	const contactListElement = contactList.map((contact: IContact) =>
-		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid) }} key={contact.uid} style={styles.contactDiv}>
+	const contactListElement = contactList.map((contact: IContact) => 
+    <TouchableOpacity onPress={() => { handleSelectContact(contact.uid) }} key={contact.uid} style={styles.contactDiv}>
 			<View style={{borderRadius: 90, padding: 2, backgroundColor: 'white',
 					borderWidth: 2, borderColor: '#2cb9b0'}}>
 				<Image
 					style={styles.profileImage}
 					source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 				/>
+        
 			</View>
 			<Text style={styles.name}>{contact.displayName}</Text>
+      {console.log(contact)}
 		</TouchableOpacity>
-	)
+  )
 
 	const onPress = () =>
 		ActionSheetIOS.showActionSheetWithOptions(
