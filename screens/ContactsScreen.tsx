@@ -6,11 +6,13 @@ import IndividualTaskList from '../components/IndividualTaskList';
 import ProfileImage from '../components/ProfileImage';
 import { Text, View } from '../components/Themed';
 import * as firebase from 'firebase'
+import ViewContactsTasksModal from '../components/ViewContactsTasksModal';
 
 
 export default function ContactsScreen(props) {
   const [contactsList, setContactList]:[IContact[], any] = useState([]);
-  const [selectedContact, setSelectedContact] = useState(null);
+  const [selectedContact, setSelectedContact]: [IContact, any]= useState({uid: "", displayName: "", email: "", avatar: ""});
+  const [addViewContactsTasksModalOpen, setAddViewContactsTasksModalOpen] = useState(false);
 
   var getContacts = firebase.functions().httpsCallable('getContacts');
 
@@ -24,20 +26,8 @@ export default function ContactsScreen(props) {
 		getContactsCaller();
 	  },[])
 
-	// const contactsListElement = contactsList.map((contact: IContact) => {
-  //   <TouchableOpacity onPress={e => {}} key={contact.uid}>
-	// 		<Image
-	// 			style={styles.profileImage}
-	// 			source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
-	// 		/>
-  //     <Text>{contact.displayName}</Text>
-  //     <Text>{contact.email}</Text>
-	// 	</TouchableOpacity>
-  // });
-		
-
 	interface IContact {
-		uid: number,
+		uid: string,
 		displayName: string,
 		email: string,
     avatar: string
@@ -74,9 +64,10 @@ export default function ContactsScreen(props) {
     <>
     <View style={{ backgroundColor: 'white', flex: 1 }}>
       <AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
+      <ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen} selectedContact={selectedContact} />
       <SectionList sections={getData()}
 	  		renderItem={({ item }) => (
-				  <>
+				  <TouchableOpacity onPress={() => {setSelectedContact(item); setAddViewContactsTasksModalOpen(true)}}>
 				  <View style={styles.contactContainer}>
 				  	<Image
 						style={styles.profileImage}
@@ -88,7 +79,7 @@ export default function ContactsScreen(props) {
 				  	</View>
 				  </View>
 				  <View style={styles.separator}></View>
-				  </>
+				  </TouchableOpacity>
 			)}
 			keyExtractor={item => item.uid.toString()}
 			renderSectionHeader={({ section }) => (
