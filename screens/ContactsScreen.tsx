@@ -1,100 +1,68 @@
 import * as React from 'react';
-import { ScrollView, SectionList, StyleSheet, Image } from 'react-native';
+import { useState, useEffect } from 'react';
+import { ScrollView, SectionList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AddContactModal from '../components/AddContactModal';
 import IndividualTaskList from '../components/IndividualTaskList';
 import ProfileImage from '../components/ProfileImage';
 import { Text, View } from '../components/Themed';
+import * as firebase from 'firebase'
+
 
 export default function ContactsScreen(props) {
-	const contacts: IContact[] = [
-		{
-			index: 0,
-			name: "Cal Chen",
-			email: "catherine_chen@brown.edu"
-		},
-		{
-			index: 1,
-			name: "Xinzhe Chai",
-			email: "xinzhe_chai@brown.edu"
-		},
-		{
-			index: 2,
-			name: "Jinoo Hong",
-			email: "jinoo_hong@brown.edu"
-		},
-		{
-			index: 3,
-			name: "Elliot Hong",
-			email: "elliot_hong@brown.edu"
-		},
-		{
-			index: 4,
-			name: "Eddard Stark",
-			email: "eddard_stark@got.com"
-		},
-		{
-			index: 5,
-			name: "Robert Baratheon",
-			email: "robert_baratheon@got.com"
-		},
-		{
-			index: 6,
-			name: "Jaime Lannister",
-			email: "jaime_lannister@got.com"
-		},
-		{
-			index: 7,
-			name: "Cersei Lannister",
-			email: "cersei_lannister@got.com"
-		},
-		{
-			index: 8,
-			name: "Daenerys Targaryen",
-			email: "daenerys_targaryen@got.com"
-		},
-		{
-			index: 9,
-			name: "Arya Stark",
-			email: "arya_stark@got.com"
-		},
-		{
-			index: 10,
-			name: "Sandor Clegane",
-			email: "the_hound@got.com"
-		},
-		{
-			index: 11,
-			name: "Petyr Baelish",
-			email: "little_finger@got.com"
+  const [contactsList, setContactList]:[IContact[], any] = useState([]);
+  const [selectedContact, setSelectedContact] = useState(null);
+
+  var getContacts = firebase.functions().httpsCallable('getContacts');
+
+  useEffect(() => {
+		async function getContactsCaller() {
+      let getContactsRes = await getContacts();
+      if (getContactsRes.data.status) {
+        setContactList(getContactsRes.data.contacts);
+      }
 		}
-	]
+		getContactsCaller();
+	  },[])
+
+	// const contactsListElement = contactsList.map((contact: IContact) => {
+  //   <TouchableOpacity onPress={e => {}} key={contact.uid}>
+	// 		<Image
+	// 			style={styles.profileImage}
+	// 			source={{ uri: contact.avatar ? contact.avatar : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
+	// 		/>
+  //     <Text>{contact.displayName}</Text>
+  //     <Text>{contact.email}</Text>
+	// 	</TouchableOpacity>
+  // });
+		
 
 	interface IContact {
-		index: number,
-		name: string,
-		email: string
+		uid: number,
+		displayName: string,
+		email: string,
+    avatar: string
 	}
 
-	interface ISelectedContacts {
+	interface ISelectedContact {
 		title: string,
 		data: IContact[]
 	}
 
 	let getData = () => {
-		let contactsArr: ISelectedContacts[] = [];
+		let contactsArr: ISelectedContact[] = [];
 		let aCode = "A".charCodeAt(0);
 		for (let i = 0; i < 26; i++) {
 			let currChar = String.fromCharCode(aCode + i);
-			let obj: ISelectedContacts = {
+			let obj: ISelectedContact = {
 				title: currChar,
 				data: []
 			};
 
-			let currContacts = contacts.filter(item => {
-				return item.name[0].toUpperCase() === currChar;
+			let currContacts = contactsList.filter(item => {
+				return item.displayName[0].toUpperCase() === currChar;
 			});
 			if (currContacts.length > 0) {
-				currContacts.sort((a, b) => a.name.localeCompare(b.name));
+				currContacts.sort((a, b) => a.displayName.localeCompare(b.displayName));
 				obj.data = currContacts;
 				contactsArr.push(obj);
 			}
@@ -112,17 +80,17 @@ export default function ContactsScreen(props) {
 				  <View style={styles.contactContainer}>
 				  	<Image
 						style={styles.profileImage}
-						source={{ uri: 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
+						source={{ uri: item.avatar }}
 					/>
 				  	<View style={styles.rowContainer}>
-					  	<Text style={styles.name}>{item.name}</Text>
+					  	<Text style={styles.name}>{item.displayName}</Text>
 						<Text style={styles.email}>{item.email.toLowerCase()}</Text>
 				  	</View>
 				  </View>
 				  <View style={styles.separator}></View>
 				  </>
 			)}
-			keyExtractor={item => item.index.toString()}
+			keyExtractor={item => item.uid.toString()}
 			renderSectionHeader={({ section }) => (
 				<View style={styles.sectionHeader}>
 					<Text style={styles.sectionText}>{section.title}</Text>

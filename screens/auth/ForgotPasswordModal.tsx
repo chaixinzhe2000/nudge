@@ -16,31 +16,24 @@ interface IForgotPasswordModal {
   setForgotPasswordModalOpen: any,
 }
 
-export default function ChangePasswordModal(props: IForgotPasswordModal) {
-  const user = firebase.auth().currentUser;
-
-  const [newPassword, setNewPassword] = useState('');
+export default function ForgotPasswordModal(props: IForgotPasswordModal) {
+  const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   async function handleSubmit() {
-    const user = firebase.auth().currentUser;
-    if (user) {
-      user.updatePassword(newPassword)
-        .then(() => {
-          setNewPassword('');
-          setErrorMessage('');
-          props.setForgotPasswordModalOpen(false);
-        })
-        .catch((error) => {
-          setNewPassword('');
-          setErrorMessage('Oh no! Failed to update password!');
-          console.log(error.code)
-          console.log(error.message)
-          console.log(error.details)
-        });
-    } else {
-      alert('Not logged in, please login again.');
-    }
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(() => {
+        setEmail('');
+        setErrorMessage('');
+        props.setForgotPasswordModalOpen(false);
+      })
+      .catch((error) => {
+        setEmail('');
+        setErrorMessage('Oh no! Failed to send reset email to that email!');
+        console.log(error.code)
+        console.log(error.message)
+        console.log(error.details)
+      });
   }
 
   return (
@@ -53,19 +46,19 @@ export default function ChangePasswordModal(props: IForgotPasswordModal) {
           </View>
     	</TouchableOpacity>
 		<View style={styles.inputDiv}>
-			<Text style={styles.title}>Change your super secret password!</Text>
+			<Text style={styles.title}>Forgot Password? No problem</Text>
         	<TextInput
 				placeholderTextColor='#f9f7f7' textAlign='left'
           		style={styles.input}
-          		onChangeText={setNewPassword}
-          		value={newPassword}
+          		onChangeText={setEmail}
+          		value={email}
         	/>
-			<Text style={styles.subtitle}>NEW PASSWORD</Text>
+			<Text style={styles.subtitle}>EMAIL</Text>
       <Text style={styles.subtitle}>{errorMessage}</Text>
 		</View>
         <TouchableOpacity onPress={() => handleSubmit()} >
           <View style={styles.buttonDiv}>
-            <Text style={styles.text}>Change Password</Text>
+            <Text style={styles.text}>Send Reset Email</Text>
           </View>
         </TouchableOpacity>
       </View>

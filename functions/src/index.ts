@@ -107,6 +107,7 @@ exports.getContacts = functions.https.onCall(async (data, context) => {
 exports.addTask = functions.https.onCall(async (data, context) => {
 	/* data: {
 	  taskName: string,
+    extraDetails: string,
 	  due: date,
 	  location: string,
 	  priority: string,
