@@ -99,7 +99,6 @@ function TaskBox(props: ITaskBoxProps) {
 
 	return (
 		<View style={styles.boxDiv}>
-			{console.log(props.dueDate)}
 			<Text style={styles.title}>{props.title}</Text>
 			<View style={styles.timeDiv}>
 				<FeatherIcon name="clock" color='white' />

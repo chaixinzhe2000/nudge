@@ -48,7 +48,7 @@ export default function SentScreen(props) {
 
 	return (
 		<>
-			{listOfReceivers ?
+			{listOfReceivers.length === 0  ?
 				<View>
 					<Text>No contacts found</Text>
 				</View> :

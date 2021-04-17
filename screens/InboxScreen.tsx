@@ -42,7 +42,7 @@ export default function InboxScreen(props) {
 
 	return (
 		<>
-			{listOfSenders ?
+			{listOfSenders.length === 0 ?
 				<View>
 					<Text>No contacts found</Text>
 				</View> :
