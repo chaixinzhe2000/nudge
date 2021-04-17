@@ -39,7 +39,6 @@ function TaskBox(props: ITaskBoxProps) {
 		const time = moment(m).format('h:mm A');
 
 		const calendar = (moment(m).calendar().split(' at'))[0];
-		console.log(time)
 		if (calendar === 'Today') {
 			return ('TDY ' + time);
 		} else if (calendar === 'Tomorrow') {
