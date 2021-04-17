@@ -21,7 +21,7 @@ export default function SettingsScreen() {
 	const user = firebase.auth().currentUser;
 	const [changeNameModalOpen, setChangeNameModalOpen] = useState(false);
 	const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false);
-	const [imageUri, setImageUri] = useState("");
+	const [imageUri, setImageUri] = useState("https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg");
 
 
 	useEffect(() => {

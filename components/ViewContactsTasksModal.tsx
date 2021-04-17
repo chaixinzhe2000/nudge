@@ -53,11 +53,11 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 
 
 	const TasksGroup = receivedTasks.map((task: any) =>
-		<TaskBox key={task.taskName} priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
+		<TaskBox key={task.id} priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
 	)
 
 	const TasksGroupSent = sentTasks.map((task: any) =>
-		<TaskBox key={task.taskName} priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
+		<TaskBox key={task.id} priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
 	)
 
 	async function handleGetTasks() {
@@ -98,25 +98,26 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 						<Text style={styles.close}>CLOSE</Text>
 					</View>
 				</TouchableOpacity>
-
+				<Text style={styles.convo}>Conversation with</Text>
+				<Text style={styles.convoName}>{props.selectedContact.displayName}</Text>
 				<View style={styles.viewContainer}>
 					<Image
 						style={styles.profileImage}
 						source={{ uri: props.selectedContact.avatar }}
 					/>
-					<View style={styles.taskList}>
+					<View style={styles.taskListFrom}>
 						<Text style={styles.name}>{props.selectedContact.displayName}</Text>
 						{firebase.auth().currentUser ? TasksGroup : ''}
 					</View>
 				</View>
 
 				<View style={styles.viewContainer}>
-					<Image
+					{/* <Image
 						style={styles.profileImage}
 						source={{ uri: imageUri}}
-					/>
-					<View style={styles.taskList}>
-						<Text style={styles.name}>{firebase.auth().currentUser?.displayName}</Text>
+					/> */}
+					<View style={styles.taskListTo}>
+						{/* <Text style={styles.name}>{firebase.auth().currentUser?.displayName}</Text> */}
 
 						{firebase.auth().currentUser ? TasksGroupSent : ''}
 					</View>
@@ -144,6 +145,19 @@ const styles = StyleSheet.create({
 	close: {
 		fontSize: 16,
 		fontWeight: '700'
+	},
+	convo: {
+		marginTop: 25,
+		marginLeft: 20,
+		fontSize: 32,
+		fontWeight: '600',
+	},
+	convoName: {
+		marginLeft: 20,
+		fontSize: 32,
+		fontWeight: '700',
+		color: '#2cb9b0',
+		marginBottom: 25
 	},
 	inputDiv: {
 		display: 'flex',
@@ -207,7 +221,7 @@ const styles = StyleSheet.create({
 		fontSize: 17
 	},
 	viewContainer: {
-		marginBottom: 90,
+		marginBottom: 85,
 		width: '100%',
 		justifyContent: "center",
 		alignItems: "flex-start",
@@ -216,8 +230,13 @@ const styles = StyleSheet.create({
 		paddingLeft: 10,
 		paddingRight: 10
 	},
-	taskList: {
-		flex: 1
+	taskListFrom: {
+		flex: 1,
+		marginRight: 20
+	},
+	taskListTo: {
+		flex: 1,
+		marginLeft: '25%'
 	},
 	taskBox: {
 		maxHeight: 30
