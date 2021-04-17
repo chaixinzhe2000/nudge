@@ -78,7 +78,6 @@ export default function TaskModal(props: ITaskModalProps) {
 			}
 			markTaskAsCompleted(toSend)
 				.then((result) => {
-					console.log(result.data);
 					props.setTaskModalOpen(false);
 				})
 				.catch((error) => {
@@ -101,7 +100,6 @@ export default function TaskModal(props: ITaskModalProps) {
 			}
 			deleteTask(toSend)
 				.then((result) => {
-					console.log(result.data);
 					props.setTaskModalOpen(false);
 				})
 				.catch((error) => {
@@ -118,14 +116,12 @@ export default function TaskModal(props: ITaskModalProps) {
 
 	async function handleEdit() {
 		const user = firebase.auth().currentUser;
-
 		if (user) {
 			const toSend = {
 				newName: newName,
 			}
 			task(toSend)
 				.then((result) => {
-					console.log(result);
 					if (result.data.status === false) {
 						if (user) {
 							setNewName(user.displayName);

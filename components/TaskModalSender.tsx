@@ -52,6 +52,8 @@ export default function TaskModal(props: ITaskModalProps) {
 	}, [props.taskModalOpen])
 
 	var task = firebase.functions().httpsCallable('task');
+  var markTaskAsCompleted = firebase.functions().httpsCallable('markTaskAsCompleted');
+  var deleteTask = firebase.functions().httpsCallable('deleteTask');
 
 	//   const contactListElement = contactList.map((contact: IContact) =>
 	// 		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
@@ -67,8 +69,53 @@ export default function TaskModal(props: ITaskModalProps) {
 	// 			<Text style={styles.name}>{contact.displayName}</Text>
 	// 		</TouchableOpacity>
 	// 	)
+  async function handleMarkAsCompleted() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const toSend = {
+          taskId: props.selectedTask.id
+      }
+      markTaskAsCompleted(toSend)
+        .then((result) => {
+          console.log(result);
+          props.setTaskModalOpen(false);
+        })
+        .catch((error) => {
+          // Getting the Error details.
+          var code = error.code;
+          var message = error.message;
+          var details = error.details;
+          console.log(code)
+          console.log(message)
+          console.log(details)
+        })
+    }
+  }
 
-	async function handleSubmit() {
+  async function handleDeleteTask() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const toSend = {
+        taskId: props.selectedTask.id
+      }
+      deleteTask(toSend)
+        .then((result) => {
+          console.log(result.data);
+          props.setTaskModalOpen(false);
+        })
+        .catch((error) => {
+          // Getting the Error details.
+          var code = error.code;
+          var message = error.message;
+          var details = error.details;
+          console.log(code)
+          console.log(message)
+          console.log(details)
+        })
+    }
+  }
+
+	async function handleEdit() {
 		const user = firebase.auth().currentUser;
 
 		if (user) {
@@ -77,7 +124,6 @@ export default function TaskModal(props: ITaskModalProps) {
 			}
 			task(toSend)
 				.then((result) => {
-					console.log(result);
 					if (result.data.status === false) {
 						if (user) {
 							setNewName(user.displayName);
@@ -303,11 +349,42 @@ export default function TaskModal(props: ITaskModalProps) {
 			flexDirection: 'row',
 			borderRadius: 10
 		},
+    markCompletedButton: {
+      backgroundColor: '#2cb9b0',
+      minHeight: 40,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      borderRadius: 10,
+      padding: 10
+    },
+    editButton: {
+      backgroundColor: '#2cb9b0',
+      minHeight: 40,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      borderRadius: 10,
+      padding: 10
+    },
+    deleteButton: {
+      backgroundColor: '#e93342',
+      minHeight: 40,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      borderRadius: 10,
+      padding: 10
+    },
 		text: {
 			color: 'white',
 			fontSize: 18,
 			fontWeight: '700'
 		},
+    
 	})
 
 	return (
@@ -349,11 +426,21 @@ export default function TaskModal(props: ITaskModalProps) {
 						<Text style={styles.boxText}>{displayDate}</Text>
 					</View>
 				</View>
-				<View style={styles.buttonWrapper}>
-					<TouchableOpacity onPress={() => handleSubmit()} style={styles.buttonDiv}>
-						<Text style={styles.text}>Cancel Task</Text>
-					</TouchableOpacity>
-				</View>
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity onPress={() => handleMarkAsCompleted()} style={styles.markCompletedButton}>
+            <Text style={styles.text}>Mark As Completed</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity onPress={() => handleEdit()} style={styles.editButton}>
+            <Text style={styles.text}>Edit Task</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <TouchableOpacity onPress={() => handleDeleteTask()} style={styles.deleteButton}>
+            <Text style={styles.text}>Delete Task</Text>
+          </TouchableOpacity>
+        </View>
 			</View>
 		</Modal>
 	)

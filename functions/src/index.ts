@@ -94,14 +94,11 @@ exports.getContacts = functions.https.onCall(async (data, context) => {
   const currUserRef = db.collection("User").doc(uid);
   const doc = await currUserRef.get();
   if (doc.exists) {
-    console.log(doc.get("contacts"));
     let listOfContacts = [];
     const contactList = doc.get("contacts");
     for (let i = 0; i < contactList.length; i++) {
       const contactDoc = await db.collection("User").doc(contactList[i].uid).get();
       listOfContacts.push(contactDoc.data());
-      console.log("current listOfContacts:");
-      console.log(listOfContacts);
     }
     return { status: true, contacts: listOfContacts };
   } else {
@@ -284,41 +281,48 @@ exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
   const db = admin.firestore();
 
   // verify receiverUid exists
-  const receivedTasksRef = db.collection("Task").where("receiverUid", "==", uid);
-  const snapshot = await receivedTasksRef.get();
-  if (snapshot.empty) {
-    return ({
-      status: true,
-      tasks: {},
-      listOfSenders: [],
-      reason: "receiver has no new tasks"
+  const receivedTasksRef = db.collection("Task").where("receiverUid", "==", uid).where("completionStatus", "==", "not started");
+  // const receivedTasksRef = db.collection("Task").where("receiverUid", "==", uid);
+  async function asyncF(receivedTasksRef: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>) {
+    const snapshot = await receivedTasksRef.get();
+    if (snapshot.empty) {
+      return ({
+        status: true,
+        tasks: {},
+        listOfSenders: [],
+        reason: "receiver has no new tasks"
+      });
+    }
+    let tasksBySenderMap = new Map();
+    let listOfSenderIds: any[] = [];
+    console.log("snapshot")
+    console.log(snapshot);
+    snapshot.forEach(task => {
+      const senderUid = task.get("senderUid");
+      if (!tasksBySenderMap.has(senderUid)) {
+        tasksBySenderMap.set(senderUid, []);
+        listOfSenderIds.push(senderUid);
+      } 
+      tasksBySenderMap.get(senderUid).push(task.data());
+      console.log("task data")
+      console.log(task.data());
     });
+    let listOfSenders = [];
+    for (let i = 0; i < listOfSenderIds.length; i++) {
+      const senderDoc = await db.collection("User").doc(listOfSenderIds[i]).get();
+      listOfSenders.push(senderDoc.data());
+      console.log("senderDoc.data()");
+      console.log(senderDoc.data());
+      console.log("listOfSenders")
+      console.log(listOfSenders);
+    }
+    return ({ status: true, tasks: Object.fromEntries(tasksBySenderMap), listOfSenders: listOfSenders });
   }
-  let tasksBySenderMap = new Map();
-  let listOfSenderIds: any[] = [];
-  console.log("snapshot")
-  console.log(snapshot);
-  snapshot.forEach(task => {
-    const senderUid = task.get("senderUid");
-    if (!tasksBySenderMap.has(senderUid)) {
-      tasksBySenderMap.set(senderUid, []);
-      listOfSenderIds.push(senderUid);
-    } 
-    tasksBySenderMap.get(senderUid).push(task.data());
-    console.log("task data")
-    console.log(task.data());
-  });
-  let listOfSenders = [];
-  for (let i = 0; i < listOfSenderIds.length; i++) {
-    const senderDoc = await db.collection("User").doc(listOfSenderIds[i]).get();
-    listOfSenders.push(senderDoc.data());
-    console.log("senderDoc.data()");
-    console.log(senderDoc.data());
-    console.log("listOfSenders")
-    console.log(listOfSenders);
-  }
-  return ({ status: true, tasks: Object.fromEntries(tasksBySenderMap), listOfSenders: listOfSenders });
-})
+  return asyncF(receivedTasksRef)
+    .then((result)=> {
+    return result; })
+    .catch((error)=> { console.log(error); return { status: false, tasks: {}, listOfReceivers: [] } });
+});
 
 
 
@@ -351,44 +355,51 @@ exports.getSentTasks = functions.https.onCall(async (data, context) => {
   const db = admin.firestore();
 
   // verify receiverUid exists
-  const receivedTasksRef = db.collection("Task").where("senderUid", "==", uid);
-  const snapshot = await receivedTasksRef.get();
-  if (snapshot.empty) {
-    return ({
-      status: true,
-      tasks: {},
-      listOfReceivers: [],
-      reason: "no tasks sent"
+  const sentTasksRef = db.collection("Task").where("senderUid", "==", uid).where("completionStatus", "==", "not started");
+  // const receivedTasksRef = db.collection("Task").where("senderUid", "==", uid);
+  async function asyncF(receivedTasksRef: FirebaseFirestore.Query<FirebaseFirestore.DocumentData>) {
+    const snapshot = await sentTasksRef.get();
+    if (snapshot.empty) {
+      return ({
+        status: true,
+        tasks: {},
+        listOfReceivers: [],
+        reason: "no tasks sent"
+      });
+    }
+    let tasksByReceiverMap = new Map();
+    let listOfReceiverIds: any[] = [];
+    console.log("snapshot")
+    console.log(snapshot);
+    snapshot.forEach(task => {
+      const receiverUid = task.get("receiverUid");
+      if (!tasksByReceiverMap.has(receiverUid)) {
+        tasksByReceiverMap.set(receiverUid, []);
+        listOfReceiverIds.push(receiverUid);
+      } 
+      tasksByReceiverMap.get(receiverUid).push(task.data());
+      console.log("task data")
+      console.log(task.data());
+
     });
-  }
-  let tasksByReceiverMap = new Map();
-  let listOfReceiverIds: any[] = [];
-  console.log("snapshot")
-  console.log(snapshot);
-  snapshot.forEach(task => {
-    const receiverUid = task.get("receiverUid");
-    if (!tasksByReceiverMap.has(receiverUid)) {
-      tasksByReceiverMap.set(receiverUid, []);
-      listOfReceiverIds.push(receiverUid);
-    } 
-    tasksByReceiverMap.get(receiverUid).push(task.data());
-    console.log("task data")
-    console.log(task.data());
 
-  });
-
-  let listOfReceivers = [];
-  for (let i = 0; i < listOfReceiverIds.length; i++) {
-    const receiverDoc = await db.collection("User").doc(listOfReceiverIds[i]).get();
-    listOfReceivers.push(receiverDoc.data());
-    console.log("receiverDoc.data()");
-    console.log(receiverDoc.data());
-    console.log("listOfReceivers")
-    console.log(listOfReceivers);
+    let listOfReceivers = [];
+    for (let i = 0; i < listOfReceiverIds.length; i++) {
+      const receiverDoc = await db.collection("User").doc(listOfReceiverIds[i]).get();
+      listOfReceivers.push(receiverDoc.data());
+      console.log("receiverDoc.data()");
+      console.log(receiverDoc.data());
+      console.log("listOfReceivers")
+      console.log(listOfReceivers);
+    }
+    return ({ status: true, tasks: Object.fromEntries(tasksByReceiverMap), listOfReceivers: listOfReceivers });
   }
 
-
-  return ({ status: true, tasks: Object.fromEntries(tasksByReceiverMap), listOfReceivers: listOfReceivers });
+  return asyncF(sentTasksRef)
+    .then((result) => {
+      return result;
+    })
+    .catch((error)=> { console.log(error); return { status: false, tasks: {}, listOfReceivers: [] }});
 });
 
 
@@ -492,10 +503,7 @@ exports.markTaskAsCompleted = functions.https.onCall(async (data, context) => {
   // get tasks sent by contact
   const receivedTasksRef = db.collection("Task").doc(taskId);
   // const receivedTaskDoc = await receivedTasksRef.get();
+  await receivedTasksRef.update({completionStatus:"finished"});
   // await db.collection("CompletedTask").add(receivedTaskDoc.data);
-  await receivedTasksRef.delete();
   return ({ status: true });
 });
-
-
-

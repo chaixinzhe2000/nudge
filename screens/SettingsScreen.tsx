@@ -59,7 +59,6 @@ export default function SettingsScreen() {
 				dbh.collection("User").doc(user.uid).set(
 					{ avatar: remoteUri }, {merge: true}
 				)
-				console.log('updated')
 			}
 		}
 	}
