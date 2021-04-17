@@ -48,7 +48,7 @@ export default function InboxScreen(props) {
 					selectedUser={selectedUser} setSelectedUser={setSelectedUser}
 				/>
 				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
-				<Text style={styles.favorites}>Favorites</Text>
+				<Text style={styles.favorites}>Recents</Text>
 				<ScrollView horizontal={true}
 					contentContainerStyle={styles.favoritesContainer}
 					showsHorizontalScrollIndicator={false}

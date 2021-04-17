@@ -35,8 +35,9 @@ export default function NewTaskScreen() {
   const [priorityButton, setPriorityButton] = useState("Set Priority");
   const [receiveMessage, setReceiveMessage] = useState("Nudge a friend!");
   const [receiverUid, setReceiverUid] = useState("");
-  const [contactList, setContactList]: [IContact[], any] = useState([])
+  const [contactList, setContactList]: [IContact[], any] = useState([]);
   const [errorMessage, setErrorMessage]: [string, any] = useState("");
+  const [searchString, setSearchString]: [string, any] = useState("");
   // data stuff
   const [date, setDate]: [Date, any] = useState(new Date());
   const [show, setShow] = useState(true);
@@ -52,15 +53,25 @@ export default function NewTaskScreen() {
   var getContacts = firebase.functions().httpsCallable('getContacts');
   var addTask = firebase.functions().httpsCallable('addTask');
 
+//   useEffect(() => {
+// 	  setInterval(() => {console.log(searchString)}, 2000);
+//   }, []);
+
+  function strcmp (str1, str2) {
+	return ((str1 === str2) ? 0 : ((str1 > str2) ? 1 : -1));
+  }
+
   useEffect(() => {
     async function getContactsCaller() {
       let contactResponse = await getContacts();
       if (contactResponse.data.status) {
+		let tempList: IContact[] = contactResponse.data.contacts;
+		tempList.sort((a, b) => strcmp(a.displayName, b.displayName));
         setContactList(contactResponse.data.contacts)
       }
     }
     getContactsCaller();
-  }, [])
+  }, []);
 
   function clearFields() {
     setTaskName("");
@@ -72,6 +83,7 @@ export default function NewTaskScreen() {
     setPriorityButton("Set Priority");
     setReceiveMessage("Nudge a friend!")
     setErrorMessage("");
+	setSearchString("");
   }
 
   async function handleSubmit() {
@@ -119,7 +131,21 @@ export default function NewTaskScreen() {
     // console.log(receiverUid);
   }
 
-  const contactListElement = contactList.map((contact: IContact) =>
+  const handleSearch = () => {
+	  if (searchString === '') {
+		  return contactList;
+	  } else {
+		  	let searched: IContact[] = [];
+			for (let i = 0; i < contactList.length; i++) {
+				if (contactList[i].displayName.toLowerCase().includes(searchString.toLowerCase())) {
+					searched.push(contactList[i]);
+				}
+			}
+			return searched;
+	  }
+  }
+
+  const contactListElement = handleSearch().map((contact: IContact) =>
     <TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
       {/* {console.log(receiverUid)} */}
       {console.log(contact.uid)}
@@ -169,6 +195,17 @@ export default function NewTaskScreen() {
           value={taskName}
         />
         <Text style={styles.nudge}>{receiveMessage}</Text>
+		<TouchableOpacity activeOpacity={1} style={styles.searchDiv}
+          onPress={() => Keyboard.dismiss()}>
+          <FeatherIcon name="search" color="#2cb9b0" />
+          <TextInput
+            style={styles.search}
+            onChangeText={setSearchString}
+            placeholder="Search by name"
+            placeholderTextColor="#a9a9a9"
+            value={searchString}
+          />
+		</TouchableOpacity>
         <ScrollView horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
@@ -183,7 +220,7 @@ export default function NewTaskScreen() {
           <TextInput
             style={styles.details}
             onChangeText={setExtraDetails}
-            placeholder="Add Detail"
+            placeholder="Add detail"
             placeholderTextColor="#a9a9a9"
             value={extraDetails}
             multiline={true}
@@ -216,13 +253,12 @@ export default function NewTaskScreen() {
             onChange={onChange}
           />
         </View>
-        <Text> {errorMessage} </Text>
+        <Text style={styles.error}> {errorMessage} </Text>
         <TouchableOpacity onPress={() => { handleSubmit() }} style={{ display: 'flex', alignItems: 'center' }} >
           <View style={styles.sendDiv}>
             <FeatherIconAlt name="send" color='white' />
             <Text style={styles.text}>Send</Text>
           </View>
-
         </TouchableOpacity>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -273,7 +309,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 12,
     paddingRight: 10,
-    marginTop: 38
+    marginTop: 10
   },
   text: {
     marginLeft: 3,
@@ -292,7 +328,7 @@ const styles = StyleSheet.create({
   },
   nudge: {
     marginLeft: 20,
-    fontSize: 18,
+    fontSize: 20,
     marginTop: 13,
     fontWeight: '600'
   },
@@ -301,6 +337,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 20,
     marginTop: 25
+  },
+  searchDiv: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginLeft: 20,
+    marginTop: 10
   },
   locationDiv: {
     display: 'flex',
@@ -330,6 +372,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginRight: 20
   },
+  search: {
+    height: 40,
+    width: '85%',
+    fontSize: 18,
+    fontWeight: '600',
+    padding: 10,
+    backgroundColor: '#ededed',
+    borderRadius: 10,
+    marginRight: 20
+  },
   input: {
     height: 40,
     width: '90%',
@@ -345,8 +397,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   profileImage: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 90
   },
   name: {
@@ -356,11 +408,20 @@ const styles = StyleSheet.create({
   },
   contactList: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+	marginBottom: 5,
+	marginTop: 5
   },
   date: {
     marginLeft: 20,
     marginTop: 10,
     fontWeight: '600'
+  },
+  error: {
+    fontSize: 15,
+    paddingTop: 10,
+    color: '#e93342',
+    fontWeight: '500',
+    paddingLeft: 17
   }
 });
