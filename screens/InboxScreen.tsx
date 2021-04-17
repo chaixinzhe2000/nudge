@@ -42,23 +42,28 @@ export default function InboxScreen(props) {
 
 	return (
 		<>
-			<ScrollView style={{ backgroundColor: 'white' }}>
-				<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
-					selectedTask={selectedTask} setSelectedTask={setSelectedTask}
-					selectedUser={selectedUser} setSelectedUser={setSelectedUser}
-				/>
-				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
-				<Text style={styles.favorites}>Recents</Text>
-				<ScrollView horizontal={true}
-					contentContainerStyle={styles.favoritesContainer}
-					showsHorizontalScrollIndicator={false}
-				>
-					{HorizontalAvatar}
+			{listOfSenders.length === 0 ?
+				<View>
+					<Text>No contacts found</Text>
+				</View> :
+				<ScrollView style={{ backgroundColor: 'white' }}>
+					<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
+						selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+						selectedUser={selectedUser} setSelectedUser={setSelectedUser}
+					/>
+					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
+					<Text style={styles.favorites}>Recents</Text>
+					<ScrollView horizontal={true}
+						contentContainerStyle={styles.favoritesContainer}
+						showsHorizontalScrollIndicator={false}
+					>
+						{HorizontalAvatar}
+					</ScrollView>
+					<View style={styles.scrollContainer}>
+						{TasksGroup}
+					</View>
 				</ScrollView>
-				<View style={styles.scrollContainer}>
-					{TasksGroup}
-				</View>
-			</ScrollView>
+			}
 		</>
 	);
 }
