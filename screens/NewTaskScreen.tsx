@@ -77,12 +77,6 @@ export default function NewTaskScreen() {
   async function handleSubmit() {
     const user = firebase.auth().currentUser;
 
-    console.log(taskName);
-    console.log(receiverUid);
-    console.log(priority);
-    console.log(date);
-    console.log(date.getSeconds());
-
     if (taskName === "") {
       setErrorMessage("Please add a task name!");
     } else if (receiverUid === "") {
@@ -116,13 +110,10 @@ export default function NewTaskScreen() {
   const handleSelectContact = (uid: string, name: string) => {
     setReceiveMessage('Send to: ' + name);
     setReceiverUid(uid);
-    // console.log(receiverUid);
   }
 
   const contactListElement = contactList.map((contact: IContact) =>
     <TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
-      {/* {console.log(receiverUid)} */}
-      {console.log(contact.uid)}
       <View style={contact.uid === receiverUid ? styles.highlightedImgDiv : styles.imgDiv}>
         <Image
           style={styles.profileImage}

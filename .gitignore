@@ -8,6 +8,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+nudge-2e82e-0c15c8e87830.json
 
 # macOS
 .DS_Store

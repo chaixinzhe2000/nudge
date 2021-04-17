@@ -24,7 +24,6 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
   useEffect(() => {
     if (user) {
       setNewName(user.displayName);
-      console.log(user.displayName);
     }
   }, [props.changeNameModalOpen])
 
@@ -41,7 +40,6 @@ export default function ChangeNameModal(props: IChangeNameModalProps) {
       }
       changeName(toSend)
         .then((result) => {
-          console.log(result);
           if (result.data.status === false) {
             if (user) {
               setNewName(user.displayName);

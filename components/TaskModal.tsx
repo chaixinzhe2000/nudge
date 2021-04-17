@@ -79,7 +79,6 @@ export default function TaskModal(props: ITaskModalProps) {
       }
       markTaskAsCompleted(toSend)
         .then((result) => {
-          console.log(result.data);
           props.setTaskModalOpen(false);
         })
         .catch((error) => {
@@ -102,7 +101,6 @@ export default function TaskModal(props: ITaskModalProps) {
       }
       deleteTask(toSend)
         .then((result) => {
-          console.log(result.data);
           props.setTaskModalOpen(false);
         })
         .catch((error) => {
@@ -126,7 +124,6 @@ export default function TaskModal(props: ITaskModalProps) {
       }
       task(toSend)
         .then((result) => {
-          console.log(result);
           if (result.data.status === false) {
             if (user) {
               setNewName(user.displayName);

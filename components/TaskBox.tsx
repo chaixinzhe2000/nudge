@@ -39,7 +39,6 @@ function TaskBox(props: ITaskBoxProps) {
 		const time = moment(m).format('h:mm A');
 
 		const calendar = (moment(m).calendar().split(' at'))[0];
-		console.log(time)
 		if (calendar === 'Today') {
 			return ('TDY ' + time);
 		} else if (calendar === 'Tomorrow') {
@@ -99,7 +98,6 @@ function TaskBox(props: ITaskBoxProps) {
 
 	return (
 		<View style={styles.boxDiv}>
-			{console.log(props.dueDate)}
 			<Text style={styles.title}>{props.title}</Text>
 			<View style={styles.timeDiv}>
 				<FeatherIcon name="clock" color='white' />

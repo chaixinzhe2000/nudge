@@ -37,7 +37,6 @@ function Register() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
     } else {
       alert('Must use physical device for Push Notifications');
     }
@@ -57,7 +56,6 @@ function Register() {
   async function handleAddUser() {
     const user = firebase.auth().currentUser;
 
-    console.log("WE RAN TYHIS")
     let remoteUri: string = '';
 
     if (user !== null) {
@@ -127,7 +125,6 @@ function Register() {
   const handleSignUp = () => {
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((res) => {
-        console.log(res);
         handleAddUser();
       })
       .catch((err) => {
