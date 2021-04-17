@@ -48,23 +48,28 @@ export default function SentScreen(props) {
 
 	return (
 		<>
-			<ScrollView style={{ backgroundColor: 'white' }}>
-				<TaskModalSender setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
-					selectedTask={selectedTask} setSelectedTask={setSelectedTask}
-					selectedUser={selectedUser} setSelectedUser={setSelectedUser}
-				/>
-				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
-				<Text style={styles.favorites}>Recents</Text>
-				<ScrollView horizontal={true}
-					contentContainerStyle={styles.favoritesContainer}
-					showsHorizontalScrollIndicator={false}
-				>
-					{HorizontalAvatar}
+			{listOfReceivers ?
+				<View>
+					<Text>No contacts found</Text>
+				</View> :
+				<ScrollView style={{ backgroundColor: 'white' }}>
+					<TaskModalSender setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
+						selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+						selectedUser={selectedUser} setSelectedUser={setSelectedUser}
+					/>
+					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
+					<Text style={styles.favorites}>Recents</Text>
+					<ScrollView horizontal={true}
+						contentContainerStyle={styles.favoritesContainer}
+						showsHorizontalScrollIndicator={false}
+					>
+						{HorizontalAvatar}
+					</ScrollView>
+					<View style={styles.scrollContainer}>
+						{TasksGroup}
+					</View>
 				</ScrollView>
-				<View style={styles.scrollContainer}>
-					{TasksGroup}
-				</View>
-			</ScrollView>
+			}
 		</>
 	);
 }
