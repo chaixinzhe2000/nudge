@@ -121,7 +121,11 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 						{firebase.auth().currentUser ? TasksGroupSent : ''}
 					</View>
 				</View>
-
+				<View style={styles.buttonWrapper}>
+					<TouchableOpacity onPress={() => console.log('hi')} style={styles.deleteButton}>
+						<Text style={styles.text}>Remove Contact</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</Modal>
 	)
@@ -193,7 +197,18 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		width: '100%',
-		height: 50
+		height: 50,
+		marginTop: 20
+	},
+	deleteButton: {
+		backgroundColor: '#e93342',
+		minHeight: 40,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		flexDirection: 'row',
+		borderRadius: 10,
+		padding: 10,
 	},
 	buttonDiv: {
 		backgroundColor: '#2cb9b0',
