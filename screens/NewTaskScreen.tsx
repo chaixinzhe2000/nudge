@@ -67,7 +67,7 @@ export default function NewTaskScreen() {
       if (contactResponse.data.status) {
 		let tempList: IContact[] = contactResponse.data.contacts;
 		tempList.sort((a, b) => strcmp(a.displayName, b.displayName));
-        setContactList(contactResponse.data.contacts)
+        setContactList(tempList);
       }
     }
     getContactsCaller();

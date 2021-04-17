@@ -112,13 +112,12 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 				</View>
 
 				<View style={styles.viewContainer}>
-					{/* <Image
+					<Image
 						style={styles.profileImage}
 						source={{ uri: imageUri}}
-					/> */}
+					/>
 					<View style={styles.taskListTo}>
-						{/* <Text style={styles.name}>{firebase.auth().currentUser?.displayName}</Text> */}
-
+						<Text style={styles.name}>{firebase.auth().currentUser?.displayName}</Text>
 						{firebase.auth().currentUser ? TasksGroupSent : ''}
 					</View>
 				</View>
@@ -232,11 +231,9 @@ const styles = StyleSheet.create({
 	},
 	taskListFrom: {
 		flex: 1,
-		marginRight: 20
 	},
 	taskListTo: {
 		flex: 1,
-		marginLeft: '25%'
 	},
 	taskBox: {
 		maxHeight: 30
