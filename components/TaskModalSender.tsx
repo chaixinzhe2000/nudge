@@ -189,13 +189,13 @@ export default function TaskModal(props: ITaskModalProps) {
 			fontWeight: '700'
 		},
 		taskName: {
-			height: 40,
 			width: '90%',
 			fontSize: 28,
 			marginTop: 20,
 			color: 'black',
 			fontWeight: '700',
-			marginLeft: 25
+			marginLeft: 25,
+			flexWrap: 'wrap',
 		},
 		contactList: {
 			display: 'flex',
@@ -380,7 +380,8 @@ export default function TaskModal(props: ITaskModalProps) {
 			flexDirection: 'row',
 			borderRadius: 10,
 			padding: 10,
-			width: 120
+			width: 120,
+			marginLeft: 30
 		},
 		text: {
 			color: 'white',
@@ -432,11 +433,6 @@ export default function TaskModal(props: ITaskModalProps) {
 					<TouchableOpacity onPress={() => handleMarkAsCompleted()} style={styles.markCompletedButton}>
 						<Text style={styles.text}>Completed</Text>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={() => handleEdit()} style={styles.editButton}>
-						<Text style={styles.text}>Edit Task</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={styles.deleteButtonWrapper}>
 					<TouchableOpacity onPress={() => handleDeleteTask()} style={styles.deleteButton}>
 						<Text style={styles.text}>Delete Task</Text>
 					</TouchableOpacity>
