@@ -39,8 +39,8 @@ export default function NewTaskScreen() {
 	const [errorMessage, setErrorMessage]: [string, any] = useState("");
 	const [searchString, setSearchString]: [string, any] = useState("");
 	// data stuff
-	const today = new Date()
-	const tomorrow = new Date(today)
+	let today = new Date()
+	let tomorrow = new Date(today)
 	tomorrow.setDate(tomorrow.getDate() + 1)
 	const [date, setDate]: [Date, any] = useState(tomorrow);
 	const [show, setShow] = useState(true);
@@ -73,7 +73,7 @@ export default function NewTaskScreen() {
 				setContactList(tempList)
 			}
 		}
-		getContactsCaller();
+		setInterval(() => getContactsCaller(), 2000);
 	}, []);
 
 	function clearFields() {
@@ -81,7 +81,10 @@ export default function NewTaskScreen() {
 		setExtraDetails("");
 		setLocation("");
 		setPriority("");
-		setDate(new Date());
+    let today = new Date()
+	  let tomorrow = new Date(today)
+	  tomorrow.setDate(tomorrow.getDate() + 1)
+		setDate(tomorrow);
 		setReceiverUid("");
 		setPriorityButton("Set Priority");
 		setReceiveMessage("Nudge a friend!")
