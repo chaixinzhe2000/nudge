@@ -311,7 +311,7 @@ exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
     for (let i = 0; i < listOfSenderIds.length; i++) {
       const senderDoc = await db.collection("User").doc(listOfSenderIds[i]).get();
       tasksToSend.set(listOfSenderIds[i], {"user": senderDoc.data(),
-                                          "tasks": tasksBySenderMap.get(listOfSenderIds[i].get("tasks"))});
+                                          "tasks": tasksBySenderMap.get(listOfSenderIds[i]).get("tasks")});
     }
     return ({ status: true, tasks: Object.fromEntries(tasksToSend) });
   }
