@@ -289,7 +289,6 @@ exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
       return ({
         status: true,
         tasks: {},
-        listOfSenders: [],
         reason: "receiver has no new tasks"
       });
     }
@@ -300,28 +299,26 @@ exports.getReceivedTasks = functions.https.onCall(async (data, context) => {
     snapshot.forEach(task => {
       const senderUid = task.get("senderUid");
       if (!tasksBySenderMap.has(senderUid)) {
-        tasksBySenderMap.set(senderUid, []);
+        tasksBySenderMap.set(senderUid, new Map());
+        tasksBySenderMap.get(senderUid).set("tasks", []);
         listOfSenderIds.push(senderUid);
       } 
-      tasksBySenderMap.get(senderUid).push(task.data());
+      tasksBySenderMap.get(senderUid).get("tasks").push(task.data());
       console.log("task data")
       console.log(task.data());
     });
-    let listOfSenders = [];
+    const tasksToSend = new Map();
     for (let i = 0; i < listOfSenderIds.length; i++) {
       const senderDoc = await db.collection("User").doc(listOfSenderIds[i]).get();
-      listOfSenders.push(senderDoc.data());
-      console.log("senderDoc.data()");
-      console.log(senderDoc.data());
-      console.log("listOfSenders")
-      console.log(listOfSenders);
+      tasksToSend.set(listOfSenderIds[i], {"user": senderDoc.data(),
+                                          "tasks": tasksBySenderMap.get(listOfSenderIds[i].get("tasks"))});
     }
-    return ({ status: true, tasks: Object.fromEntries(tasksBySenderMap), listOfSenders: listOfSenders });
+    return ({ status: true, tasks: Object.fromEntries(tasksToSend) });
   }
   return asyncF(receivedTasksRef)
     .then((result)=> {
     return result; })
-    .catch((error)=> { console.log(error); return { status: false, tasks: {}, listOfReceivers: [] } });
+    .catch((error)=> { console.log(error); return { status: false, tasks: {} } });
 });
 
 
@@ -399,7 +396,7 @@ exports.getSentTasks = functions.https.onCall(async (data, context) => {
     .then((result) => {
       return result;
     })
-    .catch((error)=> { console.log(error); return { status: false, tasks: {}, listOfReceivers: [] }});
+    .catch((error)=> { console.log(error); return { status: false, tasks: {} }});
 });
 
 
