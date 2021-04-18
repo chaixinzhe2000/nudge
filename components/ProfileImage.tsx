@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
+import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 const ProfileImage = (props) => {
 	const name = props.name;
@@ -14,17 +14,28 @@ const ProfileImage = (props) => {
 				alignItems: "center",
 				marginRight: 15
 			}}>
-			<View style={{
-				borderRadius: 90, padding: 2, backgroundColor: 'white',
-				borderWidth: 2, borderColor: '#2cb890'
+			<TouchableOpacity onPress={() => {
+				props.setSelectedContact({
+					uid: props.uid,
+					displayName: props.name,
+					email: props.email,
+					avatar: props.profileImg
+				}); props.setAddViewContactsTasksModalOpen(true)
 			}}>
-				<Image
-					style={styles.stretch}
-					source={{ uri: props.profileImg ? props.profileImg : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
-				/>
-			</View>
+				<View style={{
+					borderRadius: 90, padding: 2, backgroundColor: 'white',
+					borderWidth: 2, borderColor: '#2cb890'
+				}}>
+					<Image
+						style={styles.stretch}
+						source={{ uri: props.profileImg ? props.profileImg : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
+					/>
+				</View>
+			</TouchableOpacity>
 			<Text style={styles.firstName}>{firstName}</Text>
 			<Text style={styles.lastName}>{lastName}</Text>
+
+
 		</View>
 	)
 }

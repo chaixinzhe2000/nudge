@@ -8,6 +8,8 @@ import { Text, View } from '../components/Themed';
 import * as firebase from 'firebase'
 import TaskModal from '../components/TaskModal';
 import TaskModalSender from '../components/TaskModalSender';
+import ViewContactsTasksModal from '../components/ViewContactsTasksModal';
+import { useState } from 'react';
 
 export default function SentScreen(props) {
 
@@ -23,10 +25,20 @@ export default function SentScreen(props) {
 		setInterval(() => getTasksCaller(), 2000)
 	}, [])
 
+	interface IContact {
+		uid: string,
+		displayName: string,
+		email: string,
+		avatar: string
+	}
+
 	const [taskByReceiverMap, setTaskByReceiverMap] = React.useState(new Map());
 	const [selectedTask, setSelectedTask] = React.useState({});
 	const [taskModalOpen, setTaskModalOpen] = React.useState(false);
 	const [selectedUser, setSelectedUser] = React.useState({});
+
+	const [selectedContact, setSelectedContact]: [IContact, any] = React.useState({ uid: "", displayName: "", email: "", avatar: "" });
+	const [addViewContactsTasksModalOpen, setAddViewContactsTasksModalOpen] = useState(false);
 
 	const allElement = () => {
 		let allElementArray: any = []
@@ -55,7 +67,10 @@ export default function SentScreen(props) {
 		for (let i = 0; i < allKeys.length; i++) {
 			const myObject = taskByReceiverMap[allKeys[i]]["user"];
 			const individualElement = (
-				<ProfileImage key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName} uid={myObject.uid} />
+				<ProfileImage 
+					key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName} 
+					uid={myObject.uid} email={myObject.email} setSelectedContact={setSelectedContact}
+					setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen} />
 			)
 			allElementArray.push(individualElement);
 		}
@@ -80,6 +95,8 @@ export default function SentScreen(props) {
 						selectedTask={selectedTask} setSelectedTask={setSelectedTask}
 						selectedUser={selectedUser} setSelectedUser={setSelectedUser}
 					/>
+					<ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen}
+						selectedContact={selectedContact} />
 					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 					<Text style={styles.favorites}>Recents</Text>
 					<ScrollView horizontal={true}
