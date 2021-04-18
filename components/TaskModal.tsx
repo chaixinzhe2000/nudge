@@ -319,12 +319,21 @@ export default function TaskModal(props: ITaskModalProps) {
 			paddingLeft: 8,
 			color: '#2cb9b0'
 		},
-		buttonWrapper: {
+		completeButtonWrapper: {
 			display: 'flex',
 			alignItems: 'center',
 			width: '100%',
 			height: 50,
-			marginTop: 30
+			marginTop: 25,
+			flexDirection: 'row',
+			justifyContent: 'center'
+		},
+		deleteButtonWrapper: {
+			display: 'flex',
+			alignItems: 'center',
+			width: '100%',
+			height: 50,
+			marginTop: 10
 		},
 		priorityButtonDiv: {
 			width: '45%',
@@ -344,7 +353,8 @@ export default function TaskModal(props: ITaskModalProps) {
 			alignItems: 'center',
 			flexDirection: 'row',
 			borderRadius: 10,
-			padding: 10
+			padding: 10,
+			width: 115
 		},
 		editButton: {
 			backgroundColor: '#2cb9b0',
@@ -354,7 +364,9 @@ export default function TaskModal(props: ITaskModalProps) {
 			alignItems: 'center',
 			flexDirection: 'row',
 			borderRadius: 10,
-			padding: 10
+			padding: 10,
+			marginLeft: 15,
+			width: 115
 		},
 		deleteButton: {
 			backgroundColor: '#e93342',
@@ -364,7 +376,8 @@ export default function TaskModal(props: ITaskModalProps) {
 			alignItems: 'center',
 			flexDirection: 'row',
 			borderRadius: 10,
-			padding: 10
+			padding: 10,
+			width: 120
 		},
 		text: {
 			color: 'white',
@@ -412,17 +425,15 @@ export default function TaskModal(props: ITaskModalProps) {
 						<Text style={styles.boxText}>{displayDate}</Text>
 					</View>
 				</View>
-				<View style={styles.buttonWrapper}>
+				<View style={styles.completeButtonWrapper}>
 					<TouchableOpacity onPress={() => handleMarkAsCompleted()} style={styles.markCompletedButton}>
-						<Text style={styles.text}>Mark As Completed</Text>
+						<Text style={styles.text}>Completed</Text>
 					</TouchableOpacity>
-				</View>
-				<View style={styles.buttonWrapper}>
 					<TouchableOpacity onPress={() => handleEdit()} style={styles.editButton}>
 						<Text style={styles.text}>Edit Task</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={styles.buttonWrapper}>
+				<View style={styles.deleteButtonWrapper}>
 					<TouchableOpacity onPress={() => handleDeleteTask()} style={styles.deleteButton}>
 						<Text style={styles.text}>Delete Task</Text>
 					</TouchableOpacity>

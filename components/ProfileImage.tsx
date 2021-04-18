@@ -2,6 +2,10 @@ import React from 'react';
 import { Text, View, Image, StyleSheet } from 'react-native';
 
 const ProfileImage = (props) => {
+	const name = props.name;
+	const firstName = name.substr(0, name.indexOf(' '));
+	const lastName = name.substr(name.indexOf(' ') + 1);
+
 	return (
 		<View
 			style={{
@@ -19,7 +23,8 @@ const ProfileImage = (props) => {
 					source={{ uri: props.profileImg ? props.profileImg : 'https://i.pinimg.com/originals/5d/70/18/5d70184dfe1869354afe7bf762416603.jpg' }}
 				/>
 			</View>
-			<Text style={styles.name}>{props.name}</Text>
+			<Text style={styles.firstName}>{firstName}</Text>
+			<Text style={styles.lastName}>{lastName}</Text>
 		</View>
 	)
 }
@@ -34,8 +39,11 @@ const styles = StyleSheet.create({
 		paddingRight: 20,
 		borderRadius: 90
 	},
-	name: {
+	firstName: {
 		paddingTop: 5,
+		fontWeight: '500'
+	},
+	lastName: {
 		fontWeight: '500'
 	}
 });

@@ -75,7 +75,7 @@ export default function NewTaskScreen() {
 		}
 		getContactsCaller();
 	}, []);
-	
+
 	function clearFields() {
 		setTaskName("");
 		setExtraDetails("");
@@ -142,6 +142,14 @@ export default function NewTaskScreen() {
 		}
 	}
 
+	function getFirstName (name: string) {
+		return name.substr(0, name.indexOf(' '));
+	}
+
+	function getLastName (name: string) {
+		return name.substr(name.indexOf(' ') + 1);
+	}
+
 	const contactListElement = handleSearch().map((contact: IContact) =>
 		<TouchableOpacity onPress={() => { handleSelectContact(contact.uid, contact.displayName) }} key={contact.uid} style={styles.contactDiv}>
 			{/* {console.log(receiverUid)} */}
@@ -153,7 +161,8 @@ export default function NewTaskScreen() {
 				/>
 
 			</View>
-			<Text style={styles.name}>{contact.displayName}</Text>
+			<Text style={styles.firstName}>{getFirstName(contact.displayName)}</Text>
+			<Text style={styles.lastName}>{getLastName(contact.displayName)}</Text>
 		</TouchableOpacity>
 	)
 
@@ -184,6 +193,8 @@ export default function NewTaskScreen() {
 	return (
 		<SafeAreaView style={styles.mainContainer}>
 			<KeyboardAwareScrollView>
+			<View style={styles.nameDiv}>
+				<FeatherIcon name="edit" color="#2cb9b0" />
 				<TextInput
 					style={styles.taskName}
 					onChangeText={setTaskName}
@@ -191,6 +202,7 @@ export default function NewTaskScreen() {
 					placeholderTextColor="#2cb9b0"
 					value={taskName}
 				/>
+			</View>
 				<Text style={styles.nudge}>{receiveMessage}</Text>
 				<TouchableOpacity activeOpacity={1} style={styles.searchDiv}
 					onPress={() => Keyboard.dismiss()}>
@@ -318,10 +330,8 @@ const styles = StyleSheet.create({
 		height: 40,
 		width: '90%',
 		fontSize: 28,
-		marginTop: 20,
 		color: 'black',
 		fontWeight: '700',
-		marginLeft: 20
 	},
 	nudge: {
 		marginLeft: 20,
@@ -346,6 +356,12 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		marginLeft: 20,
 		marginTop: 10
+	},
+	nameDiv: {
+		display: 'flex',
+		flexDirection: 'row',
+		marginLeft: 20,
+		marginTop: 20
 	},
 	details: {
 		minHeight: 40,
@@ -398,15 +414,18 @@ const styles = StyleSheet.create({
 		height: 50,
 		borderRadius: 90
 	},
-	name: {
+	firstName: {
 		paddingTop: 8,
+		fontSize: 14,
+		fontWeight: '500'
+	},
+	lastName: {
 		fontSize: 14,
 		fontWeight: '500'
 	},
 	contactList: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginBottom: 5,
 		marginTop: 5
 	},
 	date: {

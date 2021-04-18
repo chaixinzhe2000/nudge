@@ -9,24 +9,27 @@ function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']
 }
 
 interface ITaskBoxProps {
-	priority: String,
-	title: String,
-	dueDate: any
+	priority: string,
+	title: string,
+	dueDate: any,
+	completionStatus: string
 }
 
 function TaskBox(props: ITaskBoxProps) {
-	const setBackgroundColor = (pLevel: String) => {
+	const setBackgroundColor = (pLevel: string, status: string) => {
+		if (status === 'finished') {
+			return '#7a7a7a';
+		}
+
 		if (pLevel === 'high') {
 			return '#f58822';
-		} else if (pLevel === 'medium' || pLevel ==='low') {
-			return '#2cb9b0';
 		} else {
-			return '#7a7a7a';
+			return '#2cb9b0';
 		}
 	};
 
-	const setStatus = (pLevel: String) => {
-		if (pLevel === 'completed') {
+	const setStatus = (status: string) => {
+		if (status === 'finished') {
 			return 'line-through';
 		} else {
 			return 'none';
@@ -48,17 +51,17 @@ function TaskBox(props: ITaskBoxProps) {
 		}
 	}
 
-	const setDisplay = (pLevel: String) => {
-		if (pLevel === 'completed') {
+	const setDisplay = (status: String) => {
+		if (status === 'finished') {
 			return 'none';
 		} else {
 			return 'flex';
 		}
 	}
 
-	let backgroundColor = setBackgroundColor(props.priority);
-	let strikeThrough = setStatus(props.priority);
-	let displayDate = setDisplay(props.priority);
+	let backgroundColor = setBackgroundColor(props.priority, props.completionStatus);
+	let strikeThrough = setStatus(props.completionStatus);
+	let displayDate = setDisplay(props.completionStatus);
 
 	const styles = StyleSheet.create({
 		boxDiv: {
@@ -90,9 +93,6 @@ function TaskBox(props: ITaskBoxProps) {
 			fontSize: 14,
 			color: 'white',
 			paddingLeft: 4
-		},
-		box: {
-			
 		}
 	});
 

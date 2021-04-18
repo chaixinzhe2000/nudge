@@ -25,14 +25,14 @@ export default function AddContactModal(props: IAddContactModalProps) {
 		const user = firebase.auth().currentUser;
 
 		if (user) {
-			if (user.email === newContactEmail) {
+			if (user.email?.toLowerCase() === newContactEmail.toLowerCase()) {
 				setNewContactEmail('');
 				alert('You cannot add yourself as a contact. Please try again.');
 				return;
 			}
 
 			const toSend = {
-				targetEmail: newContactEmail,
+				targetEmail: newContactEmail.toLowerCase(),
 				// email: user.email,
 				// uid: user.uid
 			}

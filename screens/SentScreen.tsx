@@ -49,8 +49,10 @@ export default function SentScreen(props) {
 	return (
 		<>
 			{listOfReceivers.length === 0  ?
-				<View>
-					<Text>No contacts found</Text>
+				<View style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					<Text style={styles.noTasks}>
+						No tasks assigned by you are due!
+					</Text>
 				</View> :
 				<ScrollView style={{ backgroundColor: 'white' }}>
 					<TaskModalSender setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
@@ -75,6 +77,11 @@ export default function SentScreen(props) {
 }
 
 const styles = StyleSheet.create({
+	noTasks: {
+		margin: 15, 
+		fontSize: 18, 
+		fontWeight: '500'
+	},
 	favorites: {
 		paddingTop: 10,
 		backgroundColor: 'white',
@@ -100,7 +107,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		height: '100%',
 		width: '100%',
-
+		marginTop: 5
 	},
 	title: {
 		fontSize: 20,

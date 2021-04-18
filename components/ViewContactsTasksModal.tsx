@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
+import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView } from "react-native";
 import * as firebase from 'firebase'
 import 'firebase/firestore';
 import "firebase/functions";
@@ -53,11 +53,15 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 
 
 	const TasksGroup = receivedTasks.map((task: any) =>
-		<TaskBox key={task.id} priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
+		<TaskBox key={task.id} priority={task.priority} title={task.taskName}
+			completionStatus={task.completionStatus}
+			dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
 	)
 
 	const TasksGroupSent = sentTasks.map((task: any) =>
-		<TaskBox key={task.id} priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
+		<TaskBox key={task.id} priority={task.priority} title={task.taskName} 
+			completionStatus={task.completionStatus}
+			dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
 	)
 
 	async function handleGetTasks() {
@@ -89,6 +93,35 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 
 	}
 
+	if (receivedTasks.length === 0 && sentTasks.length === 0) {
+		return (
+			<Modal visible={props.addViewContactsTasksModalOpen} animationType='slide'>
+			<View style={styles.modalContent}>
+				<TouchableOpacity onPress={() => props.setAddViewContactsTasksModalOpen(false)} >
+					<View style={styles.closeButton}>
+						<FeatherIcon name="x" color='#2cb9b0' />
+						<Text style={styles.close}>CLOSE</Text>
+					</View>
+				</TouchableOpacity>
+				<Text style={styles.convo}>Conversation with</Text>
+				<Text style={styles.convoName}>{props.selectedContact.displayName}</Text>
+				<View style={{width: '100%', height: '58%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					<Text style={{fontSize: 18, fontWeight: '500'}}>
+						Looks like you have no exchanges
+					</Text>
+					<Text style={{fontSize: 18, fontWeight: '500'}}>
+						with this person yet.
+					</Text>
+				</View>
+				<View style={styles.buttonWrapper}>
+					<TouchableOpacity onPress={() => console.log('hi')} style={styles.deleteButton}>
+						<Text style={styles.text}>Remove Contact</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+		)
+	}
 	return (
 		<Modal visible={props.addViewContactsTasksModalOpen} animationType='slide'>
 			<View style={styles.modalContent}>
@@ -100,6 +133,9 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 				</TouchableOpacity>
 				<Text style={styles.convo}>Conversation with</Text>
 				<Text style={styles.convoName}>{props.selectedContact.displayName}</Text>
+				{ receivedTasks.length === 0 ? 
+					<View style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					</View> : 
 				<View style={styles.viewContainer}>
 					<Image
 						style={styles.profileImage}
@@ -107,20 +143,29 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 					/>
 					<View style={styles.taskListFrom}>
 						<Text style={styles.name}>{props.selectedContact.displayName}</Text>
-						{firebase.auth().currentUser ? TasksGroup : ''}
+						<ScrollView>
+							{firebase.auth().currentUser ? TasksGroup : ''}
+						</ScrollView>
 					</View>
 				</View>
+				}
 
-				<View style={styles.viewContainer}>
+				{ sentTasks.length === 0 ? 
+					<View style={{height: '29%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					</View> :
+				<View style={receivedTasks.length === 0 ? styles.viewContainerBottom : styles.viewContainer}>
 					<Image
 						style={styles.profileImage}
 						source={{ uri: imageUri}}
 					/>
 					<View style={styles.taskListTo}>
 						<Text style={styles.name}>{firebase.auth().currentUser?.displayName}</Text>
-						{firebase.auth().currentUser ? TasksGroupSent : ''}
+						<ScrollView>
+							{firebase.auth().currentUser ? TasksGroupSent : ''}
+						</ScrollView>
 					</View>
 				</View>
+				}
 				<View style={styles.buttonWrapper}>
 					<TouchableOpacity onPress={() => console.log('hi')} style={styles.deleteButton}>
 						<Text style={styles.text}>Remove Contact</Text>
@@ -160,38 +205,7 @@ const styles = StyleSheet.create({
 		fontSize: 32,
 		fontWeight: '700',
 		color: '#2cb9b0',
-		marginBottom: 25
-	},
-	inputDiv: {
-		display: 'flex',
-		flexDirection: 'column',
-		marginLeft: 25,
-		width: '100%',
-		marginTop: 40,
-		minHeight: 140
-	},
-	input: {
-		height: 40,
-		width: '88%',
-		marginTop: 15,
-		backgroundColor: '#ededed',
-		borderRadius: 10,
-		minHeight: 50,
-		fontSize: 18,
-		paddingLeft: 20,
-		fontWeight: '600',
-	},
-	title: {
-		fontWeight: '700',
-		fontSize: 22,
-		paddingLeft: 8
-	},
-	subtitle: {
-		fontWeight: '700',
-		fontSize: 15,
-		paddingTop: 8,
-		paddingLeft: 8,
-		color: '#2cb9b0'
+		marginBottom: 35
 	},
 	buttonWrapper: {
 		display: 'flex',
@@ -203,21 +217,9 @@ const styles = StyleSheet.create({
 	deleteButton: {
 		backgroundColor: '#e93342',
 		minHeight: 40,
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		flexDirection: 'row',
 		borderRadius: 10,
 		padding: 10,
-	},
-	buttonDiv: {
-		backgroundColor: '#2cb9b0',
-		display: 'flex',
-		flex: 1,
-		width: '88%',
-		borderRadius: 10,
-		justifyContent: 'center',
-		alignItems: 'center',
+		marginTop: 50
 	},
 	text: {
 		color: 'white',
@@ -242,16 +244,27 @@ const styles = StyleSheet.create({
 		display: "flex",
 		flexDirection: "row",
 		paddingLeft: 10,
-		paddingRight: 10
+		paddingRight: 10,
+		height: '18%'
+	},
+	viewContainerBottom: {
+		marginBottom: 310,
+		width: '100%',
+		justifyContent: "center",
+		alignItems: "flex-start",
+		display: "flex",
+		flexDirection: "row",
+		paddingLeft: 10,
+		paddingRight: 10,
+		height: '18%'
 	},
 	taskListFrom: {
 		flex: 1,
+		height: 200,
 	},
 	taskListTo: {
 		flex: 1,
-	},
-	taskBox: {
-		maxHeight: 30
+		height: 200
 	}
 })
 
