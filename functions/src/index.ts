@@ -32,7 +32,7 @@ exports.addContact = functions.https.onCall(async (data, context) => {
 
   const targetEmail = data.targetEmail;
   let uid;
-  let userEmail;
+  // let userEmail;
   if (!context.auth) {
     return ({
       status: false,
@@ -40,7 +40,7 @@ exports.addContact = functions.https.onCall(async (data, context) => {
     });
   } else {
     uid = context.auth.uid;
-    userEmail = context.auth.token.email;
+    // userEmail = context.auth.token.email;
   }
   // uid = data.uid;
   // userEmail = data.email;
@@ -64,11 +64,11 @@ exports.addContact = functions.https.onCall(async (data, context) => {
 
     const currUserRef = db.collection("User").doc(uid);
     const addToContactsList = await currUserRef.update({
-      contacts: admin.firestore.FieldValue.arrayUnion({ uid: targetUserList[0], email: targetEmail })
+      contacts: admin.firestore.FieldValue.arrayUnion(targetUserList[0])
     });
     const targetUserRef = db.collection("User").doc(targetUserList[0]);
     const addToTargetContactsList = await targetUserRef.update({
-      contacts: admin.firestore.FieldValue.arrayUnion({ uid: uid, email: userEmail })
+      contacts: admin.firestore.FieldValue.arrayUnion(uid)
     });
     console.log(snapshot);
     return {
@@ -97,7 +97,7 @@ exports.getContacts = functions.https.onCall(async (data, context) => {
     let listOfContacts = [];
     const contactList = doc.get("contacts");
     for (let i = 0; i < contactList.length; i++) {
-      const contactDoc = await db.collection("User").doc(contactList[i].uid).get();
+      const contactDoc = await db.collection("User").doc(contactList[i]).get();
       listOfContacts.push(contactDoc.data());
     }
     return { status: true, contacts: listOfContacts };
@@ -363,7 +363,6 @@ exports.getSentTasks = functions.https.onCall(async (data, context) => {
       return ({
         status: true,
         tasks: {},
-        listOfReceivers: [],
         reason: "no tasks sent"
       });
     }
@@ -374,25 +373,26 @@ exports.getSentTasks = functions.https.onCall(async (data, context) => {
     snapshot.forEach(task => {
       const receiverUid = task.get("receiverUid");
       if (!tasksByReceiverMap.has(receiverUid)) {
-        tasksByReceiverMap.set(receiverUid, []);
+        tasksByReceiverMap.set(receiverUid, new Map());
+        tasksByReceiverMap.get(receiverUid).set("tasks", []);
         listOfReceiverIds.push(receiverUid);
       } 
-      tasksByReceiverMap.get(receiverUid).push(task.data());
+      tasksByReceiverMap.get(receiverUid).get("tasks").push(task.data());
       console.log("task data")
       console.log(task.data());
-
     });
 
-    let listOfReceivers = [];
+
+    const tasksToSend = new Map();
     for (let i = 0; i < listOfReceiverIds.length; i++) {
       const receiverDoc = await db.collection("User").doc(listOfReceiverIds[i]).get();
-      listOfReceivers.push(receiverDoc.data());
-      console.log("receiverDoc.data()");
-      console.log(receiverDoc.data());
-      console.log("listOfReceivers")
-      console.log(listOfReceivers);
+      // tasksByReceiverMap.get(listOfReceiverIds[i]).set("user", receiverDoc.data());
+      tasksToSend.set(listOfReceiverIds[i], { "user": receiverDoc.data(), 
+                                            "tasks": tasksByReceiverMap.get(listOfReceiverIds[i]).get("tasks")});
     }
-    return ({ status: true, tasks: Object.fromEntries(tasksByReceiverMap), listOfReceivers: listOfReceivers });
+
+   
+    return ({ status: true, tasks: Object.fromEntries(tasksToSend) });
   }
 
   return asyncF(sentTasksRef)
@@ -504,6 +504,48 @@ exports.markTaskAsCompleted = functions.https.onCall(async (data, context) => {
   const receivedTasksRef = db.collection("Task").doc(taskId);
   // const receivedTaskDoc = await receivedTasksRef.get();
   await receivedTasksRef.update({completionStatus:"finished"});
+  // await db.collection("CompletedTask").add(receivedTaskDoc.data);
+  return ({ status: true });
+});
+
+exports.deleteContact = functions.https.onCall(async (data, context) => {
+  let userId;
+  let contactId;
+  // let userEmail;
+  // let contactEmail;
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    contactId = data.uid;
+    // contactEmail = data.email;
+    // userEmail = context.auth.token.email;
+    userId = context.auth.uid;
+  }
+
+  const db = admin.firestore();
+
+  const contactRef = db.collection("User").doc(contactId);
+  const userRef = db.collection("User").doc(userId);
+  // const receivedTaskDoc = await receivedTasksRef.get();
+  await contactRef.update({contacts: admin.firestore.FieldValue.arrayRemove(userId)});
+  await userRef.update({contacts: admin.firestore.FieldValue.arrayRemove(contactId)});
+  const sharedTasksRef1 = db.collection("Task").where("senderUid", "==", contactId).where("receiverUid", "==", userId);
+  const sharedTasksRef2 = db.collection("Task").where("senderUid", "==", userId).where("receiverUid", "==", contactId);
+  sharedTasksRef1.get()
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        doc.ref.delete();
+    })})
+    .catch((error) => {console.log(error)});
+  sharedTasksRef2.get()
+    .then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        doc.ref.delete();
+    })})
+    .catch((error) => {console.log(error)});
   // await db.collection("CompletedTask").add(receivedTaskDoc.data);
   return ({ status: true });
 });
