@@ -16,35 +16,61 @@ export default function InboxScreen(props) {
 			let taskResponse = await getReceivedTasks();
 			if (taskResponse.data.status) {
 				setTaskBySenderMap(taskResponse.data.tasks)
-				setListOfSenders(taskResponse.data.listOfSenders);
+				console.log(taskResponse.data.tasks)
 			}
 		}
 		setInterval(() => getTasksCaller(), 2000)
 	}, [])
 
 	const [taskBySenderMap, setTaskBySenderMap] = React.useState(new Map());
-	const [listOfSenders, setListOfSenders] = React.useState([]);
 	const [selectedTask, setSelectedTask] = React.useState({});
 	const [taskModalOpen, setTaskModalOpen] = React.useState(false);
 	const [selectedUser, setSelectedUser] = React.useState({});
 
-	const TasksGroup = listOfSenders.map((user: any) =>
-		<IndividualTaskList
-			user={user} setSelectedUser={setSelectedUser}
-			selectedTask={selectedTask} setSelectedTask={setSelectedTask}
-			taskModalOpen={taskModalOpen} setTaskModalOpen={setTaskModalOpen}
-			key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskBySenderMap} />
-	)
+	const allElement = () => {
+		let allElementArray: any = []
+		const allKeys = Object.keys(taskBySenderMap);
+		for (let i = 0; i < allKeys.length; i++) {
+			const myObject = taskBySenderMap[allKeys[i]];
+			const individualElement = (
+				<IndividualTaskList
+					user={myObject["user"]} setSelectedUser={setSelectedUser}
+					selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+					taskModalOpen={taskModalOpen} setTaskModalOpen={setTaskModalOpen}
+					key={myObject["user"].uid} profileImg={myObject["user"].avatar} name={myObject["user"].displayName} uid={myObject["user"].uid} taskList={myObject["tasks"]} />
+			)
+			allElementArray.push(individualElement);
+		}
+		return (
+			<View>
+				{allElementArray}
+			</View>
+		)
+	}
 
-	const HorizontalAvatar = listOfSenders.map((user: any) =>
-		<ProfileImage key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} />
-	)
+	const recentContacts = () => {
+		let allElementArray: any = []
+		const allKeys = Object.keys(taskBySenderMap);
+		for (let i = 0; i < allKeys.length; i++) {
+			const myObject = taskBySenderMap[allKeys[i]]["user"];
+			const individualElement = (
+				<ProfileImage key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName} uid={myObject.uid} />
+			)
+			allElementArray.push(individualElement);
+		}
+		return (
+			<View>
+				{allElementArray}
+			</View>
+		)
+	}
 
 	return (
 		<>
-			{listOfSenders.length === 0 ?
-				<View style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-					<Text style={{margin: 15, fontSize: 18, fontWeight: '500'}}>
+			{Object.keys(taskBySenderMap).length === 0 ?
+				<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
+					<Text style={{ margin: 15, fontSize: 18, fontWeight: '500' }}>
 						You have no tasks due!
 					</Text>
 				</View> :
@@ -59,10 +85,10 @@ export default function InboxScreen(props) {
 						contentContainerStyle={styles.favoritesContainer}
 						showsHorizontalScrollIndicator={false}
 					>
-						{HorizontalAvatar}
+						{recentContacts()}
 					</ScrollView>
 					<View style={styles.scrollContainer}>
-						{TasksGroup}
+						{allElement()}
 					</View>
 				</ScrollView>
 			}

@@ -9,7 +9,7 @@ import 'firebase/firestore';
 
 const IndividualTaskList = (props) => {
 
-	const TaskList = props.taskList[props.uid].map((task: any, i) =>
+	const TaskList = props.taskList.map((task: any, i) =>
 		<TouchableOpacity onPress={() => { props.setTaskModalOpen(true); props.setSelectedTask(task); props.setSelectedUser(props.user) }} key={i}>
 			<TaskBox priority={task.priority} title={task.taskName} 
 				completionStatus={task.completionStatus}

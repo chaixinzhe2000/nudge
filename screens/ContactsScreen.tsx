@@ -62,8 +62,9 @@ export default function ContactsScreen(props) {
 
 	return (
 		<>
-		{contactsList.length === 0  ?
-				<View style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+			{contactsList.length === 0 ?
+				<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 					<Text style={styles.noContacts}>
 						Oh no, you have no contacts yet!
 					</Text>
@@ -74,36 +75,36 @@ export default function ContactsScreen(props) {
 						to find a friend now!
 					</Text>
 				</View> :
-			<View style={{ backgroundColor: 'white', flex: 1 }}>
-				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
-				<ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen}
-					selectedContact={selectedContact} />
-				<SectionList sections={getData()}
-					renderItem={({ item }) => (
-						<TouchableOpacity onPress={() => { setSelectedContact(item); setAddViewContactsTasksModalOpen(true) }}>
-							<View style={styles.contactContainer}>
-								<Image
-									style={styles.profileImage}
-									source={{ uri: item.avatar }}
-								/>
-								<View style={styles.rowContainer}>
-									<Text style={styles.name}>{item.displayName}</Text>
-									<Text style={styles.email}>{item.email.toLowerCase()}</Text>
+				<View style={{ backgroundColor: 'white', flex: 1 }}>
+					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
+					<ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen}
+						selectedContact={selectedContact} />
+					<SectionList sections={getData()}
+						renderItem={({ item }) => (
+							<TouchableOpacity onPress={() => { setSelectedContact(item); setAddViewContactsTasksModalOpen(true) }}>
+								<View style={styles.contactContainer}>
+									<Image
+										style={styles.profileImage}
+										source={{ uri: item.avatar }}
+									/>
+									<View style={styles.rowContainer}>
+										<Text style={styles.name}>{item.displayName}</Text>
+										<Text style={styles.email}>{item.email.toLowerCase()}</Text>
+									</View>
 								</View>
+								<View style={styles.separator}></View>
+							</TouchableOpacity>
+						)}
+						keyExtractor={item => item.uid.toString()}
+						renderSectionHeader={({ section }) => (
+							<View style={styles.sectionHeader}>
+								<Text style={styles.sectionText}>{section.title}</Text>
 							</View>
-							<View style={styles.separator}></View>
-						</TouchableOpacity>
-					)}
-					keyExtractor={item => item.uid.toString()}
-					renderSectionHeader={({ section }) => (
-						<View style={styles.sectionHeader}>
-							<Text style={styles.sectionText}>{section.title}</Text>
-						</View>
-					)}
-					style={styles.container}
-				/>
-			</View>
-		}
+						)}
+						style={styles.container}
+					/>
+				</View>
+			}
 		</>
 	);
 }
@@ -111,11 +112,11 @@ export default function ContactsScreen(props) {
 const styles = StyleSheet.create({
 	noContacts: {
 		marginBottom: 15,
-		fontSize: 18, 
+		fontSize: 18,
 		fontWeight: '500'
 	},
 	noContactsAlt: {
-		fontSize: 18, 
+		fontSize: 18,
 		fontWeight: '500'
 	},
 	container: {

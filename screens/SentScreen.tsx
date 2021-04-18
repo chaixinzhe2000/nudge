@@ -18,38 +18,59 @@ export default function SentScreen(props) {
 			let taskResponse = await getSentTasks();
 			if (taskResponse.data.status) {
 				setTaskByReceiverMap(taskResponse.data.tasks)
-				setListOfReceivers(taskResponse.data.listOfReceivers);
 			}
 		}
 		setInterval(() => getTasksCaller(), 2000)
 	}, [])
 
 	const [taskByReceiverMap, setTaskByReceiverMap] = React.useState(new Map());
-	const [listOfReceivers, setListOfReceivers] = React.useState([]);
-
 	const [selectedTask, setSelectedTask] = React.useState({});
 	const [taskModalOpen, setTaskModalOpen] = React.useState(false);
 	const [selectedUser, setSelectedUser] = React.useState({});
 
+	const allElement = () => {
+		let allElementArray: any = []
+		const allKeys = Object.keys(taskByReceiverMap);
+		for (let i = 0; i < allKeys.length; i++) {
+			const myObject = taskByReceiverMap[allKeys[i]];
+			const individualElement = (
+				<IndividualTaskList
+					user={myObject["user"]} setSelectedUser={setSelectedUser}
+					selectedTask={selectedTask} setSelectedTask={setSelectedTask}
+					taskModalOpen={taskModalOpen} setTaskModalOpen={setTaskModalOpen}
+					key={myObject["user"].uid} profileImg={myObject["user"].avatar} name={myObject["user"].displayName} uid={myObject["user"].uid} taskList={myObject["tasks"]} />
+			)
+			allElementArray.push(individualElement);
+		}
+		return (
+			<View>
+				{allElementArray}
+			</View>
+		)
+	}
 
-	const TasksGroup = listOfReceivers.map((user: any) =>
-		<IndividualTaskList
-
-			user={user} setSelectedUser={setSelectedUser}
-			selectedTask={selectedTask} setSelectedTask={setSelectedTask}
-			taskModalOpen={taskModalOpen} setTaskModalOpen={setTaskModalOpen}
-
-			key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} taskList={taskByReceiverMap} />
-	)
-
-	const HorizontalAvatar = listOfReceivers.map((user: any) =>
-		<ProfileImage key={user.uid} profileImg={user.avatar} name={user.displayName} uid={user.uid} />
-	)
+	const recentContacts = () => {
+		let allElementArray: any = []
+		const allKeys = Object.keys(taskByReceiverMap);
+		for (let i = 0; i < allKeys.length; i++) {
+			const myObject = taskByReceiverMap[allKeys[i]]["user"];
+			const individualElement = (
+				<ProfileImage key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName} uid={myObject.uid} />
+			)
+			allElementArray.push(individualElement);
+		}
+		return (
+			<View>
+				{allElementArray}
+			</View>
+		)
+	}
 
 	return (
 		<>
-			{listOfReceivers.length === 0  ?
-				<View style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+			{Object.keys(taskByReceiverMap).length === 0 ?
+				<View style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 					<Text style={styles.noTasks}>
 						No tasks assigned by you are due!
 					</Text>
@@ -65,10 +86,10 @@ export default function SentScreen(props) {
 						contentContainerStyle={styles.favoritesContainer}
 						showsHorizontalScrollIndicator={false}
 					>
-						{HorizontalAvatar}
+						{recentContacts()}
 					</ScrollView>
 					<View style={styles.scrollContainer}>
-						{TasksGroup}
+						{allElement()}
 					</View>
 				</ScrollView>
 			}
@@ -78,8 +99,8 @@ export default function SentScreen(props) {
 
 const styles = StyleSheet.create({
 	noTasks: {
-		margin: 15, 
-		fontSize: 18, 
+		margin: 15,
+		fontSize: 18,
 		fontWeight: '500'
 	},
 	favorites: {
