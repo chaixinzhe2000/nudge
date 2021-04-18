@@ -11,7 +11,9 @@ const IndividualTaskList = (props) => {
 
 	const TaskList = props.taskList[props.uid].map((task: any, i) =>
 		<TouchableOpacity onPress={() => { props.setTaskModalOpen(true); props.setSelectedTask(task); props.setSelectedUser(props.user) }} key={i}>
-			<TaskBox priority={task.priority} title={task.taskName} dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
+			<TaskBox priority={task.priority} title={task.taskName} 
+				completionStatus={task.completionStatus}
+				dueDate={new firebase.firestore.Timestamp(task.due._seconds, task.due._nanoseconds).toDate()} />
 		</TouchableOpacity>
 	)
 

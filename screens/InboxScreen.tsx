@@ -43,8 +43,10 @@ export default function InboxScreen(props) {
 	return (
 		<>
 			{listOfSenders.length === 0 ?
-				<View>
-					<Text>No contacts found</Text>
+				<View style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					<Text style={{margin: 15, fontSize: 18, fontWeight: '500'}}>
+						You have no tasks due!
+					</Text>
 				</View> :
 				<ScrollView style={{ backgroundColor: 'white' }}>
 					<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
@@ -94,6 +96,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		height: '100%',
 		width: '100%',
+		marginTop: 5
 
 	},
 	title: {

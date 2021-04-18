@@ -62,6 +62,18 @@ export default function ContactsScreen(props) {
 
 	return (
 		<>
+		{contactsList.length === 0  ?
+				<View style={{height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+					<Text style={styles.noContacts}>
+						Oh no, you have no contacts yet!
+					</Text>
+					<Text style={styles.noContactsAlt}>
+						Click the icon on the top right corner
+					</Text>
+					<Text style={styles.noContactsAlt}>
+						to find a friend now!
+					</Text>
+				</View> :
 			<View style={{ backgroundColor: 'white', flex: 1 }}>
 				<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 				<ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen}
@@ -91,11 +103,21 @@ export default function ContactsScreen(props) {
 					style={styles.container}
 				/>
 			</View>
+		}
 		</>
 	);
 }
 
 const styles = StyleSheet.create({
+	noContacts: {
+		marginBottom: 15,
+		fontSize: 18, 
+		fontWeight: '500'
+	},
+	noContactsAlt: {
+		fontSize: 18, 
+		fontWeight: '500'
+	},
 	container: {
 		display: 'flex',
 		backgroundColor: 'white'

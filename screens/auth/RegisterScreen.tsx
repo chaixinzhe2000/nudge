@@ -155,7 +155,7 @@ function Register() {
 					onChangeText={(text) => setName(text)} style={styles.input} />
 				<TextInput
 					placeholder="Your Email" placeholderTextColor='white' textAlign='center'
-					onChangeText={(text) => setEmail(text)} style={styles.input} />
+					onChangeText={(text) => setEmail(text.toLowerCase())} style={styles.input} />
 				<TextInput
 					placeholder="Password" placeholderTextColor='white' textAlign='center'
 					secureTextEntry={true} onChangeText={(text) => setPassword(text)} style={styles.input} />
