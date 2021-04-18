@@ -1,12 +1,15 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
+import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Button } from "react-native";
 import * as firebase from 'firebase'
 import 'firebase/firestore';
 import "firebase/functions";
 import { Feather } from '@expo/vector-icons';
 import IndividualTaskList from "./IndividualTaskList";
 import TaskBox from "./TaskBox";
+import Dialog from "react-native-dialog";
+import { BlurView } from "expo-blur";
+
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={22} style={{ marginTop: -2 }} {...props} />;
@@ -31,8 +34,9 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 	const [receivedTasks, setReceivedTasks] = useState([]);
 	const [sentTasks, setSentTasks] = useState([])
 	const [imageUri, setImageUri] = useState("");
-
-	var getTasksWithContact = firebase.functions().httpsCallable('getTasksWithContact');
+  const [deleteContactDialogOpen, setDeleteContactDialogOpen] = useState(false);
+	
+  var getTasksWithContact = firebase.functions().httpsCallable('getTasksWithContact');
 
 	useEffect(() => {
 		async function getProfileImageCaller() {
@@ -89,8 +93,45 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 
 	}
 
+  var deleteContact = firebase.functions().httpsCallable('deleteContact');
+
+
+  function handleDeleteContact() {
+    console.log("hi");
+    deleteContact(props.selectedContact)
+    .then(() => {
+      props.setAddViewContactsTasksModalOpen(false);
+      setDeleteContactDialogOpen(false);
+      
+    })
+    .catch((error) => {
+      // Getting the Error details.
+      var code = error.code;
+      var message = error.message;
+      var details = error.details;
+      console.log(code)
+      console.log(message)
+      console.log(details)
+    });
+    
+  }
+
+  const blurComponentIOS = (
+    <BlurView style={StyleSheet.absoluteFill} blurType="xlight" blurAmount={10} />
+  );
+
 	return (
 		<Modal visible={props.addViewContactsTasksModalOpen} animationType='slide'>
+    <View >
+      <Dialog.Container visible={deleteContactDialogOpen} blurComponentIOS={blurComponentIOS}>
+        <Dialog.Title>Account delete</Dialog.Title>
+        <Dialog.Description>
+          Are you sure you want to delete this contact?
+        </Dialog.Description>
+        <Dialog.Button label="Cancel" onPress={() => setDeleteContactDialogOpen(false)} />
+        <Dialog.Button label="Delete" onPress={() => handleDeleteContact()} />
+      </Dialog.Container>
+    </View>
 			<View style={styles.modalContent}>
 				<TouchableOpacity onPress={() => props.setAddViewContactsTasksModalOpen(false)} >
 					<View style={styles.closeButton}>
@@ -122,7 +163,7 @@ export default function ViewContactsTasksModal(props: IViewContactsTasksModalPro
 					</View>
 				</View>
 				<View style={styles.buttonWrapper}>
-					<TouchableOpacity onPress={() => console.log('hi')} style={styles.deleteButton}>
+					<TouchableOpacity onPress={() => setDeleteContactDialogOpen(true)} style={styles.deleteButton}>
 						<Text style={styles.text}>Remove Contact</Text>
 					</TouchableOpacity>
 				</View>
