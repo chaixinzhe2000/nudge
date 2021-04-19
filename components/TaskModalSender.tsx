@@ -149,13 +149,13 @@ export default function TaskModalSender(props: ITaskModalProps) {
       fontWeight: '700'
     },
     taskName: {
-      height: 40,
       width: '90%',
       fontSize: 28,
       marginTop: 20,
       color: 'black',
       fontWeight: '700',
-      marginLeft: 25
+      marginLeft: 25,
+	  flexWrap: 'wrap'
     },
     contactList: {
       display: 'flex',

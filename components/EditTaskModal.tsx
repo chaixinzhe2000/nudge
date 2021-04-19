@@ -578,7 +578,7 @@ export default function EditTaskModal(props:IEditTaskModalProps) {
       <Text style={styles.error}> {errorMessage} </Text>
       <TouchableOpacity onPress={() => { handleSave() }} style={{ display: 'flex', alignItems: 'center' }} >
         <View style={styles.sendDiv}>
-          <FeatherIconAlt name="send" color='white' />
+          <FeatherIconAlt name="edit-3" color='white' />
           <Text style={styles.text2}>Edit</Text>
         </View>
       </TouchableOpacity>
