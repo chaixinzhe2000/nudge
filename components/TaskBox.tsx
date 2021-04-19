@@ -28,6 +28,8 @@ function TaskBox(props: ITaskBoxProps) {
 
 		if (pLevel === 'high') {
 			return '#f58822';
+		} else if (pLevel === 'low') {
+			return '#498bef'
 		} else {
 			return '#2cb9b0';
 		}

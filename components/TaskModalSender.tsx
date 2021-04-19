@@ -124,7 +124,14 @@ export default function TaskModalSender(props: ITaskModalProps) {
     }
   }
 
-  let bColor = props.selectedTask.priority === 'high' ? '#f58822' : '#2cb9b0';
+  const bColorGetter = () => {
+	if (props.selectedTask.priority === 'high') {
+		return '#f58822'
+	} else if (props.selectedTask.priority === 'low') {
+		return '#498bef'
+	}
+	return '#2cb9b0'
+}
   let dueDate = new firebase.firestore.Timestamp(props.selectedTask.due ? props.selectedTask.due._seconds : 0, props.selectedTask.due ? props.selectedTask.due._nanoseconds : 0).toDate();
   let priorityMessage = (props.selectedTask.priority + ' priority');
 
@@ -300,7 +307,7 @@ export default function TaskModalSender(props: ITaskModalProps) {
     },
     priorityButtonDiv: {
       width: '45%',
-      backgroundColor: bColor,
+      backgroundColor: bColorGetter(),
       minHeight: 40,
       display: 'flex',
       justifyContent: 'center',
