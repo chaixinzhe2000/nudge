@@ -57,17 +57,20 @@ export default function InboxScreen(props) {
 		for (let i = 0; i < allKeys.length; i++) {
 			const myObject = taskBySenderMap[allKeys[i]]["user"];
 			const individualElement = (
-				<ProfileImage 
-					key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName} 
+				<ProfileImage
+					key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName}
 					uid={myObject.uid} email={myObject.email} setSelectedContact={setSelectedContact}
 					setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen} />
 			)
 			allElementArray.push(individualElement);
 		}
 		return (
-			<View>
+			<ScrollView horizontal={true}
+				contentContainerStyle={styles.favoritesContainer}
+				showsHorizontalScrollIndicator={false}
+			>
 				{allElementArray}
-			</View>
+			</ScrollView>
 		)
 	}
 
@@ -89,12 +92,8 @@ export default function InboxScreen(props) {
 					/>
 					<AddContactModal setAddContactModalOpen={props.setAddContactModalOpen} addContactModalOpen={props.addContactModalOpen} />
 					<Text style={styles.favorites}>Recents</Text>
-					<ScrollView horizontal={true}
-						contentContainerStyle={styles.favoritesContainer}
-						showsHorizontalScrollIndicator={false}
-					>
-						{recentContacts()}
-					</ScrollView>
+
+					{recentContacts()}
 					<View style={styles.scrollContainer}>
 						{allElement()}
 					</View>

@@ -43,12 +43,12 @@ export default function TaskModal(props: ITaskModalProps) {
 	const [newName, setNewName] = useState(user !== null ? user.displayName : "");
 	const [contactList, setContactList]: [IContact[], any] = useState([]);
 
-  // for edit task
-  const [editTaskMode, setEditTaskMode]: [boolean, any] = useState(false);
+	// for edit task
+	const [editTaskMode, setEditTaskMode]: [boolean, any] = useState(false);
 
 	function toggleEditMode() {
-    setEditTaskMode(!editTaskMode);    
-    console.log(editTaskMode)
+		setEditTaskMode(!editTaskMode);
+		console.log(editTaskMode)
 	}
 
 	useEffect(() => {
@@ -351,70 +351,78 @@ export default function TaskModal(props: ITaskModalProps) {
 			fontSize: 18,
 			fontWeight: '700'
 		},
+		deleteButtonWrapper: {
+			display: 'flex',
+			alignItems: 'center',
+			width: '100%',
+			height: 50,
+			marginTop: 10
+		},
 	})
 
 	if (editTaskMode === false) {
-    return (
-		<Modal visible={props.taskModalOpen} animationType='slide'>
-			<View style={styles.modalContent}>
-				<TouchableOpacity onPress={() => props.setTaskModalOpen(false)} >
-					<View style={styles.closeButton}>
-						<FeatherIconClose name="x" color='#2cb9b0' />
-						<Text style={styles.close}>CLOSE</Text>
-					</View>
-				</TouchableOpacity>
-				<Text style={styles.taskName}>{props.selectedTask.taskName}</Text>
-				<View style={styles.detailsDiv}>
-					<FeatherIcon name="user" color="#2cb9b0" />
-					<Text style={styles.sentBox}>{props.selectedUser.displayName}</Text>
-					{/* <View style={styles.contactList}>{contactListElement}</View> */}
-				</View>
-				<View style={styles.priorityDiv}>
-					<FeatherIcon name="bell" color="#2cb9b0" />
-					<View style={styles.priorityButtonDiv}>
-						<Text style={styles.text}>{priorityMessage}</Text>
-					</View>
-				</View>
-				<View style={styles.detailsDiv}>
-					<FeatherIcon name="align-left" color="#2cb9b0" />
-					<View style={styles.box}>
-						<Text style={styles.boxText}>{props.selectedTask.extraDetails}</Text>
-					</View>
-				</View>
-				<View style={styles.locationDiv}>
-					<FeatherIcon name="map-pin" color="#2cb9b0" />
-					<View style={styles.box}>
-						<Text style={styles.boxText}>{props.selectedTask.location}</Text>
-					</View>
-				</View>
-				<View style={styles.locationDiv}>
-					<FeatherIcon name="clock" color="#2cb9b0" />
-					<View style={styles.timeBox}>
-						<Text style={styles.boxText}>{displayDate}</Text>
-					</View>
-				</View>
-				<View style={styles.completeButtonWrapper}>
-					<TouchableOpacity onPress={() => handleMarkAsCompleted()} style={styles.markCompletedButton}>
-						<Text style={styles.text}>Completed</Text>
+		return (
+			<Modal visible={props.taskModalOpen} animationType='slide'>
+				<View style={styles.modalContent}>
+					<TouchableOpacity onPress={() => props.setTaskModalOpen(false)} >
+						<View style={styles.closeButton}>
+							<FeatherIconClose name="x" color='#2cb9b0' />
+							<Text style={styles.close}>CLOSE</Text>
+						</View>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={() => toggleEditMode()} style={styles.editButton}>
-						<Text style={styles.text}>Edit Task</Text>
-					</TouchableOpacity>
+					<Text style={styles.taskName}>{props.selectedTask.taskName}</Text>
+					<View style={styles.detailsDiv}>
+						<FeatherIcon name="user" color="#2cb9b0" />
+						<Text style={styles.sentBox}>{props.selectedUser.displayName}</Text>
+						{/* <View style={styles.contactList}>{contactListElement}</View> */}
+					</View>
+					<View style={styles.priorityDiv}>
+						<FeatherIcon name="bell" color="#2cb9b0" />
+						<View style={styles.priorityButtonDiv}>
+							<Text style={styles.text}>{priorityMessage}</Text>
+						</View>
+					</View>
+					<View style={styles.detailsDiv}>
+						<FeatherIcon name="align-left" color="#2cb9b0" />
+						<View style={styles.box}>
+							<Text style={styles.boxText}>{props.selectedTask.extraDetails}</Text>
+						</View>
+					</View>
+					<View style={styles.locationDiv}>
+						<FeatherIcon name="map-pin" color="#2cb9b0" />
+						<View style={styles.box}>
+							<Text style={styles.boxText}>{props.selectedTask.location}</Text>
+						</View>
+					</View>
+					<View style={styles.locationDiv}>
+						<FeatherIcon name="clock" color="#2cb9b0" />
+						<View style={styles.timeBox}>
+							<Text style={styles.boxText}>{displayDate}</Text>
+						</View>
+					</View>
+					<View style={styles.completeButtonWrapper}>
+						<TouchableOpacity onPress={() => handleMarkAsCompleted()} style={styles.markCompletedButton}>
+							<Text style={styles.text}>Completed</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => toggleEditMode()} style={styles.editButton}>
+							<Text style={styles.text}>Edit Task</Text>
+						</TouchableOpacity>
+					</View>
+					<View style={styles.deleteButtonWrapper}>
+						<TouchableOpacity onPress={() => handleDeleteTask()} style={styles.deleteButton}>
+							<Text style={styles.text}>Delete Task</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
-				<View style={styles.deleteButtonWrapper}>
-					<TouchableOpacity onPress={() => handleDeleteTask()} style={styles.deleteButton}>
-						<Text style={styles.text}>Delete Task</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		</Modal>
-	)}
-  else {
-    return (
-      <EditTaskModal editTaskMode={editTaskMode} setEditTaskMode={setEditTaskMode} taskModalOpen={props.taskModalOpen}
-      setTaskModalOpen={props.setTaskModalOpen} selectedTask={props.selectedTask} selectedUser={props.selectedUser}/>
-	);
-  }
+			</Modal>
+		)
+	}
+	else {
+		return (
+			<EditTaskModal editTaskMode={editTaskMode} setEditTaskMode={setEditTaskMode} taskModalOpen={props.taskModalOpen}
+				setTaskModalOpen={props.setTaskModalOpen} selectedTask={props.selectedTask} selectedUser={props.selectedUser} />
+		);
+	}
 }
 
 
