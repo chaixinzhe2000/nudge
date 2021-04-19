@@ -7,6 +7,7 @@ import "firebase/functions";
 import { Feather } from '@expo/vector-icons';
 import { user } from "firebase-functions/lib/providers/auth";
 import moment from "moment";
+import EditTaskModal from "./EditTaskModal";
 
 function FeatherIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
 	return <Feather size={24} style={{ marginTop: 9, paddingRight: 10 }} {...props} />;
@@ -42,7 +43,13 @@ export default function TaskModal(props: ITaskModalProps) {
 	const [newName, setNewName] = useState(user !== null ? user.displayName : "");
 	const [contactList, setContactList]: [IContact[], any] = useState([]);
 
-	var getContacts = firebase.functions().httpsCallable('getContacts');
+  // for edit task
+  const [editTaskMode, setEditTaskMode]: [boolean, any] = useState(false);
+
+	function toggleEditMode() {
+    setEditTaskMode(!editTaskMode);    
+    console.log(editTaskMode)
+	}
 
 	useEffect(() => {
 		if (user) {
@@ -112,40 +119,6 @@ export default function TaskModal(props: ITaskModalProps) {
 					console.log(details)
 				})
 		}
-	}
-
-	async function handleEdit() {
-		const user = firebase.auth().currentUser;
-		if (user) {
-			const toSend = {
-				newName: newName,
-			}
-			task(toSend)
-				.then((result) => {
-					if (result.data.status === false) {
-						if (user) {
-							setNewName(user.displayName);
-						}
-						alert('Failed to change name. Please try again.');
-						return;
-					} else {
-						setNewName('');
-						props.setTaskModalOpen(false);
-					}
-				})
-				.catch((error) => {
-					// Getting the Error details.
-					var code = error.code;
-					var message = error.message;
-					var details = error.details;
-					console.log(code)
-					console.log(message)
-					console.log(details)
-				});
-		} else {
-			alert('Not logged in, please login again.');
-		}
-
 	}
 
 	const parseDate = (m: any) => {
@@ -386,7 +359,8 @@ export default function TaskModal(props: ITaskModalProps) {
 		},
 	})
 
-	return (
+	if (editTaskMode === false) {
+    return (
 		<Modal visible={props.taskModalOpen} animationType='slide'>
 			<View style={styles.modalContent}>
 				<TouchableOpacity onPress={() => props.setTaskModalOpen(false)} >
@@ -429,7 +403,7 @@ export default function TaskModal(props: ITaskModalProps) {
 					<TouchableOpacity onPress={() => handleMarkAsCompleted()} style={styles.markCompletedButton}>
 						<Text style={styles.text}>Completed</Text>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={() => handleEdit()} style={styles.editButton}>
+					<TouchableOpacity onPress={() => toggleEditMode()} style={styles.editButton}>
 						<Text style={styles.text}>Edit Task</Text>
 					</TouchableOpacity>
 				</View>
@@ -440,7 +414,13 @@ export default function TaskModal(props: ITaskModalProps) {
 				</View>
 			</View>
 		</Modal>
-	)
+	)}
+  else {
+    return (
+      <EditTaskModal editTaskMode={editTaskMode} setEditTaskMode={setEditTaskMode} taskModalOpen={props.taskModalOpen}
+      setTaskModalOpen={props.setTaskModalOpen} selectedTask={props.selectedTask} selectedUser={props.selectedUser}/>
+	);
+  }
 }
 
 

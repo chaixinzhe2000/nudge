@@ -546,3 +546,135 @@ exports.deleteContact = functions.https.onCall(async (data, context) => {
   // await db.collection("CompletedTask").add(receivedTaskDoc.data);
   return ({ status: true });
 });
+
+exports.editTask = functions.https.onCall(async (data, context) => {
+  /* data: {
+    taskName: string,
+    extraDetails: string,
+    due: number,
+    location: string,
+    priority: string,
+    receiverUid: string
+  }*/
+
+  /* send response/put in database: {
+    taskName: string,
+    location: string,
+    due: date,
+    priority: string,
+    receiverUid: uid,
+  
+    completionStatus: string,
+    timeCreated: date,
+    senderUid: uid,
+    followUps: followUpIds[]
+  }*/
+  let taskName;
+  let extraDetails;
+  let due;
+  let location;
+  let priority;
+  let senderUid;
+  let receiverUid;
+
+  if (!context.auth) {
+    return ({
+      status: false,
+      reason: "no auth"
+    });
+  } else {
+    taskName = data.taskName;
+    extraDetails = data.extraDetails;
+    due = new Date(data.due);
+    location = data.location;
+    priority = data.priority;
+    senderUid = data.senderUid;
+    receiverUid = data.receiverUid;
+  }
+  // uid = data.uid;
+  // userEmail = data.email;
+  const db = admin.firestore();
+
+  // verify senderUid exists
+  const userRef = db.collection("User").doc(senderUid);
+  const senderDoc = await userRef.get();
+  if (!senderDoc.exists) {
+    return ({
+      status: false,
+      reason: "sender uid does not map to real user."
+    });
+  }
+  
+  // verify receiverUid exists
+  const receiverRef = db.collection("User").doc(receiverUid);
+  const receiverDoc = await receiverRef.get();
+  if (!receiverDoc.exists) {
+    return ({
+      status: false,
+      reason: "receiver uid does not map to real user."
+    });
+  }
+
+  // fill in other fields:
+  // completionStatus: string,
+  // timeCreated: date,
+  // sender: uid,
+  // followUps: followUpIds[]
+  
+  const addTaskRef = await db.collection("Task").doc();
+  const newTaskDoc = {
+    taskName: taskName,
+    extraDetails: extraDetails,
+    location: location,
+    due: due,
+    priority: priority,
+    receiverUid: receiverUid,
+    completionStatus: "not started",
+    seen: "not seen yet",
+    timeCreated: admin.firestore.Timestamp.fromDate(new Date()),
+    senderUid: senderUid,
+    followUps: [],
+    id: addTaskRef.id
+  }
+  const addTaskRes = await db.collection("Task").doc(addTaskRef.id).set(newTaskDoc);
+
+  console.log(addTaskRes);
+
+  // delete old task
+  const receivedTasksRef = db.collection("Task").doc(data.oldTaskId);
+  await receivedTasksRef.delete();
+
+  // // EXPO NOTIFICATIONS:
+  // // Create a new Expo SDK client
+  // // optionally providing an access token if you have enabled push security
+  // let expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
+  // const toSend = {
+  //     to: receiverDoc.get("messageToken"),
+  //     sound: 'default',
+  //     body: 'This is a test notification',
+  //     data: { withSome: 'data' },
+  // };
+  // let notifications = [toSend];
+  // expo.sendPushNotificationsAsync(notifications)
+
+  let notifRec;
+  if (context.auth.uid === senderUid) {
+    notifRec = receiverDoc.get("messageToken");
+  } else {
+    notifRec = senderDoc.get("messageToken");
+  }
+
+  const notificationMessage = {
+    to: notifRec,
+    sound: 'default',
+    title: "Edited: " + taskName,
+    body: "By: " + context.auth.token.displayName,
+    data: { someData: 'goes here' },
+  };
+  await sendPushNotification(notificationMessage);
+  return {
+    status: true,
+    addTaskRes: addTaskRes,
+  };
+});
+

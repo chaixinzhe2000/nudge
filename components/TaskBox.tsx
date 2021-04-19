@@ -65,7 +65,7 @@ function TaskBox(props: ITaskBoxProps) {
 	}
 
 	const parseTitle = (title: string) => {
-		return title.slice(0, 23) + (title.length > 23 ? '...' : '');
+		return title.slice(0, 20) + (title.length > 18 ? '...' : '');
 	}
 
 	let backgroundColor = setBackgroundColor(props.priority, props.completionStatus, props.dueDate);
