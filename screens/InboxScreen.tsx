@@ -6,6 +6,7 @@ import ProfileImage from '../components/ProfileImage';
 import { Text, View } from '../components/Themed';
 import * as firebase from 'firebase'
 import TaskModal from '../components/TaskModal';
+import ViewContactsTasksModal from '../components/ViewContactsTasksModal';
 
 export default function InboxScreen(props) {
 
@@ -26,6 +27,8 @@ export default function InboxScreen(props) {
 	const [selectedTask, setSelectedTask] = React.useState({});
 	const [taskModalOpen, setTaskModalOpen] = React.useState(false);
 	const [selectedUser, setSelectedUser] = React.useState({});
+	const [selectedContact, setSelectedContact] = React.useState({ uid: "", displayName: "", email: "", avatar: "" });
+	const [addViewContactsTasksModalOpen, setAddViewContactsTasksModalOpen] = React.useState(false);
 
 	const allElement = () => {
 		let allElementArray: any = []
@@ -54,7 +57,10 @@ export default function InboxScreen(props) {
 		for (let i = 0; i < allKeys.length; i++) {
 			const myObject = taskBySenderMap[allKeys[i]]["user"];
 			const individualElement = (
-				<ProfileImage key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName} uid={myObject.uid} />
+				<ProfileImage 
+					key={myObject.uid} profileImg={myObject.avatar} name={myObject.displayName} 
+					uid={myObject.uid} email={myObject.email} setSelectedContact={setSelectedContact}
+					setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen} />
 			)
 			allElementArray.push(individualElement);
 		}
@@ -75,6 +81,8 @@ export default function InboxScreen(props) {
 					</Text>
 				</View> :
 				<ScrollView style={{ backgroundColor: 'white' }}>
+					<ViewContactsTasksModal addViewContactsTasksModalOpen={addViewContactsTasksModalOpen} setAddViewContactsTasksModalOpen={setAddViewContactsTasksModalOpen}
+						selectedContact={selectedContact} />
 					<TaskModal setTaskModalOpen={setTaskModalOpen} taskModalOpen={taskModalOpen}
 						selectedTask={selectedTask} setSelectedTask={setSelectedTask}
 						selectedUser={selectedUser} setSelectedUser={setSelectedUser}

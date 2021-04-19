@@ -159,12 +159,12 @@ export default function TaskModal(props: ITaskModalProps) {
 			fontWeight: '700'
 		},
 		taskName: {
-			height: 40,
 			width: '90%',
 			fontSize: 28,
 			marginTop: 20,
 			color: 'black',
 			fontWeight: '700',
+			flexWrap: 'wrap',
 			marginLeft: 25
 		},
 		contactList: {
@@ -301,13 +301,6 @@ export default function TaskModal(props: ITaskModalProps) {
 			flexDirection: 'row',
 			justifyContent: 'center'
 		},
-		deleteButtonWrapper: {
-			display: 'flex',
-			alignItems: 'center',
-			width: '100%',
-			height: 50,
-			marginTop: 10
-		},
 		priorityButtonDiv: {
 			width: '45%',
 			backgroundColor: bColor,
@@ -350,7 +343,8 @@ export default function TaskModal(props: ITaskModalProps) {
 			flexDirection: 'row',
 			borderRadius: 10,
 			padding: 10,
-			width: 120
+			width: 120,
+			marginLeft: 30
 		},
 		text: {
 			color: 'white',
